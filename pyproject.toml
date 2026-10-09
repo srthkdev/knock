@@ -1,0 +1,33 @@
+[project]
+name = "knock"
+version = "0.1.0"
+description = "A 3D physics world where AI agents must run experiments to discover hidden properties before acting."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "mujoco>=3.3",
+    "numpy>=2.0",
+    "scipy>=1.13",
+    "matplotlib>=3.9",
+    "pillow>=10",
+    "pydantic>=2.14.0",
+    "gymnasium>=1.4.0",
+    "typer>=0.27.3",
+    "rich>=15.0.0",
+    "torch>=2.14.1",
+    "scikit-fem>=12.0.2",
+    "sbi>=0.27.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+    "scikit-learn>=1.5",
+]
+
+[project.scripts]
+knock = "knock.cli:main"
+
+[build-system]
+requires = ["uv_build>=0.8.22,<0.9.0"]
+build-backend = "uv_build"
