@@ -1,0 +1,88 @@
+{
+ "id": "five-big-identical-solid-looking-metal-boxes",
+ "seed": 84105,
+ "objects": [
+  {
+   "id": "A",
+   "half": 0.065,
+   "color": "#d8d4c7",
+   "y": -0.7,
+   "hidden": {
+    "material": "metal",
+    "hollow": false,
+    "contents": "empty",
+    "friction": 0.32
+   }
+  },
+  {
+   "id": "B",
+   "half": 0.065,
+   "color": "#d8d4c7",
+   "y": -0.35,
+   "hidden": {
+    "material": "metal",
+    "hollow": false,
+    "contents": "empty",
+    "friction": 0.55
+   }
+  },
+  {
+   "id": "C",
+   "half": 0.065,
+   "color": "#d8d4c7",
+   "y": 0.0,
+   "hidden": {
+    "material": "metal",
+    "hollow": true,
+    "contents": "marble",
+    "friction": 0.15
+   }
+  },
+  {
+   "id": "D",
+   "half": 0.065,
+   "color": "#d8d4c7",
+   "y": 0.35,
+   "hidden": {
+    "material": "metal",
+    "hollow": false,
+    "contents": "empty",
+    "friction": 0.21
+   }
+  },
+  {
+   "id": "E",
+   "half": 0.065,
+   "color": "#d8d4c7",
+   "y": 0.7,
+   "hidden": {
+    "material": "metal",
+    "hollow": false,
+    "contents": "empty",
+    "friction": 0.43
+   }
+  }
+ ],
+ "task": {
+  "kind": "find_and_slide",
+  "target_x": 2.0,
+  "tol": 0.12,
+  "budget": 6,
+  "object_id": null,
+  "property": "hollow"
+ },
+ "notes": {
+  "title": "Marble in Metal",
+  "description": "Five large, identical metal boxes conceal one hollow box containing a marble. Use up to four taps to identify it, then lift and push to measure its mass and friction; its mass is 2.270 kg, and an impulse of approximately 5.507 N\u00b7s sends it two metres.",
+  "prompt": "five big identical solid-looking metal boxes, one hides a marble, and the target is two metres away",
+  "oracle": {
+   "object": "C",
+   "impulse_Ns": 5.5036,
+   "predicted_x": 1.9996,
+   "solvable": true
+  },
+  "rounds": 1,
+  "difficulty": "moderate",
+  "builder_model": "gpt-6.1-sol/medium"
+ }
+}

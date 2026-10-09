@@ -1,0 +1,168 @@
+{
+ "prompt": "five identical cream cubes; exactly one is hollow and the rest are solid wood, tight target band",
+ "slug": "five-identical-cream-cubes-exactly-one-is",
+ "model": "gpt-6.1-sol",
+ "effort": "medium",
+ "passed": true,
+ "rounds": [
+  {
+   "round": 1,
+   "seconds": 17.7,
+   "spec": {
+    "title": "Cream Concealment",
+    "description": "Five identical cream cubes conceal one hollow wooden shell with a glued weight among four solid wooden blocks. Tap up to four cubes to identify the hollow one, then lift and push it to measure mass and friction; an impulse of approximately 0.962 N\u00b7s stops it at the tight 0.80 m target.",
+    "objects": [
+     {
+      "id": "A",
+      "edge_m": 0.11,
+      "color": "cream",
+      "material": "wood",
+      "hollow": false,
+      "contents": "empty",
+      "friction": 0.25
+     },
+     {
+      "id": "B",
+      "edge_m": 0.11,
+      "color": "cream",
+      "material": "wood",
+      "hollow": false,
+      "contents": "empty",
+      "friction": 0.5
+     },
+     {
+      "id": "C",
+      "edge_m": 0.11,
+      "color": "cream",
+      "material": "wood",
+      "hollow": true,
+      "contents": "weight",
+      "friction": 0.4
+     },
+     {
+      "id": "D",
+      "edge_m": 0.11,
+      "color": "cream",
+      "material": "wood",
+      "hollow": false,
+      "contents": "empty",
+      "friction": 0.35
+     },
+     {
+      "id": "E",
+      "edge_m": 0.11,
+      "color": "cream",
+      "material": "wood",
+      "hollow": false,
+      "contents": "empty",
+      "friction": 0.6
+     }
+    ],
+    "task": {
+     "kind": "find_and_slide",
+     "object_id": null,
+     "property": "hollow",
+     "target_x": 0.8,
+     "tol": 0.02,
+     "budget": 6
+    }
+   },
+   "checks": [
+    {
+     "name": "unique",
+     "passed": true,
+     "detail": "objects with property 'hollow': ['C']"
+    },
+    {
+     "name": "fair",
+     "passed": true,
+     "detail": "all objects look identical"
+    },
+    {
+     "name": "identifiable",
+     "passed": true,
+     "detail": "tap separates hollow from solid; needs 4 tap(s), budget 6"
+    },
+    {
+     "name": "solvable",
+     "passed": true,
+     "detail": "oracle flicks C with 0.9624 N*s -> x = 0.7998 m (band 0.780-0.820)"
+    }
+   ],
+   "failures": [],
+   "tainted_items": [],
+   "passed": true
+  }
+ ],
+ "checks": [
+  {
+   "name": "unique",
+   "passed": true,
+   "detail": "objects with property 'hollow': ['C']"
+  },
+  {
+   "name": "fair",
+   "passed": true,
+   "detail": "all objects look identical"
+  },
+  {
+   "name": "identifiable",
+   "passed": true,
+   "detail": "tap separates hollow from solid; needs 4 tap(s), budget 6"
+  },
+  {
+   "name": "solvable",
+   "passed": true,
+   "detail": "oracle flicks C with 0.9624 N*s -> x = 0.7998 m (band 0.780-0.820)"
+  }
+ ],
+ "oracle": {
+  "object": "C",
+  "impulse_Ns": 0.9624,
+  "predicted_x": 0.7998,
+  "solvable": true
+ },
+ "difficulty": {
+  "none": {
+   "success": false,
+   "correct_object": false,
+   "landed_in_band": false,
+   "error_m": 4.4265,
+   "probes_used": 0
+  },
+  "random": [
+   {
+    "success": false,
+    "correct_object": false,
+    "landed_in_band": false,
+    "error_m": 4.4265,
+    "probes_used": 6
+   },
+   {
+    "success": false,
+    "correct_object": true,
+    "landed_in_band": false,
+    "error_m": 0.072,
+    "probes_used": 6
+   },
+   {
+    "success": false,
+    "correct_object": false,
+    "landed_in_band": false,
+    "error_m": 4.4265,
+    "probes_used": 6
+   }
+  ],
+  "random_success_rate": 0.0,
+  "scripted": {
+   "success": false,
+   "correct_object": true,
+   "landed_in_band": false,
+   "error_m": -0.0223,
+   "probes_used": 5
+  },
+  "label": "hard"
+ },
+ "level_path": "levels/showcase/five-identical-cream-cubes-exactly-one-is.json",
+ "report_path": "levels/showcase/five-identical-cream-cubes-exactly-one-is.report.json"
+}

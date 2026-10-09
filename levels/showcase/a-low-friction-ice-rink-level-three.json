@@ -1,0 +1,64 @@
+{
+ "id": "a-low-friction-ice-rink-level-three",
+ "seed": 5740,
+ "objects": [
+  {
+   "id": "A",
+   "half": 0.04,
+   "color": "#d8d4c7",
+   "y": -0.35,
+   "hidden": {
+    "material": "metal",
+    "hollow": false,
+    "contents": "empty",
+    "friction": 0.15
+   }
+  },
+  {
+   "id": "B",
+   "half": 0.04,
+   "color": "#d8d4c7",
+   "y": 0.0,
+   "hidden": {
+    "material": "glass",
+    "hollow": false,
+    "contents": "empty",
+    "friction": 0.15
+   }
+  },
+  {
+   "id": "C",
+   "half": 0.04,
+   "color": "#d8d4c7",
+   "y": 0.35,
+   "hidden": {
+    "material": "wood",
+    "hollow": false,
+    "contents": "empty",
+    "friction": 0.15
+   }
+  }
+ ],
+ "task": {
+  "kind": "find_and_slide",
+  "target_x": 0.55,
+  "tol": 0.03,
+  "budget": 5,
+  "object_id": null,
+  "property": "heaviest"
+ },
+ "notes": {
+  "title": "Ice-Rink Heavyweight",
+  "description": "Three identical cream boxes glide on low-friction lanes, but their masses are approximately 3.994, 1.280 and 0.333 kg. Lift all three to identify the heaviest, then use the remaining probes to measure its sliding friction; an impulse of about 5.08 N\u00b7s sends it to 0.55 m.",
+  "prompt": "a low-friction ice-rink level: three identical boxes with very different masses, find the heaviest and land it just past half a metre",
+  "oracle": {
+   "object": "A",
+   "impulse_Ns": 5.0831,
+   "predicted_x": 0.5502,
+   "solvable": true
+  },
+  "rounds": 1,
+  "difficulty": "moderate",
+  "builder_model": "gpt-6.1-sol/medium"
+ }
+}

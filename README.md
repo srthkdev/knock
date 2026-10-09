@@ -94,6 +94,29 @@ uv run --group dev pytest -q
 
 The Codex agent uses your local `codex` login (`codex exec`). No API key is needed.
 
+## Build worlds from a prompt
+
+```bash
+uv run knock build "three identical boxes, one has a marble, far target"   # -> levels/custom/<slug>.json
+uv run knock build --batch scripts/prompts_showcase.txt --out levels/showcase
+```
+
+A world-builder agent (Codex CLI, same sandboxed `codex exec` call as the Codex agent) fills a
+`LevelSpec` (`src/knock/spec.py`, Pydantic, exported as a strict JSON schema) from the request.
+Each proposal is checked and the failures are fed back until it passes (default 4 rounds):
+
+| Check | Rule |
+|---|---|
+| solvable | the oracle lands the answer object in the band with a flick in range |
+| unique | find tasks: exactly one object has the property |
+| identifiable | tap tells hollow/solid; the rattler's first shake is >= 15 dB over floor and the loudest; heaviest/lightest differ by >= 25%; the budget covers the probes needed |
+| fair | find tasks: all objects look identical |
+
+Passing levels get a difficulty label from the none / random / scripted baselines
+(`easy`: a blind flick works, `moderate`/`tricky`: probing needed, `hard`: scripted fails).
+A `<slug>.report.json` with every round is written next to each level.
+
+
 ## Project layout
 
 ```
@@ -102,11 +125,14 @@ src/knock/
   world.py       MuJoCo scenes, probes, flick
   sound.py       modal synthesis, features, spectrograms
   env.py         episodes: budgeted probes, one scored flick, traces
-  oracle.py      ground-truth solver
+  oracle.py      ground-truth solver; proves levels are solvable
+  spec.py        LevelSpec: LLM-facing level schema with catalogue validation
+  builder.py     prompt -> validated level (Codex proposes, checks give feedback)
+  render.py      offscreen scene renders
   video.py       narrated MP4 replays
   webexport.py   static data for the web app
   agents/        baselines (Bayesian physics) and the Codex agent
-web/             Three.js / React viewer (in progress)
+web/             Three.js / React app: watch replays, play levels in-browser
 tests/           physics consistency, determinism, no-leak, solvability
 ```
 
@@ -115,7 +141,7 @@ tests/           physics consistency, determinism, no-leak, solvability
 - [x] MuJoCo world, probes, contact-driven sound, oracle-verified levels
 - [x] Baselines, Codex agent with taint detection, MP4 replays
 - [ ] Web app: watch agent replays in 3D, play levels yourself with in-browser MuJoCo
-- [ ] Prompt-to-level: describe a world, a builder agent creates it, validators check it's fair
+- [x] Prompt-to-level: describe a world, a builder agent creates it, validators check it's fair
 - [ ] FEM vibration modes and cited material constants, calibrated against real impact recordings
 - [ ] Rust audio engine shared by Python and the browser (PyO3 + WebAssembly)
 - [ ] Simulation-based-inference neural baseline (sbi / PyTorch)

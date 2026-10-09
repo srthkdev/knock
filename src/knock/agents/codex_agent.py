@@ -9,12 +9,9 @@ read, web search...), the episode is marked `tainted`: it could have read the hi
 from __future__ import annotations
 
 import json
-import subprocess
-import tempfile
-import time
 from pathlib import Path
 
-ALLOWED_ITEMS = {"agent_message", "reasoning"}
+from .codex_cli import ALLOWED_ITEMS, run_codex  # noqa: F401  (ALLOWED_ITEMS re-exported)
 
 INSTRUCTIONS = """\
 You are the agent in Knock, a physics lab. You cannot see hidden properties directly; you must
@@ -121,51 +118,9 @@ object, force_N (push only, else 0), impulse_Ns (flick only, else 0), reasoning 
 
     # ------------------------------------------------------------------ codex exec
     def _call(self, prompt, ids, image_paths, stem):
-        stem.parent.mkdir(parents=True, exist_ok=True)
-        with tempfile.TemporaryDirectory(prefix="knock-codex-") as tmp:
-            schema = Path(tmp) / "schema.json"
-            schema.write_text(json.dumps(_schema(ids)))
-            out = Path(tmp) / "out.json"
-            work = Path(tmp) / "work"
-            work.mkdir()
-            cmd = ["codex", "exec", "--ephemeral", "--skip-git-repo-check", "--ignore-user-config",
-                   "-s", "read-only", "-C", str(work), "-m", self.model,
-                   "-c", f'model_reasoning_effort="{self.effort}"',
-                   "--json", "--output-schema", str(schema), "-o", str(out)]
-            for p in image_paths:
-                cmd += ["-i", str(p)]
-            cmd.append("-")  # prompt from stdin
-            t0 = time.time()
-            proc = subprocess.run(cmd, input=prompt, capture_output=True, text=True, timeout=self.timeout_s)
-            secs = time.time() - t0
-            stem.with_suffix(".prompt.txt").write_text(prompt)
-            stem.with_suffix(".events.jsonl").write_text(proc.stdout)
-            if proc.stderr.strip():
-                stem.with_suffix(".stderr.txt").write_text(proc.stderr)
-            reply_txt = out.read_text() if out.exists() else ""
-        items, usage = self._scan(proc.stdout)
-        tainted = sorted(set(items) - ALLOWED_ITEMS)
-        if tainted:
+        res = run_codex(prompt, _schema(ids), model=self.model, effort=self.effort, image_paths=image_paths,
+                        timeout_s=self.timeout_s, log_stem=stem)
+        if res.tainted_items:
             self._meta["tainted"] = True
-        try:
-            reply = json.loads(reply_txt)
-        except json.JSONDecodeError:
-            reply = None
-        self._meta["calls"].append({"seconds": round(secs, 1), "exit": proc.returncode, "items": items,
-                                    "tainted_items": tainted, "usage": usage, "reply": reply})
-        stem.with_suffix(".reply.json").write_text(json.dumps(reply, indent=1))
-        return reply
-
-    @staticmethod
-    def _scan(stdout):
-        items, usage = [], None
-        for line in stdout.splitlines():
-            try:
-                ev = json.loads(line)
-            except json.JSONDecodeError:
-                continue
-            if ev.get("type") == "item.completed":
-                items.append(ev.get("item", {}).get("type", "?"))
-            if ev.get("type") == "turn.completed":
-                usage = ev.get("usage")
-        return items, usage
+        self._meta["calls"].append(res.meta())
+        return res.reply

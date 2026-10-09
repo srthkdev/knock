@@ -1,0 +1,150 @@
+{
+ "prompt": "a low-friction ice-rink level: three identical boxes with very different masses, find the heaviest and land it just past half a metre",
+ "slug": "a-low-friction-ice-rink-level-three",
+ "model": "gpt-6.1-sol",
+ "effort": "medium",
+ "passed": true,
+ "rounds": [
+  {
+   "round": 1,
+   "seconds": 14.1,
+   "spec": {
+    "title": "Ice-Rink Heavyweight",
+    "description": "Three identical cream boxes glide on low-friction lanes, but their masses are approximately 3.994, 1.280 and 0.333 kg. Lift all three to identify the heaviest, then use the remaining probes to measure its sliding friction; an impulse of about 5.08 N\u00b7s sends it to 0.55 m.",
+    "objects": [
+     {
+      "id": "A",
+      "edge_m": 0.08,
+      "color": "cream",
+      "material": "metal",
+      "hollow": false,
+      "contents": "empty",
+      "friction": 0.15
+     },
+     {
+      "id": "B",
+      "edge_m": 0.08,
+      "color": "cream",
+      "material": "glass",
+      "hollow": false,
+      "contents": "empty",
+      "friction": 0.15
+     },
+     {
+      "id": "C",
+      "edge_m": 0.08,
+      "color": "cream",
+      "material": "wood",
+      "hollow": false,
+      "contents": "empty",
+      "friction": 0.15
+     }
+    ],
+    "task": {
+     "kind": "find_and_slide",
+     "object_id": null,
+     "property": "heaviest",
+     "target_x": 0.55,
+     "tol": 0.03,
+     "budget": 5
+    }
+   },
+   "checks": [
+    {
+     "name": "unique",
+     "passed": true,
+     "detail": "heaviest: A (3.994 kg)"
+    },
+    {
+     "name": "fair",
+     "passed": true,
+     "detail": "all objects look identical"
+    },
+    {
+     "name": "identifiable",
+     "passed": true,
+     "detail": "lift separates by 212%; needs 3 lift(s), budget 5"
+    },
+    {
+     "name": "solvable",
+     "passed": true,
+     "detail": "oracle flicks A with 5.0831 N*s -> x = 0.5502 m (band 0.520-0.580)"
+    }
+   ],
+   "failures": [],
+   "tainted_items": [],
+   "passed": true
+  }
+ ],
+ "checks": [
+  {
+   "name": "unique",
+   "passed": true,
+   "detail": "heaviest: A (3.994 kg)"
+  },
+  {
+   "name": "fair",
+   "passed": true,
+   "detail": "all objects look identical"
+  },
+  {
+   "name": "identifiable",
+   "passed": true,
+   "detail": "lift separates by 212%; needs 3 lift(s), budget 5"
+  },
+  {
+   "name": "solvable",
+   "passed": true,
+   "detail": "oracle flicks A with 5.0831 N*s -> x = 0.5502 m (band 0.520-0.580)"
+  }
+ ],
+ "oracle": {
+  "object": "A",
+  "impulse_Ns": 5.0831,
+  "predicted_x": 0.5502,
+  "solvable": true
+ },
+ "difficulty": {
+  "none": {
+   "success": false,
+   "correct_object": true,
+   "landed_in_band": false,
+   "error_m": -0.5376,
+   "probes_used": 0
+  },
+  "random": [
+   {
+    "success": true,
+    "correct_object": true,
+    "landed_in_band": true,
+    "error_m": 0.0259,
+    "probes_used": 5
+   },
+   {
+    "success": false,
+    "correct_object": true,
+    "landed_in_band": false,
+    "error_m": 0.1337,
+    "probes_used": 5
+   },
+   {
+    "success": false,
+    "correct_object": false,
+    "landed_in_band": false,
+    "error_m": 1.5116,
+    "probes_used": 5
+   }
+  ],
+  "random_success_rate": 0.333,
+  "scripted": {
+   "success": true,
+   "correct_object": true,
+   "landed_in_band": true,
+   "error_m": 0.0259,
+   "probes_used": 4
+  },
+  "label": "moderate"
+ },
+ "level_path": "levels/showcase/a-low-friction-ice-rink-level-three.json",
+ "report_path": "levels/showcase/a-low-friction-ice-rink-level-three.report.json"
+}

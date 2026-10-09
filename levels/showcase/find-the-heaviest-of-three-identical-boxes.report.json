@@ -1,0 +1,150 @@
+{
+ "prompt": "find the heaviest of three identical boxes, where one hollow box hides a glued weight among solid wooden blocks",
+ "slug": "find-the-heaviest-of-three-identical-boxes",
+ "model": "gpt-6.1-sol",
+ "effort": "medium",
+ "passed": true,
+ "rounds": [
+  {
+   "round": 1,
+   "seconds": 15.2,
+   "spec": {
+    "title": "The Weighted Impostor",
+    "description": "Three identical cream boxes conceal two solid wooden blocks and a hollow glass box with a glued weight: the weighted box weighs 0.51694 kg, about 55% more than either 0.3328 kg wooden block. Lift all three to identify the heaviest, then probe its friction; an impulse of approximately 1.254 N\u00b7s stops it at 0.75 m.",
+    "objects": [
+     {
+      "id": "A",
+      "edge_m": 0.08,
+      "color": "cream",
+      "material": "wood",
+      "hollow": false,
+      "contents": "empty",
+      "friction": 0.25
+     },
+     {
+      "id": "B",
+      "edge_m": 0.08,
+      "color": "cream",
+      "material": "glass",
+      "hollow": true,
+      "contents": "weight",
+      "friction": 0.4
+     },
+     {
+      "id": "C",
+      "edge_m": 0.08,
+      "color": "cream",
+      "material": "wood",
+      "hollow": false,
+      "contents": "empty",
+      "friction": 0.55
+     }
+    ],
+    "task": {
+     "kind": "find_and_slide",
+     "object_id": null,
+     "property": "heaviest",
+     "target_x": 0.75,
+     "tol": 0.04,
+     "budget": 5
+    }
+   },
+   "checks": [
+    {
+     "name": "unique",
+     "passed": true,
+     "detail": "heaviest: B (0.517 kg)"
+    },
+    {
+     "name": "fair",
+     "passed": true,
+     "detail": "all objects look identical"
+    },
+    {
+     "name": "identifiable",
+     "passed": true,
+     "detail": "lift separates by 55%; needs 3 lift(s), budget 5"
+    },
+    {
+     "name": "solvable",
+     "passed": true,
+     "detail": "oracle flicks B with 1.2551 N*s -> x = 0.7506 m (band 0.710-0.790)"
+    }
+   ],
+   "failures": [],
+   "tainted_items": [],
+   "passed": true
+  }
+ ],
+ "checks": [
+  {
+   "name": "unique",
+   "passed": true,
+   "detail": "heaviest: B (0.517 kg)"
+  },
+  {
+   "name": "fair",
+   "passed": true,
+   "detail": "all objects look identical"
+  },
+  {
+   "name": "identifiable",
+   "passed": true,
+   "detail": "lift separates by 55%; needs 3 lift(s), budget 5"
+  },
+  {
+   "name": "solvable",
+   "passed": true,
+   "detail": "oracle flicks B with 1.2551 N*s -> x = 0.7506 m (band 0.710-0.790)"
+  }
+ ],
+ "oracle": {
+  "object": "B",
+  "impulse_Ns": 1.2551,
+  "predicted_x": 0.7506,
+  "solvable": true
+ },
+ "difficulty": {
+  "none": {
+   "success": false,
+   "correct_object": false,
+   "landed_in_band": false,
+   "error_m": 0.9552,
+   "probes_used": 0
+  },
+  "random": [
+   {
+    "success": false,
+    "correct_object": true,
+    "landed_in_band": false,
+    "error_m": -0.3563,
+    "probes_used": 5
+   },
+   {
+    "success": false,
+    "correct_object": false,
+    "landed_in_band": false,
+    "error_m": 0.815,
+    "probes_used": 5
+   },
+   {
+    "success": false,
+    "correct_object": true,
+    "landed_in_band": false,
+    "error_m": 0.0783,
+    "probes_used": 5
+   }
+  ],
+  "random_success_rate": 0.0,
+  "scripted": {
+   "success": true,
+   "correct_object": true,
+   "landed_in_band": true,
+   "error_m": 0.0102,
+   "probes_used": 4
+  },
+  "label": "tricky"
+ },
+ "level_path": "levels/showcase/find-the-heaviest-of-three-identical-boxes.json",
+ "report_path": "levels/showcase/find-the-heaviest-of-three-identical-boxes.report.json"
+}

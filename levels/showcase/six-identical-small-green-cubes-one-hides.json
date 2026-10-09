@@ -1,0 +1,100 @@
+{
+ "id": "six-identical-small-green-cubes-one-hides",
+ "seed": 78246,
+ "objects": [
+  {
+   "id": "A",
+   "half": 0.04,
+   "color": "#5b8e7d",
+   "y": -0.875,
+   "hidden": {
+    "material": "wood",
+    "hollow": true,
+    "contents": "weight",
+    "friction": 0.45
+   }
+  },
+  {
+   "id": "B",
+   "half": 0.04,
+   "color": "#5b8e7d",
+   "y": -0.5249999999999999,
+   "hidden": {
+    "material": "metal",
+    "hollow": true,
+    "contents": "empty",
+    "friction": 0.2
+   }
+  },
+  {
+   "id": "C",
+   "half": 0.04,
+   "color": "#5b8e7d",
+   "y": -0.175,
+   "hidden": {
+    "material": "plastic",
+    "hollow": true,
+    "contents": "marble",
+    "friction": 0.3
+   }
+  },
+  {
+   "id": "D",
+   "half": 0.04,
+   "color": "#5b8e7d",
+   "y": 0.175,
+   "hidden": {
+    "material": "glass",
+    "hollow": true,
+    "contents": "weight",
+    "friction": 0.55
+   }
+  },
+  {
+   "id": "E",
+   "half": 0.04,
+   "color": "#5b8e7d",
+   "y": 0.5249999999999999,
+   "hidden": {
+    "material": "wood",
+    "hollow": true,
+    "contents": "empty",
+    "friction": 0.25
+   }
+  },
+  {
+   "id": "F",
+   "half": 0.04,
+   "color": "#5b8e7d",
+   "y": 0.875,
+   "hidden": {
+    "material": "plastic",
+    "hollow": true,
+    "contents": "weight",
+    "friction": 0.4
+   }
+  }
+ ],
+ "task": {
+  "kind": "find_and_slide",
+  "target_x": 0.8,
+  "tol": 0.05,
+  "budget": 10,
+  "object_id": null,
+  "property": "rattles"
+ },
+ "notes": {
+  "title": "The Green Marble",
+  "description": "Six identical small green cubes conceal one loud marble rattler among empty and weighted shells. Shake to find it, then measure its mass and friction: its mass is 0.122454 kg, and an impulse of approximately 0.266 N\u00b7s slides it 0.802 m.",
+  "prompt": "six identical small green cubes, one hides a marble, the others are a mix of empty and weighted shells; generous budget",
+  "oracle": {
+   "object": "C",
+   "impulse_Ns": 0.2651,
+   "predicted_x": 0.8003,
+   "solvable": true
+  },
+  "rounds": 1,
+  "difficulty": "tricky",
+  "builder_model": "gpt-6.1-sol/medium"
+ }
+}

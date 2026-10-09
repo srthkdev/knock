@@ -1,0 +1,150 @@
+{
+ "prompt": "three identical boxes, one has a marble, far target",
+ "slug": "three-identical-boxes-one-has-a-marble",
+ "model": "gpt-6.1-sol",
+ "effort": "medium",
+ "passed": true,
+ "rounds": [
+  {
+   "round": 1,
+   "seconds": 15.5,
+   "spec": {
+    "title": "Marble at Long Range",
+    "description": "Three identical boxes hide one loose marble, a foam ball, and a glued weight. Shake up to two boxes to identify the rattler, then lift and push it to measure mass and friction; its approximately 0.1225 kg mass needs a 0.402 N\u00b7s flick to reach the far target.",
+    "objects": [
+     {
+      "id": "A",
+      "edge_m": 0.08,
+      "color": "cream",
+      "material": "plastic",
+      "hollow": true,
+      "contents": "foam",
+      "friction": 0.55
+     },
+     {
+      "id": "B",
+      "edge_m": 0.08,
+      "color": "cream",
+      "material": "plastic",
+      "hollow": true,
+      "contents": "marble",
+      "friction": 0.25
+     },
+     {
+      "id": "C",
+      "edge_m": 0.08,
+      "color": "cream",
+      "material": "wood",
+      "hollow": true,
+      "contents": "weight",
+      "friction": 0.4
+     }
+    ],
+    "task": {
+     "kind": "find_and_slide",
+     "object_id": null,
+     "property": "rattles",
+     "target_x": 2.2,
+     "tol": 0.12,
+     "budget": 4
+    }
+   },
+   "checks": [
+    {
+     "name": "unique",
+     "passed": true,
+     "detail": "objects with property 'rattles': ['B']"
+    },
+    {
+     "name": "fair",
+     "passed": true,
+     "detail": "all objects look identical"
+    },
+    {
+     "name": "identifiable",
+     "passed": true,
+     "detail": "shake loudness (dB) {'A': 7.7, 'B': 54.9, 'C': 6.5}; needs 2 shake(s), budget 4"
+    },
+    {
+     "name": "solvable",
+     "passed": true,
+     "detail": "oracle flicks B with 0.4018 N*s -> x = 2.1997 m (band 2.080-2.320)"
+    }
+   ],
+   "failures": [],
+   "tainted_items": [],
+   "passed": true
+  }
+ ],
+ "checks": [
+  {
+   "name": "unique",
+   "passed": true,
+   "detail": "objects with property 'rattles': ['B']"
+  },
+  {
+   "name": "fair",
+   "passed": true,
+   "detail": "all objects look identical"
+  },
+  {
+   "name": "identifiable",
+   "passed": true,
+   "detail": "shake loudness (dB) {'A': 7.7, 'B': 54.9, 'C': 6.5}; needs 2 shake(s), budget 4"
+  },
+  {
+   "name": "solvable",
+   "passed": true,
+   "detail": "oracle flicks B with 0.4018 N*s -> x = 2.1997 m (band 2.080-2.320)"
+  }
+ ],
+ "oracle": {
+  "object": "B",
+  "impulse_Ns": 0.4018,
+  "predicted_x": 2.1997,
+  "solvable": true
+ },
+ "difficulty": {
+  "none": {
+   "success": false,
+   "correct_object": false,
+   "landed_in_band": false,
+   "error_m": 15.0219,
+   "probes_used": 0
+  },
+  "random": [
+   {
+    "success": false,
+    "correct_object": false,
+    "landed_in_band": true,
+    "error_m": 0.0148,
+    "probes_used": 4
+   },
+   {
+    "success": false,
+    "correct_object": true,
+    "landed_in_band": false,
+    "error_m": 0.3507,
+    "probes_used": 4
+   },
+   {
+    "success": false,
+    "correct_object": true,
+    "landed_in_band": false,
+    "error_m": 2.5861,
+    "probes_used": 4
+   }
+  ],
+  "random_success_rate": 0.0,
+  "scripted": {
+   "success": true,
+   "correct_object": true,
+   "landed_in_band": true,
+   "error_m": -0.0511,
+   "probes_used": 4
+  },
+  "label": "tricky"
+ },
+ "level_path": "levels/showcase/three-identical-boxes-one-has-a-marble.json",
+ "report_path": "levels/showcase/three-identical-boxes-one-has-a-marble.report.json"
+}

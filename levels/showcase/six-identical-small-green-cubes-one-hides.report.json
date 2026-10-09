@@ -1,0 +1,177 @@
+{
+ "prompt": "six identical small green cubes, one hides a marble, the others are a mix of empty and weighted shells; generous budget",
+ "slug": "six-identical-small-green-cubes-one-hides",
+ "model": "gpt-6.1-sol",
+ "effort": "medium",
+ "passed": true,
+ "rounds": [
+  {
+   "round": 1,
+   "seconds": 16.9,
+   "spec": {
+    "title": "The Green Marble",
+    "description": "Six identical small green cubes conceal one loud marble rattler among empty and weighted shells. Shake to find it, then measure its mass and friction: its mass is 0.122454 kg, and an impulse of approximately 0.266 N\u00b7s slides it 0.802 m.",
+    "objects": [
+     {
+      "id": "A",
+      "edge_m": 0.08,
+      "color": "green",
+      "material": "wood",
+      "hollow": true,
+      "contents": "weight",
+      "friction": 0.45
+     },
+     {
+      "id": "B",
+      "edge_m": 0.08,
+      "color": "green",
+      "material": "metal",
+      "hollow": true,
+      "contents": "empty",
+      "friction": 0.2
+     },
+     {
+      "id": "C",
+      "edge_m": 0.08,
+      "color": "green",
+      "material": "plastic",
+      "hollow": true,
+      "contents": "marble",
+      "friction": 0.3
+     },
+     {
+      "id": "D",
+      "edge_m": 0.08,
+      "color": "green",
+      "material": "glass",
+      "hollow": true,
+      "contents": "weight",
+      "friction": 0.55
+     },
+     {
+      "id": "E",
+      "edge_m": 0.08,
+      "color": "green",
+      "material": "wood",
+      "hollow": true,
+      "contents": "empty",
+      "friction": 0.25
+     },
+     {
+      "id": "F",
+      "edge_m": 0.08,
+      "color": "green",
+      "material": "plastic",
+      "hollow": true,
+      "contents": "weight",
+      "friction": 0.4
+     }
+    ],
+    "task": {
+     "kind": "find_and_slide",
+     "object_id": null,
+     "property": "rattles",
+     "target_x": 0.8,
+     "tol": 0.05,
+     "budget": 10
+    }
+   },
+   "checks": [
+    {
+     "name": "unique",
+     "passed": true,
+     "detail": "objects with property 'rattles': ['C']"
+    },
+    {
+     "name": "fair",
+     "passed": true,
+     "detail": "all objects look identical"
+    },
+    {
+     "name": "identifiable",
+     "passed": true,
+     "detail": "shake loudness (dB) {'A': 5.6, 'B': 5.4, 'C': 23.7, 'D': 5.0, 'E': 5.3, 'F': 6.1}; needs 5 shake(s), budget 10"
+    },
+    {
+     "name": "solvable",
+     "passed": true,
+     "detail": "oracle flicks C with 0.2651 N*s -> x = 0.8003 m (band 0.750-0.850)"
+    }
+   ],
+   "failures": [],
+   "tainted_items": [],
+   "passed": true
+  }
+ ],
+ "checks": [
+  {
+   "name": "unique",
+   "passed": true,
+   "detail": "objects with property 'rattles': ['C']"
+  },
+  {
+   "name": "fair",
+   "passed": true,
+   "detail": "all objects look identical"
+  },
+  {
+   "name": "identifiable",
+   "passed": true,
+   "detail": "shake loudness (dB) {'A': 5.6, 'B': 5.4, 'C': 23.7, 'D': 5.0, 'E': 5.3, 'F': 6.1}; needs 5 shake(s), budget 10"
+  },
+  {
+   "name": "solvable",
+   "passed": true,
+   "detail": "oracle flicks C with 0.2651 N*s -> x = 0.8003 m (band 0.750-0.850)"
+  }
+ ],
+ "oracle": {
+  "object": "C",
+  "impulse_Ns": 0.2651,
+  "predicted_x": 0.8003,
+  "solvable": true
+ },
+ "difficulty": {
+  "none": {
+   "success": false,
+   "correct_object": false,
+   "landed_in_band": false,
+   "error_m": 0.2281,
+   "probes_used": 0
+  },
+  "random": [
+   {
+    "success": false,
+    "correct_object": false,
+    "landed_in_band": false,
+    "error_m": 26.2869,
+    "probes_used": 10
+   },
+   {
+    "success": false,
+    "correct_object": false,
+    "landed_in_band": false,
+    "error_m": 0.8887,
+    "probes_used": 10
+   },
+   {
+    "success": false,
+    "correct_object": true,
+    "landed_in_band": false,
+    "error_m": 0.1562,
+    "probes_used": 10
+   }
+  ],
+  "random_success_rate": 0.0,
+  "scripted": {
+   "success": true,
+   "correct_object": true,
+   "landed_in_band": true,
+   "error_m": 0.0053,
+   "probes_used": 7
+  },
+  "label": "tricky"
+ },
+ "level_path": "levels/showcase/six-identical-small-green-cubes-one-hides.json",
+ "report_path": "levels/showcase/six-identical-small-green-cubes-one-hides.report.json"
+}

@@ -1,0 +1,64 @@
+{
+ "id": "find-the-heaviest-of-three-identical-boxes",
+ "seed": 72914,
+ "objects": [
+  {
+   "id": "A",
+   "half": 0.04,
+   "color": "#d8d4c7",
+   "y": -0.35,
+   "hidden": {
+    "material": "wood",
+    "hollow": false,
+    "contents": "empty",
+    "friction": 0.25
+   }
+  },
+  {
+   "id": "B",
+   "half": 0.04,
+   "color": "#d8d4c7",
+   "y": 0.0,
+   "hidden": {
+    "material": "glass",
+    "hollow": true,
+    "contents": "weight",
+    "friction": 0.4
+   }
+  },
+  {
+   "id": "C",
+   "half": 0.04,
+   "color": "#d8d4c7",
+   "y": 0.35,
+   "hidden": {
+    "material": "wood",
+    "hollow": false,
+    "contents": "empty",
+    "friction": 0.55
+   }
+  }
+ ],
+ "task": {
+  "kind": "find_and_slide",
+  "target_x": 0.75,
+  "tol": 0.04,
+  "budget": 5,
+  "object_id": null,
+  "property": "heaviest"
+ },
+ "notes": {
+  "title": "The Weighted Impostor",
+  "description": "Three identical cream boxes conceal two solid wooden blocks and a hollow glass box with a glued weight: the weighted box weighs 0.51694 kg, about 55% more than either 0.3328 kg wooden block. Lift all three to identify the heaviest, then probe its friction; an impulse of approximately 1.254 N\u00b7s stops it at 0.75 m.",
+  "prompt": "find the heaviest of three identical boxes, where one hollow box hides a glued weight among solid wooden blocks",
+  "oracle": {
+   "object": "B",
+   "impulse_Ns": 1.2551,
+   "predicted_x": 0.7506,
+   "solvable": true
+  },
+  "rounds": 1,
+  "difficulty": "tricky",
+  "builder_model": "gpt-6.1-sol/medium"
+ }
+}

@@ -1,0 +1,64 @@
+{
+ "id": "three-identical-boxes-one-has-a-marble",
+ "seed": 89732,
+ "objects": [
+  {
+   "id": "A",
+   "half": 0.04,
+   "color": "#d8d4c7",
+   "y": -0.35,
+   "hidden": {
+    "material": "plastic",
+    "hollow": true,
+    "contents": "foam",
+    "friction": 0.55
+   }
+  },
+  {
+   "id": "B",
+   "half": 0.04,
+   "color": "#d8d4c7",
+   "y": 0.0,
+   "hidden": {
+    "material": "plastic",
+    "hollow": true,
+    "contents": "marble",
+    "friction": 0.25
+   }
+  },
+  {
+   "id": "C",
+   "half": 0.04,
+   "color": "#d8d4c7",
+   "y": 0.35,
+   "hidden": {
+    "material": "wood",
+    "hollow": true,
+    "contents": "weight",
+    "friction": 0.4
+   }
+  }
+ ],
+ "task": {
+  "kind": "find_and_slide",
+  "target_x": 2.2,
+  "tol": 0.12,
+  "budget": 4,
+  "object_id": null,
+  "property": "rattles"
+ },
+ "notes": {
+  "title": "Marble at Long Range",
+  "description": "Three identical boxes hide one loose marble, a foam ball, and a glued weight. Shake up to two boxes to identify the rattler, then lift and push it to measure mass and friction; its approximately 0.1225 kg mass needs a 0.402 N\u00b7s flick to reach the far target.",
+  "prompt": "three identical boxes, one has a marble, far target",
+  "oracle": {
+   "object": "B",
+   "impulse_Ns": 0.4018,
+   "predicted_x": 2.1997,
+   "solvable": true
+  },
+  "rounds": 1,
+  "difficulty": "tricky",
+  "builder_model": "gpt-6.1-sol/medium"
+ }
+}
