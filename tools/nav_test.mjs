@@ -1,0 +1,11 @@
+import { chromium } from 'playwright';
+const browser = await chromium.launch({ executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', headless: true, args: ['--use-angle=metal', '--enable-gpu', '--ignore-gpu-blocklist'] });
+const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+await page.goto('http://127.0.0.1:8765/#/build', { waitUntil: 'load' });
+await page.waitForTimeout(2500);
+await page.evaluate(() => { location.hash = '/play/two-red-boxes-one-full-of-beads' });
+await page.waitForTimeout(4000);
+const labels = await page.$$eval('div', ds => ds.filter(d => /^[AB]$/.test(d.textContent.trim()) && d.className.includes('rounded-full')).map(d => ({ t: d.textContent, vis: getComputedStyle(d.parentElement.parentElement).display, r: JSON.stringify(d.getBoundingClientRect()) })));
+console.log(JSON.stringify(labels, null, 1));
+await page.screenshot({ path: '/tmp/nav.png' });
+await browser.close();

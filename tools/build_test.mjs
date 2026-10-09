@@ -1,0 +1,22 @@
+import { chromium } from 'playwright';
+const browser = await chromium.launch({ executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', headless: true, args: ['--use-angle=metal', '--enable-gpu', '--ignore-gpu-blocklist'] });
+const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+const logs = [];
+page.on('pageerror', e => logs.push('PAGEERROR ' + e.message));
+page.on('console', m => { if (m.type() === 'error') logs.push(m.text().slice(0, 200)); });
+await page.goto('http://127.0.0.1:8765/#/build', { waitUntil: 'load' });
+await page.waitForTimeout(1500);
+await page.getByRole('button', { name: /two red boxes/ }).click();
+await page.getByRole('button', { name: 'Build world' }).click();
+const t0 = Date.now();
+await page.waitForFunction(() => /Play it|failed/.test(document.body.innerText), null, { timeout: 300000 });
+await page.waitForTimeout(3000);
+const reveal = page.getByRole('button', { name: /Reveal hidden truth/ });
+if (await reveal.count()) await reveal.click();
+await page.waitForTimeout(800);
+await page.screenshot({ path: '/tmp/build_done.png' });
+console.log('build seconds', ((Date.now() - t0) / 1000).toFixed(0));
+const play = page.getByRole('button', { name: 'Play it' });
+if (await play.count()) { await play.click(); await page.waitForTimeout(5000); await page.screenshot({ path: '/tmp/build_play.png' }); }
+console.log(JSON.stringify(logs));
+await browser.close();

@@ -157,6 +157,14 @@ def print_report(rep, level) -> None:
 
 
 @app.command()
+def serve(host: str = typer.Option("127.0.0.1"), port: int = typer.Option(8765)):
+    """Serve the web app and the build API (prompt -> playable level)."""
+    from .server import serve as _serve
+    console.print(f"Knock at http://{host}:{port}  (Build needs a local Codex login)")
+    _serve(host, port)
+
+
+@app.command()
 def build(prompt: Annotated[Optional[str], typer.Argument(help="natural-language level request")] = None,
           batch: Optional[Path] = typer.Option(None, help="file with one prompt per line (# comments allowed)"),
           out: str = typer.Option("levels/custom", help="output directory"),

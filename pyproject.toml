@@ -17,6 +17,8 @@ dependencies = [
     "torch>=2.14.1",
     "scikit-fem>=12.0.2",
     "sbi>=0.27.0",
+    "fastapi>=0.143.0",
+    "uvicorn[standard]>=0.54.0",
 ]
 
 [dependency-groups]

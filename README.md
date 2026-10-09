@@ -123,6 +123,8 @@ The Codex agent uses your local `codex` login (`codex exec`). No API key is need
 
 ## Build worlds from a prompt
 
+In the web app: `uv run knock serve`, open http://127.0.0.1:8765/#/build, type a world, and play it as soon as the builder agent passes validation (typically 15–30 s). From the terminal:
+
 ```bash
 uv run knock build "three identical boxes, one has a marble, far target"   # -> levels/custom/<slug>.json
 uv run knock build --batch scripts/prompts_showcase.txt --out levels/showcase
