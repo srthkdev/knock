@@ -96,7 +96,7 @@ flowchart LR
 ```
 
 - **Physics**: MuJoCo, deterministic. Sliding distances match Coulomb friction (`d = v²/2μg`) to within 0.3%, and the simulated mass of every object equals what the scale reports. The test suite enforces both.
-- **Sound** is not a sound effect library. MuJoCo reports every impact (a marble hitting a wall, a steel ball striking a face), and each impact excites the object's vibration modes. A rattle is a real marble bouncing around inside a real box.
+- **Sound** is not a sound effect library. MuJoCo reports every impact (a marble hitting a wall, a steel ball striking a face), and each impact excites the object's vibration modes. A rattle is a real marble bouncing around inside a real box. Each cube's vibration modes come from a **finite-element analysis** (scikit-fem, validated against a Rayleigh–Ritz reference to 0.05%), with material constants from engineering handbooks and damping fitted to real recordings (`materials.py` cites every number).
 - **Sound realism, honestly:** we checked our synthetic taps against 1,500 real impact recordings from [RealImpact](https://openaccess.thecvf.com/content/CVPR2023/html/Clarke_RealImpact_A_Dataset_of_Impact_Sound_Fields_for_Real_Objects_CVPR_2023_paper.html) (50 objects, 5 materials).
   - **Current gap:** real taps decay 2–4× faster and are about twice as bright, so a classifier trained only on our sounds is at chance on real ones.
   - **With damping refitted to the real data and a shorter room tail,** a ringing-vs-dull cutoff learned purely from synthetic sound scores 88% on real recordings (the ceiling is 90%).
@@ -183,6 +183,8 @@ src/knock/
   level.py       visible layout, hidden properties, tasks, generator
   world.py       MuJoCo scenes, probes, flick
   sound.py       modal synthesis, features, spectrograms (Rust backend + numpy fallback)
+  modal.py       FEM modal analysis of free cubes (build time) and mode-table lookup (runtime)
+  materials.py   sourced elastic constants, Rayleigh damping fitted to real recordings, Hertz contact times
   env.py         episodes: budgeted probes, one scored flick, traces
   oracle.py      ground-truth solver; proves levels are solvable
   spec.py        LevelSpec: LLM-facing level schema with catalogue validation
@@ -191,10 +193,10 @@ src/knock/
   render.py      offscreen scene renders
   video.py       narrated MP4 replays
   webexport.py   static data for the web app
-  agents/        baselines (Bayesian physics) and the Codex agent
+  agents/        baselines (Bayesian physics, sbi neural posterior) and the Codex agent
 crates/knock-audio/   Rust audio engine (PyO3 extension + WASM)
 web/             Three.js / React app: watch, play (in-browser MuJoCo), build
-tests/           physics consistency, determinism, no-leak, solvability, audio backend parity
+tests/           physics consistency, determinism, no-leak, solvability, FEM validation, audio parity
 ```
 
 ## Roadmap
@@ -203,6 +205,6 @@ tests/           physics consistency, determinism, no-leak, solvability, audio b
 - [x] Baselines, Codex agent with taint detection, MP4 replays
 - [x] Web app: watch agent replays in 3D, play levels yourself with in-browser MuJoCo
 - [x] Prompt-to-level: describe a world, a builder agent creates it, validators check it's fair
-- [ ] FEM vibration modes and cited material constants, calibrated against real impact recordings (RealImpact): in progress
+- [x] FEM vibration modes and cited material constants, damping calibrated against real impact recordings (RealImpact)
 - [x] Rust audio engine shared by Python and the browser (PyO3 + WebAssembly)
 - [x] Simulation-based-inference neural baseline (sbi / PyTorch): calibrated posteriors, 93% on held-out levels

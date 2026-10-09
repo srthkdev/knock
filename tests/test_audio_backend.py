@@ -10,7 +10,7 @@ import numpy as np
 import pytest
 
 from knock import sound, world
-from knock.agents.baselines import HOLLOW_PITCH_HZ
+from knock.agents.baselines import sounds_hollow
 from knock.level import Hidden, Obj
 from knock.materials import MATERIALS, WALL
 
@@ -67,7 +67,8 @@ def _peaks_agree(freqs, decay, gains, tau, isolated):
 def test_mode_frequencies_give_the_same_spectral_peaks(material):
     p = MATERIALS[material]
     freqs = np.array([310.0, 745.0, 1630.0, 3270.0, 6120.0])
-    _peaks_agree(freqs, p["a"] + p["b"] * freqs, 1 / np.arange(1, 6), p["tau"], range(5))
+    decay = 0.5 * (p["alpha"] + p["beta"] * (2 * np.pi * freqs) ** 2)  # Rayleigh damping (materials.py)
+    _peaks_agree(freqs, decay, 1 / np.arange(1, 6), p["tau"], range(5))
 
 
 def test_hollow_metal_modes_give_the_same_spectral_peaks():
@@ -123,8 +124,8 @@ def test_tap_features_agree_statistically(material, hollow):
 
 
 @pytest.mark.parametrize("name", ["rust", "python"])
-def test_tap_pitch_separates_hollow_from_solid(name):
-    # the single-threshold pitch cue is right ~98% of the time on either backend
+def test_tap_separates_hollow_from_solid(name):
+    # the FEM-based tap rule (baselines.sounds_hollow) is right ~97% of the time on either backend
     rng = np.random.default_rng(0)
     wrong = []
     with backend(name):
@@ -132,8 +133,8 @@ def test_tap_pitch_separates_hollow_from_solid(name):
             hollow = bool(i % 2)
             o = cube(str(rng.choice(list(MATERIALS))), hollow, half=float(rng.uniform(0.04, 0.07)))
             _, f = world.simulate_tap(o, seed=i)
-            if (f["dominant_pitch_hz"] > HOLLOW_PITCH_HZ) != hollow:
-                wrong.append((i, o.hidden.material, hollow, f["dominant_pitch_hz"]))
+            if sounds_hollow(f) != hollow:
+                wrong.append((i, o.hidden.material, hollow, f["dominant_pitch_hz"], f["loudness_db_over_floor"]))
     assert len(wrong) <= 6, wrong
 
 

@@ -53,6 +53,12 @@ pub fn synthesize(events: &[Event], freqs: &[f64], decay: &[f64], gains: &[f64],
         hits.push((i, pulse, amps));
     }
 
+    // No audible modes (e.g. a small solid cube whose FEM modes all lie above the band):
+    // only the contact click is heard.
+    if nm == 0 {
+        return out;
+    }
+
     // Sparse excitation: only samples under a contact pulse carry input. `row_of[i]` points at
     // that sample's per-mode input row (modes padded to a multiple of LANES).
     let nmp = nm.div_ceil(LANES) * LANES;
@@ -159,6 +165,14 @@ mod tests {
 
     fn tap() -> Vec<Event> {
         vec![Event { t: 0.1, impulse: 0.01, tau: 0.0005 }]
+    }
+
+    #[test]
+    fn no_modes_gives_click_only() {
+        let x = synthesize(&tap(), &[], &[], &[], 7, 0.5);
+        assert_eq!(x.len(), (0.5 * FS) as usize);
+        assert!(x.iter().any(|v| *v != 0.0), "contact click should still be audible");
+        assert!(x[..(0.09 * FS) as usize].iter().all(|v| *v == 0.0));
     }
 
     #[test]

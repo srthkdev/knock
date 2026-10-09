@@ -163,8 +163,18 @@ def test_identifiable_budget_too_small():
     assert not c.passed and "budget" in c.detail
 
 
-def test_identifiable_quiet_rattle_fails():
-    # a marble in a big metal box is often muffled; with this level seed its first shake is ~7 dB over floor
+def test_identifiable_quiet_rattle_fails(monkeypatch):
+    # a muffled rattle (first shake only ~7 dB over the floor) must not count as identifiable;
+    # the shake readings are stubbed so the check is tested independently of audio details
+    import numpy as np
+    from knock import world
+
+    def quiet_shake(o, seed=0):
+        feats = {"ring_time_s": 0.0, "distinct_hits": 0, "brightness_hz": 500, "dominant_pitch_hz": 300,
+                 "loudness_db_over_floor": 7.0 if o.hidden.contents == "marble" else 5.0}
+        return np.zeros(10), feats
+
+    monkeypatch.setattr(world, "simulate_shake", quiet_shake)
     d = spec_dict([obj("A", "metal", edge=0.14), obj("B", "metal", contents="marble", edge=0.14),
                    obj("C", "metal", contents="weight", edge=0.14)])
     c = check_identifiable(level_of(d, seed=0))

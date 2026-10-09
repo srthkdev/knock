@@ -83,16 +83,16 @@ def check_identifiable(level: Level) -> Check:
         return Check("identifiable", True, "slide task: nothing to identify")
     prop = t.property
     if prop in ("hollow", "solid"):
-        from .agents.baselines import HOLLOW_PITCH_HZ
+        from .agents.baselines import sounds_hollow
         need = n - 1  # tap all but one; the last is known by elimination
         wrong = []
         for o in level.objects:
             _, f = world.simulate_tap(o, seed=probe_seed(level, o.id, "tap", 0))
-            if (f["dominant_pitch_hz"] > HOLLOW_PITCH_HZ) != o.hidden.hollow:
-                wrong.append(f"{o.id} ({f['dominant_pitch_hz']} Hz)")
+            if sounds_hollow(f) != o.hidden.hollow:
+                wrong.append(f"{o.id} ({f['dominant_pitch_hz']} Hz, {f['loudness_db_over_floor']} dB)")
         if wrong:
-            return Check("identifiable", False, f"tap pitch misleads for {wrong} (hollow should ring above "
-                         f"{HOLLOW_PITCH_HZ} Hz, solid below); try other materials or sizes")
+            return Check("identifiable", False, f"tap misleads for {wrong} (hollow cubes ring loudly below ~4 kHz; "
+                         f"solid cubes give a high tick or a quiet click); try other materials or sizes")
         msg = f"tap separates hollow from solid; needs {need} tap(s), budget {t.budget}"
     elif prop == "rattles":
         need = n - 1
