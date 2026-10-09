@@ -5,3 +5,4 @@ out/
 tools/node_modules/
 *.egg-info/
 .claude/
+target/

@@ -1,0 +1,25 @@
+[package]
+name = "knock-audio"
+version = "0.1.0"
+edition = "2021"
+description = "Knock's sound engine: modal synthesis, room/mic model and acoustic features (Python + WASM)."
+license = "MIT"
+publish = false
+
+[lib]
+name = "knock_audio"
+crate-type = ["cdylib", "rlib"]
+
+[features]
+default = []
+python = ["dep:pyo3", "dep:numpy"]
+wasm = ["dep:wasm-bindgen"]
+
+[dependencies]
+rand = { version = "0.9", default-features = false, features = ["std"] }
+rand_distr = "0.5"
+rand_pcg = "0.9"
+realfft = "3.5"
+pyo3 = { version = "0.27", features = ["extension-module", "abi3-py312"], optional = true }
+numpy = { version = "0.27", optional = true }
+wasm-bindgen = { version = "0.2", optional = true }

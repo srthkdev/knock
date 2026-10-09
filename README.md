@@ -121,6 +121,35 @@ uv run --group dev pytest -q
 
 The Codex agent uses your local `codex` login (`codex exec`). No API key is needed.
 
+## Audio engine (Rust)
+
+Sound synthesis lives in one Rust crate, `crates/knock-audio`, used from Python and the browser:
+`synthesize` (modal resonator bank driven by contact events), `room_and_mic` (short room reverb
+with a `tail_s` parameter, default 0.01 s; mic gain jitter; absolute noise floor; optional grip
+rustle) and `features` (the acoustic summary agents see). All randomness comes from a PCG64 generator
+seeded with a u64, so a clip depends only on its inputs.
+
+- **Python**: optional. `uv sync --group rust` builds the `knock_audio` extension with maturin
+  (needs `cargo` on `PATH`). `knock.sound` uses it automatically when installed (~11x faster);
+  otherwise it falls back to numpy. Set `KNOCK_AUDIO=python` to use the numpy reference
+  implementation instead. The two backends agree statistically, and `features` agrees exactly
+  (`tests/test_audio_backend.py`).
+- **Browser**: rebuild the ES module in `web/public/wasm/` with
+  ```bash
+  wasm-pack build crates/knock-audio --target web --release --out-dir ../../web/public/wasm \
+      --out-name knock_audio --no-pack -- --features wasm && rm web/public/wasm/.gitignore
+  ```
+  ```js
+  import init, * as ka from "/wasm/knock_audio.js";
+  await init();
+  const x = ka.render_f32(events, freqs, decay, gains, 42n, 1.4, false, ka.reverb_tail_s()); // Float32Array
+  ```
+  `synthesize`, `room_and_mic` and `features` take Float64Array (`features_f32` takes Float32Array).
+  Events are flat `[t, J, tau, ...]` triples and seeds are `bigint`.
+- **Checks**: `cargo test -p knock-audio`, `cargo run --release --example bench -p knock-audio`, and
+  `uv run python scripts/bench_audio.py` (Rust vs numpy on 400 clips).
+
+
 ## Build worlds from a prompt
 
 In the web app: `uv run knock serve`, open http://127.0.0.1:8765/#/build, type a world, and play it as soon as the builder agent passes validation (typically 15–30 s). From the terminal:
@@ -152,17 +181,19 @@ A `<slug>.report.json` with every round is written next to each level.
 src/knock/
   level.py       visible layout, hidden properties, tasks, generator
   world.py       MuJoCo scenes, probes, flick
-  sound.py       modal synthesis, features, spectrograms
+  sound.py       modal synthesis, features, spectrograms (Rust backend + numpy fallback)
   env.py         episodes: budgeted probes, one scored flick, traces
   oracle.py      ground-truth solver; proves levels are solvable
   spec.py        LevelSpec: LLM-facing level schema with catalogue validation
   builder.py     prompt -> validated level (Codex proposes, checks give feedback)
+  server.py      local API for the web app (knock serve)
   render.py      offscreen scene renders
   video.py       narrated MP4 replays
   webexport.py   static data for the web app
   agents/        baselines (Bayesian physics) and the Codex agent
-web/             Three.js / React app: watch replays, play levels in-browser
-tests/           physics consistency, determinism, no-leak, solvability
+crates/knock-audio/   Rust audio engine (PyO3 extension + WASM)
+web/             Three.js / React app: watch, play (in-browser MuJoCo), build
+tests/           physics consistency, determinism, no-leak, solvability, audio backend parity
 ```
 
 ## Roadmap
@@ -172,5 +203,5 @@ tests/           physics consistency, determinism, no-leak, solvability
 - [x] Web app: watch agent replays in 3D, play levels yourself with in-browser MuJoCo
 - [x] Prompt-to-level: describe a world, a builder agent creates it, validators check it's fair
 - [ ] FEM vibration modes and cited material constants, calibrated against real impact recordings (RealImpact): in progress
-- [ ] Rust audio engine shared by Python and the browser (PyO3 + WebAssembly)
+- [x] Rust audio engine shared by Python and the browser (PyO3 + WebAssembly)
 - [ ] Simulation-based-inference neural baseline (sbi / PyTorch)

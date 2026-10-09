@@ -2,6 +2,12 @@ version = 1
 revision = 3
 requires-python = ">=3.12"
 
+[manifest]
+members = [
+    "knock",
+    "knock-audio",
+]
+
 [[package]]
 name = "absl-py"
 version = "2.5.1"
@@ -705,6 +711,9 @@ dev = [
     { name = "pytest" },
     { name = "scikit-learn" },
 ]
+rust = [
+    { name = "knock-audio" },
+]
 
 [package.metadata]
 requires-dist = [
@@ -729,6 +738,18 @@ dev = [
     { name = "pytest", specifier = ">=8" },
     { name = "scikit-learn", specifier = ">=1.5" },
 ]
+rust = [{ name = "knock-audio", editable = "crates/knock-audio" }]
+
+[[package]]
+name = "knock-audio"
+version = "0.1.0"
+source = { editable = "crates/knock-audio" }
+dependencies = [
+    { name = "numpy" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "numpy", specifier = ">=2.0" }]
 
 [[package]]
 name = "markdown"

@@ -26,6 +26,9 @@ dev = [
     "pytest>=8",
     "scikit-learn>=1.5",
 ]
+# Optional Rust audio engine (~11x faster sound synthesis): uv sync --group rust
+# Needs a Rust toolchain on PATH; without it knock falls back to the numpy implementation.
+rust = ["knock-audio"]
 
 [project.scripts]
 knock = "knock.cli:main"
@@ -33,3 +36,9 @@ knock = "knock.cli:main"
 [build-system]
 requires = ["uv_build>=0.8.22,<0.9.0"]
 build-backend = "uv_build"
+
+[tool.uv.workspace]
+members = ["crates/knock-audio"]
+
+[tool.uv.sources]
+knock-audio = { workspace = true }
