@@ -157,7 +157,7 @@ def main():
         index["levels"].append(export_level(lv, out))
         print("level", lv.id, flush=True)
     for run_dir in args.runs:
-        run = Path(run_dir).name
+        run = Path(run_dir).name.removeprefix("dev-")
         eps = {}
         for t in sorted(Path(run_dir).glob("*/trace.json")):
             eps[t.parent.name] = export_replay(json.loads(t.read_text()), run, out)

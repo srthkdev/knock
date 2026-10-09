@@ -42,25 +42,27 @@ The agent has a **probe budget**, then gets **one flick** that has to stop the r
 
 A slow push alone can't separate *heavy* from *sticky*. Weighing alone says nothing about friction. Good agents notice this and pick experiments that resolve it. Great ones save probes by reasoning: "A and B don't rattle, so it's C."
 
-## Results (dev set, 30 levels)
+## Results (Knock v0.2)
 
-| Agent | Solved | Picked the right cube | Notes |
-|---|---:|---:|---|
-| Oracle (knows the hidden values) | 30/30 | 30/30 | proves every level is solvable |
-| SBI neural baseline (PyTorch, `sbi`) | 27/30 | 30/30 | learned posterior + information-gain probing; 93% on 100 held-out levels when trained on matching audio (scripted: 89%), retraining for the v0.2 audio |
-| Scripted Bayesian baseline | 29/30 | 30/30 | identify by elimination, then lift + push |
-| **GPT-6.1 Sol** (Codex, high) | **26/30** | 27/30 | median miss on solved levels: **2.3 mm** |
-| **GPT-6 Luna** (Codex, high) | **10/30** | 29/30 | finds the cube, then gets the physics wrong |
-| Random probes | 7/30 | 26/30 | |
-| No probes | 0/30 | 21/30 | guessing doesn't work |
+Dev set: 30 oracle-verified levels. Held-out: 100 fresh levels, never used for tuning.
 
-**The two models fail in opposite ways.**
-- **Sol's physics is nearly perfect, but it sometimes mishears.** Three of its four failures were the wrong cube, yet its flicks still landed within 1.5 mm of where it aimed. It misread a tap or a shake, not the mechanics.
-- **Luna identifies the right cube 29 times out of 30, but solves only 10.** It spends probes weighing everything, skips measuring friction, and then guesses the impulse.
+| Agent | Dev solved | Right cube | Held-out solved | Notes |
+|---|---:|---:|---:|---|
+| Oracle (knows the hidden values) | 30/30 | 30/30 | 100/100 | proves every level is solvable |
+| Scripted Bayesian baseline | 29/30 | 30/30 | 90/100 | identify by elimination, then lift + push |
+| SBI neural baseline (PyTorch, `sbi`) | 28/30 | 30/30 | **91/100** | learned posterior (calibrated: 90% intervals cover 90–92%), probes by expected information gain |
+| **GPT-6.1 Sol** (Codex, high) | **26/30** | 27/30 | – | median miss on solved levels: **2 mm** |
+| **GPT-6 Luna** (Codex, high) | **15/30** | 24/30 | – | misses by 8–59 cm when it has the right cube |
+| Random probes | 7/30 | 26/30 | 20/100 | |
+| No probes | 0/30 | 21/30 | 4/100 | guessing doesn't work |
 
-Every Codex episode is checked for tool use. An agent that runs a shell command or reads a file is flagged as `tainted`, because it could have read the answer. **0 of 60 episodes were tainted.**
+**The two models fail in opposite ways, and this held across both versions (v0.1: Sol 26/30, Luna 10/30).**
+- **Sol's physics is nearly perfect; its hearing is the weak point.** Three of its four failures were the wrong cube, yet those flicks still landed 1–3 mm from where it aimed. It misread a tap or a shake, not the mechanics.
+- **Luna gets the cube mostly right and the physics wrong.** It weighs everything, often skips measuring friction, then guesses the impulse.
 
-Watch all 30 of Sol's episodes, narrated and with sound: [`assets/sol_all_levels.mp4`](assets/sol_all_levels.mp4) (9 min).
+Every Codex episode is checked for tool use. Any shell command or file read flags the episode as `tainted`, because it could have read the answer from the level files. **1 of 60 v0.2 episodes was flagged:** Luna ran `/bin/zsh -lc true` (a no-op that read nothing), and that episode failed anyway. Traces carry `benchmark_version`; v0.1 results are kept in the git history.
+
+Watch all 30 of Sol's v0.2 episodes, narrated and with sound: [`assets/sol_all_levels.mp4`](assets/sol_all_levels.mp4) (9 min).
 
 ## Web app
 
@@ -97,10 +99,9 @@ flowchart LR
 
 - **Physics**: MuJoCo, deterministic. Sliding distances match Coulomb friction (`d = v²/2μg`) to within 0.3%, and the simulated mass of every object equals what the scale reports. The test suite enforces both.
 - **Sound** is not a sound effect library. MuJoCo reports every impact (a marble hitting a wall, a steel ball striking a face), and each impact excites the object's vibration modes. A rattle is a real marble bouncing around inside a real box. Each cube's vibration modes come from a **finite-element analysis** (scikit-fem, validated against a Rayleigh–Ritz reference to 0.05%), with material constants from engineering handbooks and damping fitted to real recordings (`materials.py` cites every number).
-- **Sound realism, honestly:** we checked our synthetic taps against 1,500 real impact recordings from [RealImpact](https://openaccess.thecvf.com/content/CVPR2023/html/Clarke_RealImpact_A_Dataset_of_Impact_Sound_Fields_for_Real_Objects_CVPR_2023_paper.html) (50 objects, 5 materials).
-  - **Current gap:** real taps decay 2–4× faster and are about twice as bright, so a classifier trained only on our sounds is at chance on real ones.
-  - **With damping refitted to the real data and a shorter room tail,** a ringing-vs-dull cutoff learned purely from synthetic sound scores 88% on real recordings (the ceiling is 90%).
-  - **Next:** calibration and FEM vibration modes are in progress (see the roadmap).
+- **Sound realism, honestly:** we test our synthetic taps against 1,500 real impact recordings from [RealImpact](https://openaccess.thecvf.com/content/CVPR2023/html/Clarke_RealImpact_A_Dataset_of_Impact_Sound_Fields_for_Real_Objects_CVPR_2023_paper.html) (50 objects, 5 materials).
+  - **Decay transfers.** A ringing-vs-dull rule learned only from synthetic taps scores 90% (balanced) on the real recordings, matching the best rule tuned on the real data; v0.1 scored 65%. Damping was fitted to this same dataset, so this is calibration agreement rather than independent validation.
+  - **Timbre does not transfer yet.** Synthetic taps are about 2× darker than real ones (spectral centroid ~2 kHz vs ~4.5 kHz). A classifier that also uses brightness calls real wood and plastic "glass". Likely causes: real objects (bowls, utensils) have richer high-frequency content than 8–14 cm cubes, plus a 16-mode cap. This is the next audio milestone.
 - **Fairness**: hidden information never reaches the agent (tested). Every level is oracle-verified. Probe sounds depend only on the object, not on when you probe it.
 
 ## Quick start

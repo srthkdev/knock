@@ -142,6 +142,7 @@ class Episode:
         return {"flicked": o.id, **self.result}
 
     def save_trace(self, extra: dict | None = None):
-        trace = {"level": json.loads(self.level.to_json()), "history": self.history,
-                 "result": self.result, **(extra or {})}
+        from . import BENCHMARK_VERSION
+        trace = {"benchmark_version": BENCHMARK_VERSION, "level": json.loads(self.level.to_json()),
+                 "history": self.history, "result": self.result, **(extra or {})}
         (self.out / "trace.json").write_text(json.dumps(trace, indent=1, default=str))

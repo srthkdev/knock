@@ -281,13 +281,13 @@
     "L00000": {
      "success": true,
      "correct_object": true,
-     "error_m": 0.0069,
+     "error_m": 0.0065,
      "probes": 4
     },
     "L00001": {
      "success": false,
      "correct_object": false,
-     "error_m": -0.2754,
+     "error_m": 0.0011,
      "probes": 4
     },
     "L00002": {
@@ -299,13 +299,13 @@
     "L00003": {
      "success": false,
      "correct_object": true,
-     "error_m": 0.0763,
+     "error_m": 0.0963,
      "probes": 1
     },
     "L00004": {
-     "success": true,
-     "correct_object": true,
-     "error_m": -0.0011,
+     "success": false,
+     "correct_object": false,
+     "error_m": -0.0006,
      "probes": 4
     },
     "L00005": {
@@ -323,25 +323,25 @@
     "L00007": {
      "success": true,
      "correct_object": true,
-     "error_m": -0.0018,
+     "error_m": -0.0016,
      "probes": 3
     },
     "L00008": {
      "success": true,
      "correct_object": true,
-     "error_m": -0.0014,
+     "error_m": -0.0019,
      "probes": 3
     },
     "L00009": {
      "success": true,
      "correct_object": true,
-     "error_m": -0.0004,
+     "error_m": 0.0006,
      "probes": 4
     },
     "L00010": {
      "success": true,
      "correct_object": true,
-     "error_m": -0.0034,
+     "error_m": -0.0025,
      "probes": 4
     },
     "L00011": {
@@ -365,13 +365,13 @@
     "L00014": {
      "success": true,
      "correct_object": true,
-     "error_m": -0.0068,
+     "error_m": -0.0055,
      "probes": 4
     },
     "L00015": {
      "success": true,
      "correct_object": true,
-     "error_m": 0.0147,
+     "error_m": -0.0003,
      "probes": 1
     },
     "L00016": {
@@ -395,13 +395,13 @@
     "L00019": {
      "success": false,
      "correct_object": false,
-     "error_m": 0.0015,
+     "error_m": 0.0029,
      "probes": 4
     },
     "L00020": {
      "success": true,
      "correct_object": true,
-     "error_m": -0.032,
+     "error_m": -0.0254,
      "probes": 1
     },
     "L00021": {
@@ -423,9 +423,9 @@
      "probes": 2
     },
     "L00024": {
-     "success": false,
-     "correct_object": false,
-     "error_m": -0.0009,
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0001,
      "probes": 4
     },
     "L00025": {
@@ -437,13 +437,13 @@
     "L00026": {
      "success": true,
      "correct_object": true,
-     "error_m": 0.0017,
+     "error_m": 0.0008,
      "probes": 2
     },
     "L00027": {
      "success": true,
      "correct_object": true,
-     "error_m": -0.0027,
+     "error_m": -0.0018,
      "probes": 4
     },
     "L00028": {
@@ -464,18 +464,18 @@
    "run": "luna",
    "label": "GPT-6 Luna",
    "n": 30,
-   "solved": 10,
+   "solved": 15,
    "episodes": {
     "L00000": {
      "success": false,
-     "correct_object": true,
-     "error_m": -0.1182,
+     "correct_object": false,
+     "error_m": 0.0016,
      "probes": 4
     },
     "L00001": {
      "success": false,
-     "correct_object": true,
-     "error_m": 0.4887,
+     "correct_object": false,
+     "error_m": -0.0198,
      "probes": 4
     },
     "L00002": {
@@ -485,87 +485,87 @@
      "probes": 2
     },
     "L00003": {
-     "success": false,
+     "success": true,
      "correct_object": true,
-     "error_m": 0.195,
+     "error_m": 0.0387,
      "probes": 1
     },
     "L00004": {
-     "success": true,
+     "success": false,
      "correct_object": true,
-     "error_m": -0.0011,
-     "probes": 3
+     "error_m": -0.2211,
+     "probes": 4
     },
     "L00005": {
      "success": false,
      "correct_object": true,
-     "error_m": 0.3921,
+     "error_m": -0.356,
      "probes": 4
     },
     "L00006": {
      "success": false,
      "correct_object": true,
-     "error_m": 0.2174,
+     "error_m": 0.0751,
      "probes": 1
     },
     "L00007": {
      "success": true,
      "correct_object": true,
-     "error_m": -0.0011,
+     "error_m": -0.0124,
      "probes": 3
     },
     "L00008": {
      "success": true,
      "correct_object": true,
-     "error_m": -0.01,
+     "error_m": 0.0008,
      "probes": 3
     },
     "L00009": {
      "success": false,
      "correct_object": false,
      "error_m": -0.0015,
-     "probes": 3
+     "probes": 4
     },
     "L00010": {
-     "success": false,
+     "success": true,
      "correct_object": true,
-     "error_m": -0.6418,
+     "error_m": 0.0162,
      "probes": 4
     },
     "L00011": {
      "success": true,
      "correct_object": true,
-     "error_m": -0.0299,
+     "error_m": 0.0001,
      "probes": 3
     },
     "L00012": {
-     "success": true,
+     "success": false,
      "correct_object": true,
-     "error_m": 0.0282,
+     "error_m": -0.5918,
      "probes": 4
     },
     "L00013": {
-     "success": false,
+     "success": true,
      "correct_object": true,
-     "error_m": -0.6544,
-     "probes": 4
+     "error_m": 0.051,
+     "probes": 3
     },
     "L00014": {
      "success": false,
-     "correct_object": true,
-     "error_m": -0.0524,
+     "correct_object": false,
+     "error_m": 0.0758,
      "probes": 4
     },
     "L00015": {
-     "success": false,
+     "success": true,
      "correct_object": true,
-     "error_m": 0.0612,
+     "error_m": 0.0147,
      "probes": 1
     },
     "L00016": {
      "success": false,
      "correct_object": true,
-     "error_m": 0.1311,
+     "error_m": -0.1777,
      "probes": 3
     },
     "L00017": {
@@ -582,50 +582,50 @@
     },
     "L00019": {
      "success": false,
-     "correct_object": true,
-     "error_m": 0.4305,
+     "correct_object": false,
+     "error_m": -0.0135,
      "probes": 4
     },
     "L00020": {
-     "success": false,
+     "success": true,
      "correct_object": true,
-     "error_m": 1.4104,
+     "error_m": 0.0473,
      "probes": 1
     },
     "L00021": {
-     "success": false,
+     "success": true,
      "correct_object": true,
-     "error_m": -0.1438,
+     "error_m": -0.0031,
      "probes": 3
     },
     "L00022": {
      "success": true,
      "correct_object": true,
-     "error_m": -0.0079,
+     "error_m": -0.0132,
      "probes": 2
     },
     "L00023": {
-     "success": false,
+     "success": true,
      "correct_object": true,
-     "error_m": 0.2048,
+     "error_m": -0.001,
      "probes": 2
     },
     "L00024": {
      "success": false,
-     "correct_object": true,
-     "error_m": 0.6299,
+     "correct_object": false,
+     "error_m": -0.4113,
      "probes": 4
     },
     "L00025": {
      "success": false,
      "correct_object": true,
-     "error_m": 0.0833,
+     "error_m": 0.2429,
      "probes": 4
     },
     "L00026": {
-     "success": false,
+     "success": true,
      "correct_object": true,
-     "error_m": 0.5258,
+     "error_m": 0.0035,
      "probes": 2
     },
     "L00027": {
@@ -635,15 +635,203 @@
      "probes": 4
     },
     "L00028": {
-     "success": true,
+     "success": false,
      "correct_object": true,
-     "error_m": -0.0078,
+     "error_m": -0.2037,
      "probes": 4
     },
     "L00029": {
      "success": false,
      "correct_object": true,
      "error_m": 0.12,
+     "probes": 4
+    }
+   }
+  },
+  {
+   "run": "sbi",
+   "label": "SBI neural baseline",
+   "n": 30,
+   "solved": 28,
+   "episodes": {
+    "L00000": {
+     "success": true,
+     "correct_object": true,
+     "error_m": 0.0361,
+     "probes": 4
+    },
+    "L00001": {
+     "success": true,
+     "correct_object": true,
+     "error_m": 0.0219,
+     "probes": 4
+    },
+    "L00002": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0173,
+     "probes": 2
+    },
+    "L00003": {
+     "success": true,
+     "correct_object": true,
+     "error_m": 0.0078,
+     "probes": 1
+    },
+    "L00004": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0011,
+     "probes": 4
+    },
+    "L00005": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0257,
+     "probes": 4
+    },
+    "L00006": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0143,
+     "probes": 1
+    },
+    "L00007": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0153,
+     "probes": 3
+    },
+    "L00008": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0009,
+     "probes": 3
+    },
+    "L00009": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0034,
+     "probes": 4
+    },
+    "L00010": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0498,
+     "probes": 4
+    },
+    "L00011": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0424,
+     "probes": 3
+    },
+    "L00012": {
+     "success": true,
+     "correct_object": true,
+     "error_m": 0.014,
+     "probes": 4
+    },
+    "L00013": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0125,
+     "probes": 4
+    },
+    "L00014": {
+     "success": true,
+     "correct_object": true,
+     "error_m": 0.0237,
+     "probes": 4
+    },
+    "L00015": {
+     "success": true,
+     "correct_object": true,
+     "error_m": 0.0378,
+     "probes": 1
+    },
+    "L00016": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0008,
+     "probes": 3
+    },
+    "L00017": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0241,
+     "probes": 2
+    },
+    "L00018": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0174,
+     "probes": 4
+    },
+    "L00019": {
+     "success": true,
+     "correct_object": true,
+     "error_m": 0.0098,
+     "probes": 4
+    },
+    "L00020": {
+     "success": true,
+     "correct_object": true,
+     "error_m": 0.0022,
+     "probes": 1
+    },
+    "L00021": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0494,
+     "probes": 3
+    },
+    "L00022": {
+     "success": true,
+     "correct_object": true,
+     "error_m": 0.0121,
+     "probes": 2
+    },
+    "L00023": {
+     "success": true,
+     "correct_object": true,
+     "error_m": 0.0448,
+     "probes": 2
+    },
+    "L00024": {
+     "success": true,
+     "correct_object": true,
+     "error_m": 0.0107,
+     "probes": 4
+    },
+    "L00025": {
+     "success": false,
+     "correct_object": true,
+     "error_m": -0.0841,
+     "probes": 4
+    },
+    "L00026": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0029,
+     "probes": 2
+    },
+    "L00027": {
+     "success": false,
+     "correct_object": true,
+     "error_m": -0.0963,
+     "probes": 4
+    },
+    "L00028": {
+     "success": true,
+     "correct_object": true,
+     "error_m": 0.0115,
+     "probes": 4
+    },
+    "L00029": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0054,
      "probes": 4
     }
    }
