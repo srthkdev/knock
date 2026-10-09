@@ -21,6 +21,28 @@ uv run knock summary runs/*
 uv run --group dev pytest -q
 ```
 
+## Build worlds from a prompt
+
+```bash
+uv run knock build "three identical boxes, one has a marble, far target"   # -> levels/custom/<slug>.json
+uv run knock build --batch scripts/prompts_showcase.txt --out levels/showcase
+```
+
+A world-builder agent (Codex CLI, same sandboxed `codex exec` call as the Codex agent) fills a
+`LevelSpec` (`src/knock/spec.py`, Pydantic, exported as a strict JSON schema) from the request.
+Each proposal is checked and the failures are fed back until it passes (default 4 rounds):
+
+| Check | Rule |
+|---|---|
+| solvable | the oracle lands the answer object in the band with a flick in range |
+| unique | find tasks: exactly one object has the property |
+| identifiable | tap tells hollow/solid; the rattler's first shake is >= 15 dB over floor and the loudest; heaviest/lightest differ by >= 25%; the budget covers the probes needed |
+| fair | find tasks: all objects look identical |
+
+Passing levels get a difficulty label from the none / random / scripted baselines
+(`easy`: a blind flick works, `moderate`/`tricky`: probing needed, `hard`: scripted fails).
+A `<slug>.report.json` with every round is written next to each level.
+
 ## Agents
 
 | Agent | What it is |
@@ -41,6 +63,8 @@ src/knock/
   sound.py      modal synthesis, sound features, spectrograms
   env.py        episode: budgeted probes, one scored flick, traces
   oracle.py     ground-truth solver; proves levels are solvable
+  spec.py       LevelSpec: LLM-facing level schema with catalogue validation
+  builder.py    prompt -> validated level (Codex proposes, checks give feedback)
   render.py     offscreen scene renders
   agents/       baselines and the Codex agent
 tests/          physics consistency, determinism, no-leak, solvability

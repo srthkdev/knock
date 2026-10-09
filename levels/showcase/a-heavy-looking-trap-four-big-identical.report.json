@@ -1,0 +1,159 @@
+{
+ "prompt": "a heavy-looking trap: four big identical cubes, mostly metal, find the lightest one and send it to a medium target",
+ "slug": "a-heavy-looking-trap-four-big-identical",
+ "model": "gpt-6.1-sol",
+ "effort": "medium",
+ "passed": true,
+ "rounds": [
+  {
+   "round": 1,
+   "seconds": 21.8,
+   "spec": {
+    "title": "Heavy-Looking Trap",
+    "description": "Four big blue cubes conceal three metal bodies, but the lightest is a hollow metal shell carrying a glued weight: about 2.886 kg versus the next-lightest cube's 6.860 kg. Lift all four, measure the lightest cube's friction with a push, then flick it with about 5.42 N\u00b7s to reach the 1.0 m target.",
+    "objects": [
+     {
+      "id": "A",
+      "edge_m": 0.14,
+      "color": "blue",
+      "material": "metal",
+      "hollow": false,
+      "contents": "empty",
+      "friction": 0.45
+     },
+     {
+      "id": "B",
+      "edge_m": 0.14,
+      "color": "blue",
+      "material": "metal",
+      "hollow": false,
+      "contents": "empty",
+      "friction": 0.24
+     },
+     {
+      "id": "C",
+      "edge_m": 0.14,
+      "color": "blue",
+      "material": "metal",
+      "hollow": true,
+      "contents": "weight",
+      "friction": 0.18
+     },
+     {
+      "id": "D",
+      "edge_m": 0.14,
+      "color": "blue",
+      "material": "glass",
+      "hollow": false,
+      "contents": "empty",
+      "friction": 0.36
+     }
+    ],
+    "task": {
+     "kind": "find_and_slide",
+     "object_id": null,
+     "property": "lightest",
+     "target_x": 1.0,
+     "tol": 0.08,
+     "budget": 6
+    }
+   },
+   "checks": [
+    {
+     "name": "unique",
+     "passed": true,
+     "detail": "lightest: C (2.886 kg)"
+    },
+    {
+     "name": "fair",
+     "passed": true,
+     "detail": "all objects look identical"
+    },
+    {
+     "name": "identifiable",
+     "passed": true,
+     "detail": "lift separates by 138%; needs 4 lift(s), budget 6"
+    },
+    {
+     "name": "solvable",
+     "passed": true,
+     "detail": "oracle flicks C with 5.4219 N*s -> x = 0.9992 m (band 0.920-1.080)"
+    }
+   ],
+   "failures": [],
+   "tainted_items": [],
+   "passed": true
+  }
+ ],
+ "checks": [
+  {
+   "name": "unique",
+   "passed": true,
+   "detail": "lightest: C (2.886 kg)"
+  },
+  {
+   "name": "fair",
+   "passed": true,
+   "detail": "all objects look identical"
+  },
+  {
+   "name": "identifiable",
+   "passed": true,
+   "detail": "lift separates by 138%; needs 4 lift(s), budget 6"
+  },
+  {
+   "name": "solvable",
+   "passed": true,
+   "detail": "oracle flicks C with 5.4219 N*s -> x = 0.9992 m (band 0.920-1.080)"
+  }
+ ],
+ "oracle": {
+  "object": "C",
+  "impulse_Ns": 5.4219,
+  "predicted_x": 0.9992,
+  "solvable": true
+ },
+ "difficulty": {
+  "none": {
+   "success": false,
+   "correct_object": false,
+   "landed_in_band": false,
+   "error_m": -0.9843,
+   "probes_used": 0
+  },
+  "random": [
+   {
+    "success": true,
+    "correct_object": true,
+    "landed_in_band": true,
+    "error_m": -0.054,
+    "probes_used": 6
+   },
+   {
+    "success": false,
+    "correct_object": true,
+    "landed_in_band": false,
+    "error_m": -0.9582,
+    "probes_used": 6
+   },
+   {
+    "success": false,
+    "correct_object": false,
+    "landed_in_band": false,
+    "error_m": -0.9843,
+    "probes_used": 6
+   }
+  ],
+  "random_success_rate": 0.333,
+  "scripted": {
+   "success": true,
+   "correct_object": true,
+   "landed_in_band": true,
+   "error_m": -0.0265,
+   "probes_used": 5
+  },
+  "label": "moderate"
+ },
+ "level_path": "levels/showcase/a-heavy-looking-trap-four-big-identical.json",
+ "report_path": "levels/showcase/a-heavy-looking-trap-four-big-identical.report.json"
+}

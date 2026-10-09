@@ -1,0 +1,168 @@
+{
+ "prompt": "find the single solid block among four identical hollow boxes with very different frictions, far and narrow target",
+ "slug": "find-the-single-solid-block-among-four",
+ "model": "gpt-6.1-sol",
+ "effort": "medium",
+ "passed": true,
+ "rounds": [
+  {
+   "round": 1,
+   "seconds": 25.1,
+   "spec": {
+    "title": "One Solid, Four Shells",
+    "description": "Find the single solid block among four hollow boxes with widely varying friction, then reach the distant, narrow band. Tap up to four cubes, then lift and push the solid block to calibrate its flick; its mass is 0.86515 kg, requiring approximately 3.755 N\u00b7s.",
+    "objects": [
+     {
+      "id": "A",
+      "edge_m": 0.11,
+      "color": "cream",
+      "material": "metal",
+      "hollow": true,
+      "contents": "empty",
+      "friction": 0.15
+     },
+     {
+      "id": "B",
+      "edge_m": 0.11,
+      "color": "cream",
+      "material": "glass",
+      "hollow": true,
+      "contents": "foam",
+      "friction": 0.6
+     },
+     {
+      "id": "C",
+      "edge_m": 0.11,
+      "color": "cream",
+      "material": "wood",
+      "hollow": false,
+      "contents": "empty",
+      "friction": 0.4
+     },
+     {
+      "id": "D",
+      "edge_m": 0.11,
+      "color": "cream",
+      "material": "plastic",
+      "hollow": true,
+      "contents": "weight",
+      "friction": 0.23
+     },
+     {
+      "id": "E",
+      "edge_m": 0.11,
+      "color": "cream",
+      "material": "wood",
+      "hollow": true,
+      "contents": "empty",
+      "friction": 0.52
+     }
+    ],
+    "task": {
+     "kind": "find_and_slide",
+     "object_id": null,
+     "property": "solid",
+     "target_x": 2.4,
+     "tol": 0.05,
+     "budget": 6
+    }
+   },
+   "checks": [
+    {
+     "name": "unique",
+     "passed": true,
+     "detail": "objects with property 'solid': ['C']"
+    },
+    {
+     "name": "fair",
+     "passed": true,
+     "detail": "all objects look identical"
+    },
+    {
+     "name": "identifiable",
+     "passed": true,
+     "detail": "tap separates hollow from solid; needs 4 tap(s), budget 6"
+    },
+    {
+     "name": "solvable",
+     "passed": true,
+     "detail": "oracle flicks C with 3.756 N*s -> x = 2.4006 m (band 2.350-2.450)"
+    }
+   ],
+   "failures": [],
+   "tainted_items": [],
+   "passed": true
+  }
+ ],
+ "checks": [
+  {
+   "name": "unique",
+   "passed": true,
+   "detail": "objects with property 'solid': ['C']"
+  },
+  {
+   "name": "fair",
+   "passed": true,
+   "detail": "all objects look identical"
+  },
+  {
+   "name": "identifiable",
+   "passed": true,
+   "detail": "tap separates hollow from solid; needs 4 tap(s), budget 6"
+  },
+  {
+   "name": "solvable",
+   "passed": true,
+   "detail": "oracle flicks C with 3.756 N*s -> x = 2.4006 m (band 2.350-2.450)"
+  }
+ ],
+ "oracle": {
+  "object": "C",
+  "impulse_Ns": 3.756,
+  "predicted_x": 2.4006,
+  "solvable": true
+ },
+ "difficulty": {
+  "none": {
+   "success": false,
+   "correct_object": false,
+   "landed_in_band": false,
+   "error_m": 5.8309,
+   "probes_used": 0
+  },
+  "random": [
+   {
+    "success": false,
+    "correct_object": true,
+    "landed_in_band": false,
+    "error_m": 0.9608,
+    "probes_used": 6
+   },
+   {
+    "success": false,
+    "correct_object": false,
+    "landed_in_band": false,
+    "error_m": 3.7043,
+    "probes_used": 6
+   },
+   {
+    "success": false,
+    "correct_object": false,
+    "landed_in_band": false,
+    "error_m": -0.804,
+    "probes_used": 6
+   }
+  ],
+  "random_success_rate": 0.0,
+  "scripted": {
+   "success": false,
+   "correct_object": true,
+   "landed_in_band": false,
+   "error_m": 0.0538,
+   "probes_used": 5
+  },
+  "label": "hard"
+ },
+ "level_path": "levels/showcase/find-the-single-solid-block-among-four.json",
+ "report_path": "levels/showcase/find-the-single-solid-block-among-four.report.json"
+}

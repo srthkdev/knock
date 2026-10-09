@@ -1,0 +1,52 @@
+{
+ "id": "two-identical-red-boxes-one-rattles-with",
+ "seed": 33265,
+ "objects": [
+  {
+   "id": "A",
+   "half": 0.04,
+   "color": "#c8553d",
+   "y": -0.175,
+   "hidden": {
+    "material": "plastic",
+    "hollow": true,
+    "contents": "beads",
+    "friction": 0.3
+   }
+  },
+  {
+   "id": "B",
+   "half": 0.04,
+   "color": "#c8553d",
+   "y": 0.175,
+   "hidden": {
+    "material": "plastic",
+    "hollow": true,
+    "contents": "foam",
+    "friction": 0.45
+   }
+  }
+ ],
+ "task": {
+  "kind": "find_and_slide",
+  "target_x": 0.2,
+  "tol": 0.04,
+  "budget": 3,
+  "object_id": null,
+  "property": "rattles"
+ },
+ "notes": {
+  "title": "Beads or Foam",
+  "description": "Two identical small red plastic shells hide beads and a silent foam ball. Shake to identify the beads, then measure mass and friction before flicking: the 0.124 kg rattler needs about 0.134 N\u00b7s to reach the nearby target.",
+  "prompt": "two identical red boxes, one rattles with beads, the other has a silent foam ball inside; near target, small budget",
+  "oracle": {
+   "object": "A",
+   "impulse_Ns": 0.1346,
+   "predicted_x": 0.1999,
+   "solvable": true
+  },
+  "rounds": 1,
+  "difficulty": "moderate",
+  "builder_model": "gpt-6.1-sol/medium"
+ }
+}

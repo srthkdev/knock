@@ -1,0 +1,52 @@
+{
+ "id": "slide-a-big-slippery-glass-box-exactly",
+ "seed": 14253,
+ "objects": [
+  {
+   "id": "A",
+   "half": 0.07,
+   "color": "#2f6690",
+   "y": -0.175,
+   "hidden": {
+    "material": "glass",
+    "hollow": true,
+    "contents": "empty",
+    "friction": 0.15
+   }
+  },
+  {
+   "id": "B",
+   "half": 0.07,
+   "color": "#2f6690",
+   "y": 0.175,
+   "hidden": {
+    "material": "metal",
+    "hollow": true,
+    "contents": "weight",
+    "friction": 0.55
+   }
+  }
+ ],
+ "task": {
+  "kind": "slide",
+  "target_x": 1.0,
+  "tol": 0.02,
+  "budget": 1,
+  "object_id": "A",
+  "property": null
+ },
+ "notes": {
+  "title": "One-Metre Glass Glide",
+  "description": "Slide the large, slippery glass box A exactly one metre using one push probe to calibrate its sliding response. Its 0.84474 kg shell and friction coefficient of 0.15 require an impulse of approximately 1.449 N\u00b7s.",
+  "prompt": "slide a big slippery glass box exactly one metre, with only one probe allowed",
+  "oracle": {
+   "object": "A",
+   "impulse_Ns": 1.4493,
+   "predicted_x": 0.9998,
+   "solvable": true
+  },
+  "rounds": 1,
+  "difficulty": "tricky",
+  "builder_model": "gpt-6.1-sol/medium"
+ }
+}

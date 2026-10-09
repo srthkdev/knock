@@ -1,0 +1,141 @@
+{
+ "prompt": "slide a big slippery glass box exactly one metre, with only one probe allowed",
+ "slug": "slide-a-big-slippery-glass-box-exactly",
+ "model": "gpt-6.1-sol",
+ "effort": "medium",
+ "passed": true,
+ "rounds": [
+  {
+   "round": 1,
+   "seconds": 21.1,
+   "spec": {
+    "title": "One-Metre Glass Glide",
+    "description": "Slide the large, slippery glass box A exactly one metre using one push probe to calibrate its sliding response. Its 0.84474 kg shell and friction coefficient of 0.15 require an impulse of approximately 1.449 N\u00b7s.",
+    "objects": [
+     {
+      "id": "A",
+      "edge_m": 0.14,
+      "color": "blue",
+      "material": "glass",
+      "hollow": true,
+      "contents": "empty",
+      "friction": 0.15
+     },
+     {
+      "id": "B",
+      "edge_m": 0.14,
+      "color": "blue",
+      "material": "metal",
+      "hollow": true,
+      "contents": "weight",
+      "friction": 0.55
+     }
+    ],
+    "task": {
+     "kind": "slide",
+     "object_id": "A",
+     "property": null,
+     "target_x": 1.0,
+     "tol": 0.02,
+     "budget": 1
+    }
+   },
+   "checks": [
+    {
+     "name": "unique",
+     "passed": true,
+     "detail": "slide task names object A"
+    },
+    {
+     "name": "fair",
+     "passed": true,
+     "detail": "slide task: the object is named, looks may differ"
+    },
+    {
+     "name": "identifiable",
+     "passed": true,
+     "detail": "slide task: nothing to identify"
+    },
+    {
+     "name": "solvable",
+     "passed": true,
+     "detail": "oracle flicks A with 1.4493 N*s -> x = 0.9998 m (band 0.980-1.020)"
+    }
+   ],
+   "failures": [],
+   "tainted_items": [],
+   "passed": true
+  }
+ ],
+ "checks": [
+  {
+   "name": "unique",
+   "passed": true,
+   "detail": "slide task names object A"
+  },
+  {
+   "name": "fair",
+   "passed": true,
+   "detail": "slide task: the object is named, looks may differ"
+  },
+  {
+   "name": "identifiable",
+   "passed": true,
+   "detail": "slide task: nothing to identify"
+  },
+  {
+   "name": "solvable",
+   "passed": true,
+   "detail": "oracle flicks A with 1.4493 N*s -> x = 0.9998 m (band 0.980-1.020)"
+  }
+ ],
+ "oracle": {
+  "object": "A",
+  "impulse_Ns": 1.4493,
+  "predicted_x": 0.9998,
+  "solvable": true
+ },
+ "difficulty": {
+  "none": {
+   "success": false,
+   "correct_object": true,
+   "landed_in_band": false,
+   "error_m": 15.1878,
+   "probes_used": 0
+  },
+  "random": [
+   {
+    "success": false,
+    "correct_object": true,
+    "landed_in_band": false,
+    "error_m": 15.1878,
+    "probes_used": 1
+   },
+   {
+    "success": false,
+    "correct_object": true,
+    "landed_in_band": false,
+    "error_m": 11.878,
+    "probes_used": 1
+   },
+   {
+    "success": false,
+    "correct_object": true,
+    "landed_in_band": false,
+    "error_m": 14.7348,
+    "probes_used": 1
+   }
+  ],
+  "random_success_rate": 0.0,
+  "scripted": {
+   "success": true,
+   "correct_object": true,
+   "landed_in_band": true,
+   "error_m": -0.0178,
+   "probes_used": 1
+  },
+  "label": "tricky"
+ },
+ "level_path": "levels/showcase/slide-a-big-slippery-glass-box-exactly.json",
+ "report_path": "levels/showcase/slide-a-big-slippery-glass-box-exactly.report.json"
+}

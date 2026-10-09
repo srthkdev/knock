@@ -1,0 +1,12 @@
+# Knock world-builder showcase, one prompt per line.
+# Build with: uv run knock build --batch scripts/prompts_showcase.txt --out levels/showcase
+three identical boxes, one has a marble, far target
+five identical cream cubes; exactly one is hollow and the rest are solid wood, tight target band
+a heavy-looking trap: four big identical cubes, mostly metal, find the lightest one and send it to a medium target
+find the heaviest of three identical boxes, where one hollow box hides a glued weight among solid wooden blocks
+two identical red boxes, one rattles with beads, the other has a silent foam ball inside; near target, small budget
+find the single solid block among four identical hollow boxes with very different frictions, far and narrow target
+slide a big slippery glass box exactly one metre, with only one probe allowed
+six identical small green cubes, one hides a marble, the others are a mix of empty and weighted shells; generous budget
+a low-friction ice-rink level: three identical boxes with very different masses, find the heaviest and land it just past half a metre
+five big identical solid-looking metal boxes, one hides a marble, and the target is two metres away

@@ -1,0 +1,88 @@
+{
+ "id": "find-the-single-solid-block-among-four",
+ "seed": 61370,
+ "objects": [
+  {
+   "id": "A",
+   "half": 0.055,
+   "color": "#d8d4c7",
+   "y": -0.7,
+   "hidden": {
+    "material": "metal",
+    "hollow": true,
+    "contents": "empty",
+    "friction": 0.15
+   }
+  },
+  {
+   "id": "B",
+   "half": 0.055,
+   "color": "#d8d4c7",
+   "y": -0.35,
+   "hidden": {
+    "material": "glass",
+    "hollow": true,
+    "contents": "foam",
+    "friction": 0.6
+   }
+  },
+  {
+   "id": "C",
+   "half": 0.055,
+   "color": "#d8d4c7",
+   "y": 0.0,
+   "hidden": {
+    "material": "wood",
+    "hollow": false,
+    "contents": "empty",
+    "friction": 0.4
+   }
+  },
+  {
+   "id": "D",
+   "half": 0.055,
+   "color": "#d8d4c7",
+   "y": 0.35,
+   "hidden": {
+    "material": "plastic",
+    "hollow": true,
+    "contents": "weight",
+    "friction": 0.23
+   }
+  },
+  {
+   "id": "E",
+   "half": 0.055,
+   "color": "#d8d4c7",
+   "y": 0.7,
+   "hidden": {
+    "material": "wood",
+    "hollow": true,
+    "contents": "empty",
+    "friction": 0.52
+   }
+  }
+ ],
+ "task": {
+  "kind": "find_and_slide",
+  "target_x": 2.4,
+  "tol": 0.05,
+  "budget": 6,
+  "object_id": null,
+  "property": "solid"
+ },
+ "notes": {
+  "title": "One Solid, Four Shells",
+  "description": "Find the single solid block among four hollow boxes with widely varying friction, then reach the distant, narrow band. Tap up to four cubes, then lift and push the solid block to calibrate its flick; its mass is 0.86515 kg, requiring approximately 3.755 N\u00b7s.",
+  "prompt": "find the single solid block among four identical hollow boxes with very different frictions, far and narrow target",
+  "oracle": {
+   "object": "C",
+   "impulse_Ns": 3.756,
+   "predicted_x": 2.4006,
+   "solvable": true
+  },
+  "rounds": 1,
+  "difficulty": "hard",
+  "builder_model": "gpt-6.1-sol/medium"
+ }
+}

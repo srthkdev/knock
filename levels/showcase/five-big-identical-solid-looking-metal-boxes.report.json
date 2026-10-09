@@ -1,0 +1,168 @@
+{
+ "prompt": "five big identical solid-looking metal boxes, one hides a marble, and the target is two metres away",
+ "slug": "five-big-identical-solid-looking-metal-boxes",
+ "model": "gpt-6.1-sol",
+ "effort": "medium",
+ "passed": true,
+ "rounds": [
+  {
+   "round": 1,
+   "seconds": 24.9,
+   "spec": {
+    "title": "Marble in Metal",
+    "description": "Five large, identical metal boxes conceal one hollow box containing a marble. Use up to four taps to identify it, then lift and push to measure its mass and friction; its mass is 2.270 kg, and an impulse of approximately 5.507 N\u00b7s sends it two metres.",
+    "objects": [
+     {
+      "id": "A",
+      "edge_m": 0.13,
+      "color": "cream",
+      "material": "metal",
+      "hollow": false,
+      "contents": "empty",
+      "friction": 0.32
+     },
+     {
+      "id": "B",
+      "edge_m": 0.13,
+      "color": "cream",
+      "material": "metal",
+      "hollow": false,
+      "contents": "empty",
+      "friction": 0.55
+     },
+     {
+      "id": "C",
+      "edge_m": 0.13,
+      "color": "cream",
+      "material": "metal",
+      "hollow": true,
+      "contents": "marble",
+      "friction": 0.15
+     },
+     {
+      "id": "D",
+      "edge_m": 0.13,
+      "color": "cream",
+      "material": "metal",
+      "hollow": false,
+      "contents": "empty",
+      "friction": 0.21
+     },
+     {
+      "id": "E",
+      "edge_m": 0.13,
+      "color": "cream",
+      "material": "metal",
+      "hollow": false,
+      "contents": "empty",
+      "friction": 0.43
+     }
+    ],
+    "task": {
+     "kind": "find_and_slide",
+     "object_id": null,
+     "property": "hollow",
+     "target_x": 2.0,
+     "tol": 0.12,
+     "budget": 6
+    }
+   },
+   "checks": [
+    {
+     "name": "unique",
+     "passed": true,
+     "detail": "objects with property 'hollow': ['C']"
+    },
+    {
+     "name": "fair",
+     "passed": true,
+     "detail": "all objects look identical"
+    },
+    {
+     "name": "identifiable",
+     "passed": true,
+     "detail": "tap separates hollow from solid; needs 4 tap(s), budget 6"
+    },
+    {
+     "name": "solvable",
+     "passed": true,
+     "detail": "oracle flicks C with 5.5036 N*s -> x = 1.9996 m (band 1.880-2.120)"
+    }
+   ],
+   "failures": [],
+   "tainted_items": [],
+   "passed": true
+  }
+ ],
+ "checks": [
+  {
+   "name": "unique",
+   "passed": true,
+   "detail": "objects with property 'hollow': ['C']"
+  },
+  {
+   "name": "fair",
+   "passed": true,
+   "detail": "all objects look identical"
+  },
+  {
+   "name": "identifiable",
+   "passed": true,
+   "detail": "tap separates hollow from solid; needs 4 tap(s), budget 6"
+  },
+  {
+   "name": "solvable",
+   "passed": true,
+   "detail": "oracle flicks C with 5.5036 N*s -> x = 1.9996 m (band 1.880-2.120)"
+  }
+ ],
+ "oracle": {
+  "object": "C",
+  "impulse_Ns": 5.5036,
+  "predicted_x": 1.9996,
+  "solvable": true
+ },
+ "difficulty": {
+  "none": {
+   "success": false,
+   "correct_object": false,
+   "landed_in_band": false,
+   "error_m": -1.9703,
+   "probes_used": 0
+  },
+  "random": [
+   {
+    "success": false,
+    "correct_object": true,
+    "landed_in_band": false,
+    "error_m": 0.3764,
+    "probes_used": 6
+   },
+   {
+    "success": false,
+    "correct_object": false,
+    "landed_in_band": false,
+    "error_m": -1.9856,
+    "probes_used": 6
+   },
+   {
+    "success": true,
+    "correct_object": true,
+    "landed_in_band": true,
+    "error_m": 0.1199,
+    "probes_used": 6
+   }
+  ],
+  "random_success_rate": 0.333,
+  "scripted": {
+   "success": true,
+   "correct_object": true,
+   "landed_in_band": true,
+   "error_m": 0.1199,
+   "probes_used": 5
+  },
+  "label": "moderate"
+ },
+ "level_path": "levels/showcase/five-big-identical-solid-looking-metal-boxes.json",
+ "report_path": "levels/showcase/five-big-identical-solid-looking-metal-boxes.report.json"
+}

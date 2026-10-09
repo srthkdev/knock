@@ -1,0 +1,88 @@
+{
+ "id": "five-identical-cream-cubes-exactly-one-is",
+ "seed": 70266,
+ "objects": [
+  {
+   "id": "A",
+   "half": 0.055,
+   "color": "#d8d4c7",
+   "y": -0.7,
+   "hidden": {
+    "material": "wood",
+    "hollow": false,
+    "contents": "empty",
+    "friction": 0.25
+   }
+  },
+  {
+   "id": "B",
+   "half": 0.055,
+   "color": "#d8d4c7",
+   "y": -0.35,
+   "hidden": {
+    "material": "wood",
+    "hollow": false,
+    "contents": "empty",
+    "friction": 0.5
+   }
+  },
+  {
+   "id": "C",
+   "half": 0.055,
+   "color": "#d8d4c7",
+   "y": 0.0,
+   "hidden": {
+    "material": "wood",
+    "hollow": true,
+    "contents": "weight",
+    "friction": 0.4
+   }
+  },
+  {
+   "id": "D",
+   "half": 0.055,
+   "color": "#d8d4c7",
+   "y": 0.35,
+   "hidden": {
+    "material": "wood",
+    "hollow": false,
+    "contents": "empty",
+    "friction": 0.35
+   }
+  },
+  {
+   "id": "E",
+   "half": 0.055,
+   "color": "#d8d4c7",
+   "y": 0.7,
+   "hidden": {
+    "material": "wood",
+    "hollow": false,
+    "contents": "empty",
+    "friction": 0.6
+   }
+  }
+ ],
+ "task": {
+  "kind": "find_and_slide",
+  "target_x": 0.8,
+  "tol": 0.02,
+  "budget": 6,
+  "object_id": null,
+  "property": "hollow"
+ },
+ "notes": {
+  "title": "Cream Concealment",
+  "description": "Five identical cream cubes conceal one hollow wooden shell with a glued weight among four solid wooden blocks. Tap up to four cubes to identify the hollow one, then lift and push it to measure mass and friction; an impulse of approximately 0.962 N\u00b7s stops it at the tight 0.80 m target.",
+  "prompt": "five identical cream cubes; exactly one is hollow and the rest are solid wood, tight target band",
+  "oracle": {
+   "object": "C",
+   "impulse_Ns": 0.9624,
+   "predicted_x": 0.7998,
+   "solvable": true
+  },
+  "rounds": 1,
+  "difficulty": "hard",
+  "builder_model": "gpt-6.1-sol/medium"
+ }
+}

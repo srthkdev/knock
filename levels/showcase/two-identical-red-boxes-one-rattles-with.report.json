@@ -1,0 +1,141 @@
+{
+ "prompt": "two identical red boxes, one rattles with beads, the other has a silent foam ball inside; near target, small budget",
+ "slug": "two-identical-red-boxes-one-rattles-with",
+ "model": "gpt-6.1-sol",
+ "effort": "medium",
+ "passed": true,
+ "rounds": [
+  {
+   "round": 1,
+   "seconds": 17.3,
+   "spec": {
+    "title": "Beads or Foam",
+    "description": "Two identical small red plastic shells hide beads and a silent foam ball. Shake to identify the beads, then measure mass and friction before flicking: the 0.124 kg rattler needs about 0.134 N\u00b7s to reach the nearby target.",
+    "objects": [
+     {
+      "id": "A",
+      "edge_m": 0.08,
+      "color": "red",
+      "material": "plastic",
+      "hollow": true,
+      "contents": "beads",
+      "friction": 0.3
+     },
+     {
+      "id": "B",
+      "edge_m": 0.08,
+      "color": "red",
+      "material": "plastic",
+      "hollow": true,
+      "contents": "foam",
+      "friction": 0.45
+     }
+    ],
+    "task": {
+     "kind": "find_and_slide",
+     "object_id": null,
+     "property": "rattles",
+     "target_x": 0.2,
+     "tol": 0.04,
+     "budget": 3
+    }
+   },
+   "checks": [
+    {
+     "name": "unique",
+     "passed": true,
+     "detail": "objects with property 'rattles': ['A']"
+    },
+    {
+     "name": "fair",
+     "passed": true,
+     "detail": "all objects look identical"
+    },
+    {
+     "name": "identifiable",
+     "passed": true,
+     "detail": "shake loudness (dB) {'A': 40.3, 'B': 21.3}; needs 1 shake(s), budget 3"
+    },
+    {
+     "name": "solvable",
+     "passed": true,
+     "detail": "oracle flicks A with 0.1346 N*s -> x = 0.1999 m (band 0.160-0.240)"
+    }
+   ],
+   "failures": [],
+   "tainted_items": [],
+   "passed": true
+  }
+ ],
+ "checks": [
+  {
+   "name": "unique",
+   "passed": true,
+   "detail": "objects with property 'rattles': ['A']"
+  },
+  {
+   "name": "fair",
+   "passed": true,
+   "detail": "all objects look identical"
+  },
+  {
+   "name": "identifiable",
+   "passed": true,
+   "detail": "shake loudness (dB) {'A': 40.3, 'B': 21.3}; needs 1 shake(s), budget 3"
+  },
+  {
+   "name": "solvable",
+   "passed": true,
+   "detail": "oracle flicks A with 0.1346 N*s -> x = 0.1999 m (band 0.160-0.240)"
+  }
+ ],
+ "oracle": {
+  "object": "A",
+  "impulse_Ns": 0.1346,
+  "predicted_x": 0.1999,
+  "solvable": true
+ },
+ "difficulty": {
+  "none": {
+   "success": false,
+   "correct_object": true,
+   "landed_in_band": false,
+   "error_m": 2.1362,
+   "probes_used": 0
+  },
+  "random": [
+   {
+    "success": false,
+    "correct_object": true,
+    "landed_in_band": false,
+    "error_m": 0.0879,
+    "probes_used": 3
+   },
+   {
+    "success": true,
+    "correct_object": true,
+    "landed_in_band": true,
+    "error_m": -0.0186,
+    "probes_used": 3
+   },
+   {
+    "success": true,
+    "correct_object": true,
+    "landed_in_band": true,
+    "error_m": 0.0353,
+    "probes_used": 3
+   }
+  ],
+  "random_success_rate": 0.667,
+  "scripted": {
+   "success": true,
+   "correct_object": true,
+   "landed_in_band": true,
+   "error_m": -0.0131,
+   "probes_used": 3
+  },
+  "label": "moderate"
+ },
+ "level_path": "levels/showcase/two-identical-red-boxes-one-rattles-with.json",
+ "report_path": "levels/showcase/two-identical-red-boxes-one-rattles-with.report.json"
+}
