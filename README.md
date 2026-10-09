@@ -44,16 +44,39 @@ A slow push alone can't separate *heavy* from *sticky*. Weighing alone says noth
 
 ## Results (dev set, 30 levels)
 
-| Agent | Solved | Notes |
-|---|---:|---|
-| Oracle (knows the hidden values) | 30/30 | proves every level is solvable |
-| Scripted Bayesian baseline | 29/30 | identify by elimination, then lift + push |
-| **GPT-6.1 Sol** (Codex, high) | *running* | 10/12 so far, typically within a few mm |
-| **GPT-6 Luna** (Codex, high) | *running* | spends probes poorly, often never measures friction |
-| Random probes | 7/30 | |
-| No probes | 0/30 | guessing doesn't work |
+| Agent | Solved | Picked the right cube | Notes |
+|---|---:|---:|---|
+| Oracle (knows the hidden values) | 30/30 | 30/30 | proves every level is solvable |
+| Scripted Bayesian baseline | 29/30 | 30/30 | identify by elimination, then lift + push |
+| **GPT-6.1 Sol** (Codex, high) | **26/30** | 27/30 | median miss on solved levels: **2.3 mm** |
+| **GPT-6 Luna** (Codex, high) | **10/30** | 29/30 | finds the cube, then gets the physics wrong |
+| Random probes | 7/30 | 26/30 | |
+| No probes | 0/30 | 21/30 | guessing doesn't work |
 
-Every Codex episode is checked for tool use. An agent that runs a shell command or reads a file is flagged as `tainted`, because it could have read the answer. So far: zero tainted runs.
+**The two models fail in opposite ways.**
+- **Sol's physics is nearly perfect, but it sometimes mishears.** Three of its four failures were the wrong cube, yet its flicks still landed within 1.5 mm of where it aimed. It misread a tap or a shake, not the mechanics.
+- **Luna identifies the right cube 29 times out of 30, but solves only 10.** It spends probes weighing everything, skips measuring friction, and then guesses the impulse.
+
+Every Codex episode is checked for tool use. An agent that runs a shell command or reads a file is flagged as `tainted`, because it could have read the answer. **0 of 60 episodes were tainted.**
+
+Watch all 30 of Sol's episodes, narrated and with sound: [`assets/sol_all_levels.mp4`](assets/sol_all_levels.mp4) (9 min).
+
+## Web app
+
+<p align="center">
+  <img src="assets/webapp.gif" alt="Knock web app: watching GPT-6.1 Sol tap, weigh, push and flick in 3D, with its reasoning and the sounds it heard" width="800">
+</p>
+
+- **Watch** any agent's episode in 3D: a scrubbable timeline, the agent's reasoning typed out as it thinks, spectrograms of what it heard, the real probe sounds, and a translucent **ideal flick** ghost from the oracle racing the agent's cube.
+- **Play** the same levels yourself. Pushes and flicks run on **MuJoCo compiled to WebAssembly**, using the exact model files the benchmark uses. On 24 test objects, browser and Python results are identical to the bit (`web/scripts/parity.ts`). An optional lab notebook does the arithmetic once you've weighed and pushed.
+- **Leaderboard**: every level for every agent, one click from its replay.
+
+```bash
+cd web && npm install && npm run dev        # http://localhost:5173
+uv run python -m knock.webexport --runs runs/sol runs/luna runs/scripted   # refresh data after new runs
+```
+
+<p align="center"><img src="assets/screen-play.png" alt="Playing a level in the browser: lift, push, the lab notebook, and a solved flick" width="800"></p>
 
 ## How it works
 
@@ -73,6 +96,10 @@ flowchart LR
 
 - **Physics**: MuJoCo, deterministic. Sliding distances match Coulomb friction (`d = v²/2μg`) to within 0.3%, and the simulated mass of every object equals what the scale reports. The test suite enforces both.
 - **Sound** is not a sound effect library. MuJoCo reports every impact (a marble hitting a wall, a steel ball striking a face), and each impact excites the object's vibration modes. A rattle is a real marble bouncing around inside a real box.
+- **Sound realism, honestly:** we checked our synthetic taps against 1,500 real impact recordings from [RealImpact](https://openaccess.thecvf.com/content/CVPR2023/html/Clarke_RealImpact_A_Dataset_of_Impact_Sound_Fields_for_Real_Objects_CVPR_2023_paper.html) (50 objects, 5 materials).
+  - **Current gap:** real taps decay 2–4× faster and are about twice as bright, so a classifier trained only on our sounds is at chance on real ones.
+  - **With damping refitted to the real data and a shorter room tail,** a ringing-vs-dull cutoff learned purely from synthetic sound scores 88% on real recordings (the ceiling is 90%).
+  - **Next:** calibration and FEM vibration modes are in progress (see the roadmap).
 - **Fairness**: hidden information never reaches the agent (tested). Every level is oracle-verified. Probe sounds depend only on the object, not on when you probe it.
 
 ## Quick start
@@ -140,8 +167,8 @@ tests/           physics consistency, determinism, no-leak, solvability
 
 - [x] MuJoCo world, probes, contact-driven sound, oracle-verified levels
 - [x] Baselines, Codex agent with taint detection, MP4 replays
-- [ ] Web app: watch agent replays in 3D, play levels yourself with in-browser MuJoCo
+- [x] Web app: watch agent replays in 3D, play levels yourself with in-browser MuJoCo
 - [x] Prompt-to-level: describe a world, a builder agent creates it, validators check it's fair
-- [ ] FEM vibration modes and cited material constants, calibrated against real impact recordings
+- [ ] FEM vibration modes and cited material constants, calibrated against real impact recordings (RealImpact): in progress
 - [ ] Rust audio engine shared by Python and the browser (PyO3 + WebAssembly)
 - [ ] Simulation-based-inference neural baseline (sbi / PyTorch)

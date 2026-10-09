@@ -275,8 +275,8 @@
   {
    "run": "sol",
    "label": "GPT-6.1 Sol",
-   "n": 11,
-   "solved": 9,
+   "n": 30,
+   "solved": 26,
    "episodes": {
     "L00000": {
      "success": true,
@@ -343,14 +343,128 @@
      "correct_object": true,
      "error_m": -0.0034,
      "probes": 4
+    },
+    "L00011": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0014,
+     "probes": 3
+    },
+    "L00012": {
+     "success": true,
+     "correct_object": true,
+     "error_m": 0.0022,
+     "probes": 4
+    },
+    "L00013": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0006,
+     "probes": 4
+    },
+    "L00014": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0068,
+     "probes": 4
+    },
+    "L00015": {
+     "success": true,
+     "correct_object": true,
+     "error_m": 0.0147,
+     "probes": 1
+    },
+    "L00016": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0009,
+     "probes": 3
+    },
+    "L00017": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0013,
+     "probes": 2
+    },
+    "L00018": {
+     "success": true,
+     "correct_object": true,
+     "error_m": 0.002,
+     "probes": 4
+    },
+    "L00019": {
+     "success": false,
+     "correct_object": false,
+     "error_m": 0.0015,
+     "probes": 4
+    },
+    "L00020": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.032,
+     "probes": 1
+    },
+    "L00021": {
+     "success": true,
+     "correct_object": true,
+     "error_m": 0.0002,
+     "probes": 3
+    },
+    "L00022": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0026,
+     "probes": 2
+    },
+    "L00023": {
+     "success": true,
+     "correct_object": true,
+     "error_m": 0.005,
+     "probes": 2
+    },
+    "L00024": {
+     "success": false,
+     "correct_object": false,
+     "error_m": -0.0009,
+     "probes": 4
+    },
+    "L00025": {
+     "success": true,
+     "correct_object": true,
+     "error_m": 0.0024,
+     "probes": 4
+    },
+    "L00026": {
+     "success": true,
+     "correct_object": true,
+     "error_m": 0.0017,
+     "probes": 2
+    },
+    "L00027": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0027,
+     "probes": 4
+    },
+    "L00028": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.004,
+     "probes": 4
+    },
+    "L00029": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0034,
+     "probes": 4
     }
    }
   },
   {
    "run": "luna",
    "label": "GPT-6 Luna",
-   "n": 17,
-   "solved": 6,
+   "n": 30,
+   "solved": 10,
    "episodes": {
     "L00000": {
      "success": false,
@@ -453,6 +567,84 @@
      "correct_object": true,
      "error_m": 0.1311,
      "probes": 3
+    },
+    "L00017": {
+     "success": false,
+     "correct_object": true,
+     "error_m": -0.1956,
+     "probes": 2
+    },
+    "L00018": {
+     "success": true,
+     "correct_object": true,
+     "error_m": 0.0048,
+     "probes": 4
+    },
+    "L00019": {
+     "success": false,
+     "correct_object": true,
+     "error_m": 0.4305,
+     "probes": 4
+    },
+    "L00020": {
+     "success": false,
+     "correct_object": true,
+     "error_m": 1.4104,
+     "probes": 1
+    },
+    "L00021": {
+     "success": false,
+     "correct_object": true,
+     "error_m": -0.1438,
+     "probes": 3
+    },
+    "L00022": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0079,
+     "probes": 2
+    },
+    "L00023": {
+     "success": false,
+     "correct_object": true,
+     "error_m": 0.2048,
+     "probes": 2
+    },
+    "L00024": {
+     "success": false,
+     "correct_object": true,
+     "error_m": 0.6299,
+     "probes": 4
+    },
+    "L00025": {
+     "success": false,
+     "correct_object": true,
+     "error_m": 0.0833,
+     "probes": 4
+    },
+    "L00026": {
+     "success": false,
+     "correct_object": true,
+     "error_m": 0.5258,
+     "probes": 2
+    },
+    "L00027": {
+     "success": true,
+     "correct_object": true,
+     "error_m": 0.0014,
+     "probes": 4
+    },
+    "L00028": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0078,
+     "probes": 4
+    },
+    "L00029": {
+     "success": false,
+     "correct_object": true,
+     "error_m": 0.12,
+     "probes": 4
     }
    }
   },

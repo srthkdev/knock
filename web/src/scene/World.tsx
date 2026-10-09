@@ -68,7 +68,7 @@ function tableTexture() {
   const c = document.createElement('canvas')
   c.width = c.height = 1024
   const g = c.getContext('2d')!
-  g.fillStyle = '#e8e1d3'
+  g.fillStyle = '#d9d0bf'
   g.fillRect(0, 0, 1024, 1024)
   // subtle paper grain
   const img = g.getImageData(0, 0, 1024, 1024)
@@ -193,7 +193,7 @@ function Cube({ obj, frame, selected, hovered, onSelect, onHover, label = true }
     const c = new THREE.Color(obj.color)
     const hsl = { h: 0, s: 0, l: 0 }
     c.getHSL(hsl)
-    if (hsl.l > 0.66) c.setHSL(hsl.h, Math.max(hsl.s, 0.18), 0.52)
+    if (hsl.l > 0.66) c.setHSL(hsl.h, Math.max(hsl.s, 0.22), 0.5)
     return '#' + c.getHexString()
   }, [obj.color])
   return (
@@ -376,16 +376,16 @@ export function World({ level, frame, auto = false, selected, hovered, onSelect,
   const cam = cameraFor(level, framing)
   return (
     <Canvas shadows dpr={[1, 2]} camera={{ position: cam.eye.toArray(), fov: 34, near: 0.02, far: 40 }}
-      gl={{ antialias: false, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.05 }}
+      gl={{ antialias: false, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 0.88 }}
       onPointerMissed={() => onHover?.(null)}>
-      <color attach="background" args={['#f3f0e9']} />
-      <fog attach="fog" args={['#f3f0e9', 4, 11]} />
+      <color attach="background" args={['#ebe6dc']} />
+      <fog attach="fog" args={['#ebe6dc', 4.5, 12]} />
       <SoftShadows size={18} samples={12} focus={0.6} />
-      <ambientLight intensity={0.35} />
-      <directionalLight position={[-1.2, 3.2, 1.6]} intensity={2.3} castShadow shadow-mapSize={[2048, 2048]}
+      <ambientLight intensity={0.22} />
+      <directionalLight position={[-1.2, 3.2, 1.6]} intensity={2.0} castShadow shadow-mapSize={[2048, 2048]}
         shadow-camera-left={-2.5} shadow-camera-right={2.5} shadow-camera-top={2.5} shadow-camera-bottom={-2.5} shadow-bias={-0.0004} />
       <Environment resolution={256}>
-        <Lightformer form="rect" intensity={2.2} position={[0, 4, 0]} rotation={[Math.PI / 2, 0, 0]} scale={[6, 6, 1]} />
+        <Lightformer form="rect" intensity={1.4} position={[0, 4, 0]} rotation={[Math.PI / 2, 0, 0]} scale={[6, 6, 1]} />
         <Lightformer form="rect" intensity={1.2} position={[-4, 1.5, 2]} rotation={[0, Math.PI / 2, 0]} scale={[4, 2, 1]} />
         <Lightformer form="rect" intensity={0.8} color="#ffd9c7" position={[4, 1, -2]} rotation={[0, -Math.PI / 2, 0]} scale={[4, 2, 1]} />
       </Environment>
