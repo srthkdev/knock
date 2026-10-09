@@ -2,6 +2,7 @@
 import numpy as np
 from scipy.signal import butter, lfilter, sosfilt
 
+from . import modal
 from .materials import MATERIALS
 
 FS = 44100
@@ -9,34 +10,32 @@ REF_LEVEL = 1e-3  # typical rms of a tap at the mic; sets the absolute noise flo
 
 
 def modes_for(material, size, hollow, rng, wall, n=16):
-    """(freqs, decay_rates, gains) for a cube of edge `size` metres."""
+    """(freqs Hz, amplitude decay rates 1/s, gains) of a free cube of edge `size` metres.
+
+    Frequencies: FEM table of the unit cube (`knock.modal`, precomputed in data/modes.npz) scaled by
+    sqrt(E/rho)/size, interpolated in Poisson ratio and, for hollow cubes, wall/edge ratio.
+    Damping: Rayleigh, d = 0.5*(alpha + beta*w^2), material constants from `materials.py`.
+    Gains: |normal mode displacement| at the struck point of the -x face (mass-normalised modes),
+    for a strike height drawn uniformly in the striker's range (+-0.4 half edge); scaled so the
+    strongest mode has gain 1. Each frequency gets a +-1% perturbation for manufacturing tolerance
+    (this also splits the cube's exactly degenerate modes, as in any real object).
+
+    Solid cubes are stiff: their lowest mode is f = 0.28*sqrt(E/rho)/L (3-5 kHz for plastic,
+    9-19 kHz for wood, steel and glass at 8-14 cm), so a tap on a solid cube is a short, bright
+    tick; modes above 20 kHz are inaudible and dropped. No table or floor response is added.
+    """
     p = MATERIALS[material]
-    freqs, gains = [], []
-    if hollow:
-        # thin-plate bending modes of the walls
-        k = (np.pi / 2) * wall * p["c"] / np.sqrt(12)
-        for m in range(1, 6):
-            for n_ in range(1, 6):
-                aspect = rng.uniform(0.85, 1.15)
-                freqs.append(k * ((m / size) ** 2 + (n_ / (size * aspect)) ** 2))
-                gains.append(1.0 / (m * n_))
-    else:
-        # solid block: stiff, high, fast-damped modes plus a low thump into the table
-        f0 = p["c"] / (2 * size)
-        for i in range(1, 8):
-            freqs.append(f0 * i * rng.uniform(0.97, 1.03))
-            gains.append(0.6 / i)
-        freqs.append(rng.uniform(120, 220))
-        gains.append(1.5)
-    freqs = np.array(freqs) * rng.uniform(0.98, 1.02, len(freqs))
-    gains = np.array(gains)
-    keep = (freqs > 60) & (freqs < 16000)
+    f_hat, G = modal.normalised_modes(p["nu"], wall / size if hollow else None)
+    z = rng.uniform(modal.STRIKE_Z[0], modal.STRIKE_Z[-1])
+    gains = np.array([np.interp(z, modal.STRIKE_Z, g) for g in G])
+    freqs = f_hat * np.sqrt(p["E"] / p["density"]) / size * rng.uniform(0.99, 1.01, len(f_hat))
+    keep = (freqs > 20) & (freqs < min(20000, 0.45 * FS)) & (gains > 1e-3 * gains.max(initial=0))
     freqs, gains = freqs[keep], gains[keep]
     order = np.argsort(freqs)[:n]
     freqs, gains = freqs[order], gains[order]
-    decay = p["a"] + p["b"] * freqs
-    if not hollow:
-        decay = decay * 4.0
+    gains = gains / gains.max(initial=1e-12)
+    w = 2 * np.pi * freqs
+    decay = 0.5 * (p["alpha"] + p["beta"] * w ** 2)
     return freqs, decay, gains
 
 

@@ -8,6 +8,8 @@ Objects in a level look identical, but differ in hidden mass, friction, material
 
 - Physics: MuJoCo (deterministic; masses and friction match textbook Coulomb physics to <1%).
 - Sound: contact events from MuJoCo drive modal synthesis, so taps and rattles come from the simulation.
+  Cube modes come from a finite-element modal analysis (scikit-fem, precomputed in `src/knock/data/modes.npz`
+  by `scripts/build_modes.py`), material constants and damping from cited sources (`materials.py`).
 - Every level is checked by an oracle that knows the hidden values: all levels are solvable.
 
 ## Quick start
@@ -39,6 +41,8 @@ src/knock/
   level.py      visible layout, hidden properties, tasks, level generator
   world.py      MuJoCo scenes, probes, flick
   sound.py      modal synthesis, sound features, spectrograms
+  modal.py      FEM modal analysis of free cubes (build time) and mode-table lookup (runtime)
+  materials.py  sourced elastic constants, Rayleigh damping, Hertz contact times
   env.py        episode: budgeted probes, one scored flick, traces
   oracle.py     ground-truth solver; proves levels are solvable
   render.py     offscreen scene renders

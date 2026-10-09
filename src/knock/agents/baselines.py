@@ -17,8 +17,34 @@ from ..level import FLICK_RANGE, PUSH_RANGE, Hidden, Obj, _random_hidden
 
 G = 9.81
 N_SAMPLES = 4000
-HOLLOW_PITCH_HZ = 250
+# Tap classifier (FEM modes, see knock.modal). A hollow cube's thin walls ring loudly from 0.3-3 kHz
+# upward; a solid cube's lowest mode is 0.28*sqrt(E/rho)/L (>3.9 kHz plastic, >8 kHz wood, >10 kHz
+# steel/glass, and the lowest ones are not excited by a tap at the face centre line), so a solid cube
+# gives a high tick, or only a quiet click when its modes are above 20 kHz or heavily damped (wood).
+# Thresholds from 240 measured taps (4 materials x hollow/solid x 30, edges 8-14 cm):
+#   hollow: loudness >= 25 dB; pitch 0.3-4 kHz, except glass (flat damping), whose strongest
+#           mode is often 4-12 kHz, at loudness >= 31 dB
+#   solid:  loudness <= 18 dB (click only), or pitch > 13 kHz (steel, glass),
+#           or 4-7 kHz at loudness <= 36 dB (plastic)
+# Error 0.8% on those taps, 3% on 200 fresh ones; the 0.97/0.03 likelihood below reflects that.
+HOLLOW_MAX_PITCH_HZ = 4000  # below this any clear resonance means hollow
+HOLLOW_LOUD_MAX_PITCH_HZ = 13000  # up to this a loud resonance means hollow
+HOLLOW_MIN_LOUDNESS_DB = 22
+HOLLOW_LOUD_DB = 33
+
+
+def sounds_hollow(feats):
+    pitch, loud = feats["dominant_pitch_hz"], feats["loudness_db_over_floor"]
+    if loud <= HOLLOW_MIN_LOUDNESS_DB:
+        return False
+    return pitch < HOLLOW_MAX_PITCH_HZ or (pitch < HOLLOW_LOUD_MAX_PITCH_HZ and loud > HOLLOW_LOUD_DB)
+
+
 RATTLE = ("marble", "beads")
+
+
+def sounds_hollow(feats):
+    return feats["dominant_pitch_hz"] < HOLLOW_MAX_PITCH_HZ and feats["loudness_db_over_floor"] > HOLLOW_MIN_LOUDNESS_DB
 
 
 def is_rattle(feats):
@@ -70,7 +96,7 @@ class Belief:
             else:
                 self.logw += -0.5 * ((obs["moved_mm"] - s) / sd) ** 2
         elif p == "tap":
-            hollow = obs["sound"]["dominant_pitch_hz"] > HOLLOW_PITCH_HZ
+            hollow = sounds_hollow(obs["sound"])
             self.logw += np.log(np.where(self.hollow == hollow, 0.97, 0.03))
         elif p == "shake":
             r = is_rattle(obs["sound"])
