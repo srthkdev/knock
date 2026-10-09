@@ -74,12 +74,35 @@ def scene_xml(level: Level) -> str:
         <light pos="0.3 -0.8 2.4" dir="0 0.3 -1" diffuse="0.75 0.75 0.75" castshadow="true"/>
         <geom type="plane" size="3 3 .1" material="table"/>
         {''.join(lanes)}
-        <geom type="box" pos="{t.target_x} 0 0.0009" size="{t.tol} {span} 0.0006" rgba="0.30 0.72 0.52 0.5"/>
+        <geom type="box" pos="{t.target_x} 0 0.0016" size="{t.tol} {span} 0.0004" rgba="0.30 0.72 0.52 0.5"/>
         <geom type="box" pos="0 0 0.0008" size="0.003 {span} 0.0005" rgba="0.3 0.3 0.3 1"/>
         {''.join(bodies)}
         <body name="striker" mocap="true" pos="0 0 -1"><geom type="sphere" size="0.012" rgba="0.75 0.76 0.8 1" material="obj"/></body>
-        <camera name="cam" pos="-0.62 -1.30 0.92" xyaxes="0.90 -0.43 0 0.21 0.45 0.87"/>
+        <camera name="cam" pos="{_cam_pos(level)}" xyaxes="{_cam_axes(level)}"/>
       </worldbody></mujoco>"""
+
+
+def _cam_frame(level: Level):
+    """Camera that frames the start line, every lane and the target band."""
+    far = max(level.task.target_x + level.task.tol, 0.6)
+    look = np.array([far * 0.5, 0.0, 0.0])
+    dist = 1.25 + 0.75 * far
+    eye = look + dist * np.array([-0.52, -0.62, 0.58])
+    fwd = look - eye
+    fwd /= np.linalg.norm(fwd)
+    right = np.cross(fwd, [0, 0, 1.0])
+    right /= np.linalg.norm(right)
+    up = np.cross(right, fwd)
+    return eye, right, up
+
+
+def _cam_pos(level):
+    return " ".join(f"{v:.4f}" for v in _cam_frame(level)[0])
+
+
+def _cam_axes(level):
+    _, r, u = _cam_frame(level)
+    return " ".join(f"{v:.4f}" for v in (*r, *u))
 
 
 class Stage:
@@ -166,7 +189,9 @@ def draw_panel(title: str, level: Level, st: PanelState) -> Image.Image:
         d.text((x + 6, yy), line, fill=INK, font=F_SMALL)
         yy += 18
     y += card_h + 12
-    if st.spectrogram and Path(st.spectrogram).exists():
+    if st.spectrogram == "silence":
+        d.text((x, y + 4), "(silence: nothing audible)", fill=MUTED, font=F_BODY)
+    elif st.spectrogram and Path(st.spectrogram).exists():
         sp = Image.open(st.spectrogram).convert("RGB")
         sp = sp.resize((PANEL_W - 38, int((PANEL_W - 38) * sp.height / sp.width)))
         if y + sp.height < H - 10:
@@ -261,6 +286,8 @@ def replay_episode(trace: dict, rec: Recorder, model_label: str):
             seed = probe_seed(level, o.id, a["probe"], prior)
             sim = world.simulate_tap if a["probe"] == "tap" else world.simulate_shake
             x, _ = sim(o, seed=seed)
+            if obs["sound"]["loudness_db_over_floor"] < 10:
+                spec = "silence"
             if a["probe"] == "tap":
                 _anim_tap(stage, rec, o, x, lambda: P(str(spec)))
             else:
@@ -391,7 +418,7 @@ def encode(rec: Recorder, out: Path):
     return out
 
 
-def render_run(run_dir: Path, out: Path, model_label: str, levels: list[str] | None = None):
+def render_run(run_dir: Path, out: Path, model_label: str, levels: list[str] | None = None, cards: bool = True):
     traces = []
     for t in sorted(Path(run_dir).glob("*/trace.json")):
         d = json.loads(t.read_text())
@@ -406,10 +433,12 @@ def render_run(run_dir: Path, out: Path, model_label: str, levels: list[str] | N
                   (f"{model_label} plays {len(traces)} levels", F_TITLE, INK),
                   ("Identical-looking objects. Hidden physics. A few experiments, then one flick.", F_BODY, MUTED),
                   (f"Solved {solved}/{len(traces)}", F_H, ACCENT)])
-    rec.frames += [intro] * (FPS * 3)
+    if cards:
+        rec.frames += [intro] * (FPS * 3)
     for t in traces:
         replay_episode(t, rec, model_label)
     rows = [(f"{t['level']['id']}  {'solved' if t['result'] and t['result'].get('success') else 'missed'}", F_BODY,
              ACCENT if t["result"] and t["result"].get("success") else WARN) for t in traces]
-    rec.frames += [card([("Results", F_BIG, INK), (f"{model_label}: {solved}/{len(traces)} solved", F_TITLE, INK)])] * (FPS * 3)
+    if cards:
+        rec.frames += [card([("Results", F_BIG, INK), (f"{model_label}: {solved}/{len(traces)} solved", F_TITLE, INK)])] * (FPS * 3)
     return encode(rec, out)
