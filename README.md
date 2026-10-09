@@ -47,6 +47,7 @@ A slow push alone can't separate *heavy* from *sticky*. Weighing alone says noth
 | Agent | Solved | Picked the right cube | Notes |
 |---|---:|---:|---|
 | Oracle (knows the hidden values) | 30/30 | 30/30 | proves every level is solvable |
+| SBI neural baseline (PyTorch, `sbi`) | 27/30 | 30/30 | learned posterior + information-gain probing; 93% on 100 held-out levels when trained on matching audio (scripted: 89%), retraining for the v0.2 audio |
 | Scripted Bayesian baseline | 29/30 | 30/30 | identify by elimination, then lift + push |
 | **GPT-6.1 Sol** (Codex, high) | **26/30** | 27/30 | median miss on solved levels: **2.3 mm** |
 | **GPT-6 Luna** (Codex, high) | **10/30** | 29/30 | finds the cube, then gets the physics wrong |
@@ -204,4 +205,4 @@ tests/           physics consistency, determinism, no-leak, solvability, audio b
 - [x] Prompt-to-level: describe a world, a builder agent creates it, validators check it's fair
 - [ ] FEM vibration modes and cited material constants, calibrated against real impact recordings (RealImpact): in progress
 - [x] Rust audio engine shared by Python and the browser (PyO3 + WebAssembly)
-- [ ] Simulation-based-inference neural baseline (sbi / PyTorch)
+- [x] Simulation-based-inference neural baseline (sbi / PyTorch): calibrated posteriors, 93% on held-out levels

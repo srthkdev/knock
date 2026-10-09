@@ -45,6 +45,9 @@ def make_agent(agent: str, model: str, effort: str):
     if agent in ("none", "random", "scripted"):
         from .agents.baselines import BaselineAgent
         return BaselineAgent(agent)
+    if agent == "sbi":
+        from .agents.sbi_agent import SbiAgent
+        return SbiAgent()
     if agent == "codex":
         from .agents.codex_agent import CodexAgent
         return CodexAgent(model=model, effort=effort)
@@ -53,7 +56,7 @@ def make_agent(agent: str, model: str, effort: str):
 
 @app.command()
 def run(out: str = typer.Option(..., help="output directory for traces"),
-        agent: str = typer.Option("scripted", help="none | random | scripted | codex"),
+        agent: str = typer.Option("scripted", help="none | random | scripted | sbi | codex"),
         model: str = typer.Option("gpt-6-luna", help="codex model"),
         effort: str = typer.Option("high", help="codex reasoning effort"),
         levels: str = typer.Option("levels/dev", help="directory of level JSON files"),

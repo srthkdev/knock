@@ -1,0 +1,58 @@
+{
+ "id": "L01074",
+ "seed": 107401,
+ "objects": [
+  {
+   "id": "A",
+   "half": 0.048,
+   "color": "#5b8e7d",
+   "y": -0.35,
+   "hidden": {
+    "material": "metal",
+    "hollow": true,
+    "contents": "foam",
+    "friction": 0.508
+   }
+  },
+  {
+   "id": "B",
+   "half": 0.048,
+   "color": "#5b8e7d",
+   "y": 0.0,
+   "hidden": {
+    "material": "wood",
+    "hollow": false,
+    "contents": "empty",
+    "friction": 0.579
+   }
+  },
+  {
+   "id": "C",
+   "half": 0.048,
+   "color": "#5b8e7d",
+   "y": 0.35,
+   "hidden": {
+    "material": "metal",
+    "hollow": true,
+    "contents": "weight",
+    "friction": 0.492
+   }
+  }
+ ],
+ "task": {
+  "kind": "find_and_slide",
+  "target_x": 0.913,
+  "tol": 0.052,
+  "budget": 4,
+  "object_id": null,
+  "property": "solid"
+ },
+ "notes": {
+  "oracle": {
+   "object": "B",
+   "impulse_Ns": 1.8537,
+   "predicted_x": 0.9138,
+   "solvable": true
+  }
+ }
+}
