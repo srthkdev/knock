@@ -17,6 +17,7 @@ dependencies = [
     "torch>=2.14.1",
     "scikit-fem>=12.0.2",
     "sbi>=0.27.0",
+    "knock-audio",
 ]
 
 [dependency-groups]
@@ -31,3 +32,9 @@ knock = "knock.cli:main"
 [build-system]
 requires = ["uv_build>=0.8.22,<0.9.0"]
 build-backend = "uv_build"
+
+[tool.uv.workspace]
+members = ["crates/knock-audio"]
+
+[tool.uv.sources]
+knock-audio = { workspace = true }
