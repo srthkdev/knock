@@ -30,6 +30,9 @@ def make_agent(args):
     if args.agent in ("none", "random", "scripted"):
         from .agents.baselines import BaselineAgent
         return BaselineAgent(args.agent)
+    if args.agent == "sbi":
+        from .agents.sbi_agent import SbiAgent
+        return SbiAgent()
     if args.agent == "codex":
         from .agents.codex_agent import CodexAgent
         return CodexAgent(model=args.model, effort=args.effort)
