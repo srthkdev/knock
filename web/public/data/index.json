@@ -1,0 +1,1024 @@
+{
+ "levels": [
+  {
+   "id": "L00000",
+   "kind": "find_and_slide",
+   "property": "solid",
+   "budget": 4,
+   "goal": "Exactly one object is solid. Find it and flick it so it stops with its centre between x = 0.286 m and x = 0.418 m.",
+   "color": "#5b8e7d",
+   "n_objects": 3
+  },
+  {
+   "id": "L00001",
+   "kind": "find_and_slide",
+   "property": "hollow",
+   "budget": 4,
+   "goal": "Exactly one object is hollow. Find it and flick it so it stops with its centre between x = 0.939 m and x = 1.037 m.",
+   "color": "#d8d4c7",
+   "n_objects": 3
+  },
+  {
+   "id": "L00002",
+   "kind": "slide",
+   "property": null,
+   "budget": 2,
+   "goal": "Flick object C so it stops with its centre between x = 0.312 m and x = 0.446 m.",
+   "color": "#5b8e7d",
+   "n_objects": 3
+  },
+  {
+   "id": "L00003",
+   "kind": "slide",
+   "property": null,
+   "budget": 1,
+   "goal": "Flick object A so it stops with its centre between x = 0.580 m and x = 0.714 m.",
+   "color": "#8d6a9f",
+   "n_objects": 3
+  },
+  {
+   "id": "L00004",
+   "kind": "find_and_slide",
+   "property": "solid",
+   "budget": 4,
+   "goal": "Exactly one object is solid. Find it and flick it so it stops with its centre between x = 0.341 m and x = 0.423 m.",
+   "color": "#2f6690",
+   "n_objects": 3
+  },
+  {
+   "id": "L00005",
+   "kind": "find_and_slide",
+   "property": "rattles",
+   "budget": 4,
+   "goal": "Exactly one object has something loose inside that rattles. Find it and flick it so it stops with its centre between x = 0.853 m and x = 0.951 m.",
+   "color": "#d8d4c7",
+   "n_objects": 3
+  },
+  {
+   "id": "L00006",
+   "kind": "slide",
+   "property": null,
+   "budget": 1,
+   "goal": "Flick object B so it stops with its centre between x = 0.771 m and x = 0.907 m.",
+   "color": "#2f6690",
+   "n_objects": 3
+  },
+  {
+   "id": "L00007",
+   "kind": "slide",
+   "property": null,
+   "budget": 3,
+   "goal": "Flick object C so it stops with its centre between x = 0.520 m and x = 0.628 m.",
+   "color": "#2f6690",
+   "n_objects": 3
+  },
+  {
+   "id": "L00008",
+   "kind": "slide",
+   "property": null,
+   "budget": 3,
+   "goal": "Flick object B so it stops with its centre between x = 0.917 m and x = 1.055 m.",
+   "color": "#e0a458",
+   "n_objects": 3
+  },
+  {
+   "id": "L00009",
+   "kind": "find_and_slide",
+   "property": "hollow",
+   "budget": 4,
+   "goal": "Exactly one object is hollow. Find it and flick it so it stops with its centre between x = 0.455 m and x = 0.547 m.",
+   "color": "#c8553d",
+   "n_objects": 3
+  },
+  {
+   "id": "L00010",
+   "kind": "find_and_slide",
+   "property": "rattles",
+   "budget": 4,
+   "goal": "Exactly one object has something loose inside that rattles. Find it and flick it so it stops with its centre between x = 0.927 m and x = 1.053 m.",
+   "color": "#5b8e7d",
+   "n_objects": 3
+  },
+  {
+   "id": "L00011",
+   "kind": "slide",
+   "property": null,
+   "budget": 3,
+   "goal": "Flick object B so it stops with its centre between x = 0.721 m and x = 0.841 m.",
+   "color": "#d8d4c7",
+   "n_objects": 3
+  },
+  {
+   "id": "L00012",
+   "kind": "find_and_slide",
+   "property": "rattles",
+   "budget": 4,
+   "goal": "Exactly one object has something loose inside that rattles. Find it and flick it so it stops with its centre between x = 0.561 m and x = 0.695 m.",
+   "color": "#5b8e7d",
+   "n_objects": 3
+  },
+  {
+   "id": "L00013",
+   "kind": "find_and_slide",
+   "property": "rattles",
+   "budget": 4,
+   "goal": "Exactly one object has something loose inside that rattles. Find it and flick it so it stops with its centre between x = 0.619 m and x = 0.725 m.",
+   "color": "#d8d4c7",
+   "n_objects": 3
+  },
+  {
+   "id": "L00014",
+   "kind": "find_and_slide",
+   "property": "hollow",
+   "budget": 4,
+   "goal": "Exactly one object is hollow. Find it and flick it so it stops with its centre between x = 0.449 m and x = 0.537 m.",
+   "color": "#e0a458",
+   "n_objects": 3
+  },
+  {
+   "id": "L00015",
+   "kind": "slide",
+   "property": null,
+   "budget": 1,
+   "goal": "Flick object B so it stops with its centre between x = 0.416 m and x = 0.538 m.",
+   "color": "#c8553d",
+   "n_objects": 3
+  },
+  {
+   "id": "L00016",
+   "kind": "slide",
+   "property": null,
+   "budget": 3,
+   "goal": "Flick object A so it stops with its centre between x = 0.799 m and x = 0.899 m.",
+   "color": "#2f6690",
+   "n_objects": 3
+  },
+  {
+   "id": "L00017",
+   "kind": "slide",
+   "property": null,
+   "budget": 2,
+   "goal": "Flick object B so it stops with its centre between x = 0.352 m and x = 0.474 m.",
+   "color": "#c8553d",
+   "n_objects": 3
+  },
+  {
+   "id": "L00018",
+   "kind": "find_and_slide",
+   "property": "lightest",
+   "budget": 4,
+   "goal": "Exactly one object is the lightest. Find it and flick it so it stops with its centre between x = 0.527 m and x = 0.619 m.",
+   "color": "#5b8e7d",
+   "n_objects": 3
+  },
+  {
+   "id": "L00019",
+   "kind": "find_and_slide",
+   "property": "rattles",
+   "budget": 4,
+   "goal": "Exactly one object has something loose inside that rattles. Find it and flick it so it stops with its centre between x = 0.872 m and x = 0.988 m.",
+   "color": "#2f6690",
+   "n_objects": 3
+  },
+  {
+   "id": "L00020",
+   "kind": "slide",
+   "property": null,
+   "budget": 1,
+   "goal": "Flick object A so it stops with its centre between x = 0.446 m and x = 0.570 m.",
+   "color": "#5b8e7d",
+   "n_objects": 3
+  },
+  {
+   "id": "L00021",
+   "kind": "slide",
+   "property": null,
+   "budget": 3,
+   "goal": "Flick object A so it stops with its centre between x = 0.339 m and x = 0.469 m.",
+   "color": "#c8553d",
+   "n_objects": 3
+  },
+  {
+   "id": "L00022",
+   "kind": "slide",
+   "property": null,
+   "budget": 2,
+   "goal": "Flick object C so it stops with its centre between x = 0.760 m and x = 0.840 m.",
+   "color": "#8d6a9f",
+   "n_objects": 3
+  },
+  {
+   "id": "L00023",
+   "kind": "slide",
+   "property": null,
+   "budget": 2,
+   "goal": "Flick object B so it stops with its centre between x = 0.564 m and x = 0.692 m.",
+   "color": "#d8d4c7",
+   "n_objects": 3
+  },
+  {
+   "id": "L00024",
+   "kind": "find_and_slide",
+   "property": "solid",
+   "budget": 4,
+   "goal": "Exactly one object is solid. Find it and flick it so it stops with its centre between x = 0.738 m and x = 0.848 m.",
+   "color": "#5b8e7d",
+   "n_objects": 3
+  },
+  {
+   "id": "L00025",
+   "kind": "find_and_slide",
+   "property": "hollow",
+   "budget": 4,
+   "goal": "Exactly one object is hollow. Find it and flick it so it stops with its centre between x = 0.610 m and x = 0.716 m.",
+   "color": "#8d6a9f",
+   "n_objects": 3
+  },
+  {
+   "id": "L00026",
+   "kind": "slide",
+   "property": null,
+   "budget": 2,
+   "goal": "Flick object A so it stops with its centre between x = 0.523 m and x = 0.653 m.",
+   "color": "#5b8e7d",
+   "n_objects": 3
+  },
+  {
+   "id": "L00027",
+   "kind": "find_and_slide",
+   "property": "rattles",
+   "budget": 4,
+   "goal": "Exactly one object has something loose inside that rattles. Find it and flick it so it stops with its centre between x = 0.582 m and x = 0.704 m.",
+   "color": "#2f6690",
+   "n_objects": 3
+  },
+  {
+   "id": "L00028",
+   "kind": "find_and_slide",
+   "property": "lightest",
+   "budget": 4,
+   "goal": "Exactly one object is the lightest. Find it and flick it so it stops with its centre between x = 0.500 m and x = 0.626 m.",
+   "color": "#5b8e7d",
+   "n_objects": 3
+  },
+  {
+   "id": "L00029",
+   "kind": "find_and_slide",
+   "property": "rattles",
+   "budget": 4,
+   "goal": "Exactly one object has something loose inside that rattles. Find it and flick it so it stops with its centre between x = 0.497 m and x = 0.603 m.",
+   "color": "#8d6a9f",
+   "n_objects": 3
+  }
+ ],
+ "runs": [
+  {
+   "run": "sol",
+   "label": "GPT-6.1 Sol",
+   "n": 11,
+   "solved": 9,
+   "episodes": {
+    "L00000": {
+     "success": true,
+     "correct_object": true,
+     "error_m": 0.0069,
+     "probes": 4
+    },
+    "L00001": {
+     "success": false,
+     "correct_object": false,
+     "error_m": -0.2754,
+     "probes": 4
+    },
+    "L00002": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0008,
+     "probes": 2
+    },
+    "L00003": {
+     "success": false,
+     "correct_object": true,
+     "error_m": 0.0763,
+     "probes": 1
+    },
+    "L00004": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0011,
+     "probes": 4
+    },
+    "L00005": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0207,
+     "probes": 4
+    },
+    "L00006": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0357,
+     "probes": 1
+    },
+    "L00007": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0018,
+     "probes": 3
+    },
+    "L00008": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0014,
+     "probes": 3
+    },
+    "L00009": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0004,
+     "probes": 4
+    },
+    "L00010": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0034,
+     "probes": 4
+    }
+   }
+  },
+  {
+   "run": "luna",
+   "label": "GPT-6 Luna",
+   "n": 17,
+   "solved": 6,
+   "episodes": {
+    "L00000": {
+     "success": false,
+     "correct_object": true,
+     "error_m": -0.1182,
+     "probes": 4
+    },
+    "L00001": {
+     "success": false,
+     "correct_object": true,
+     "error_m": 0.4887,
+     "probes": 4
+    },
+    "L00002": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0027,
+     "probes": 2
+    },
+    "L00003": {
+     "success": false,
+     "correct_object": true,
+     "error_m": 0.195,
+     "probes": 1
+    },
+    "L00004": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0011,
+     "probes": 3
+    },
+    "L00005": {
+     "success": false,
+     "correct_object": true,
+     "error_m": 0.3921,
+     "probes": 4
+    },
+    "L00006": {
+     "success": false,
+     "correct_object": true,
+     "error_m": 0.2174,
+     "probes": 1
+    },
+    "L00007": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0011,
+     "probes": 3
+    },
+    "L00008": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.01,
+     "probes": 3
+    },
+    "L00009": {
+     "success": false,
+     "correct_object": false,
+     "error_m": -0.0015,
+     "probes": 3
+    },
+    "L00010": {
+     "success": false,
+     "correct_object": true,
+     "error_m": -0.6418,
+     "probes": 4
+    },
+    "L00011": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0299,
+     "probes": 3
+    },
+    "L00012": {
+     "success": true,
+     "correct_object": true,
+     "error_m": 0.0282,
+     "probes": 4
+    },
+    "L00013": {
+     "success": false,
+     "correct_object": true,
+     "error_m": -0.6544,
+     "probes": 4
+    },
+    "L00014": {
+     "success": false,
+     "correct_object": true,
+     "error_m": -0.0524,
+     "probes": 4
+    },
+    "L00015": {
+     "success": false,
+     "correct_object": true,
+     "error_m": 0.0612,
+     "probes": 1
+    },
+    "L00016": {
+     "success": false,
+     "correct_object": true,
+     "error_m": 0.1311,
+     "probes": 3
+    }
+   }
+  },
+  {
+   "run": "scripted",
+   "label": "Scripted baseline",
+   "n": 30,
+   "solved": 29,
+   "episodes": {
+    "L00000": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0319,
+     "probes": 4
+    },
+    "L00001": {
+     "success": true,
+     "correct_object": true,
+     "error_m": 0.0363,
+     "probes": 4
+    },
+    "L00002": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0151,
+     "probes": 2
+    },
+    "L00003": {
+     "success": true,
+     "correct_object": true,
+     "error_m": 0.0564,
+     "probes": 1
+    },
+    "L00004": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0118,
+     "probes": 4
+    },
+    "L00005": {
+     "success": true,
+     "correct_object": true,
+     "error_m": 0.0137,
+     "probes": 4
+    },
+    "L00006": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0249,
+     "probes": 1
+    },
+    "L00007": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0207,
+     "probes": 2
+    },
+    "L00008": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0111,
+     "probes": 2
+    },
+    "L00009": {
+     "success": true,
+     "correct_object": true,
+     "error_m": 0.0004,
+     "probes": 4
+    },
+    "L00010": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0606,
+     "probes": 4
+    },
+    "L00011": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.016,
+     "probes": 2
+    },
+    "L00012": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0079,
+     "probes": 4
+    },
+    "L00013": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0224,
+     "probes": 4
+    },
+    "L00014": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0103,
+     "probes": 4
+    },
+    "L00015": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0195,
+     "probes": 1
+    },
+    "L00016": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0017,
+     "probes": 2
+    },
+    "L00017": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0242,
+     "probes": 2
+    },
+    "L00018": {
+     "success": true,
+     "correct_object": true,
+     "error_m": 0.0088,
+     "probes": 4
+    },
+    "L00019": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.01,
+     "probes": 4
+    },
+    "L00020": {
+     "success": false,
+     "correct_object": true,
+     "error_m": -0.0635,
+     "probes": 1
+    },
+    "L00021": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0251,
+     "probes": 2
+    },
+    "L00022": {
+     "success": true,
+     "correct_object": true,
+     "error_m": 0.0394,
+     "probes": 2
+    },
+    "L00023": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.007,
+     "probes": 2
+    },
+    "L00024": {
+     "success": true,
+     "correct_object": true,
+     "error_m": 0.0095,
+     "probes": 3
+    },
+    "L00025": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0189,
+     "probes": 3
+    },
+    "L00026": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0044,
+     "probes": 2
+    },
+    "L00027": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0334,
+     "probes": 4
+    },
+    "L00028": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0065,
+     "probes": 4
+    },
+    "L00029": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.013,
+     "probes": 4
+    }
+   }
+  },
+  {
+   "run": "random",
+   "label": "Random probes",
+   "n": 30,
+   "solved": 7,
+   "episodes": {
+    "L00000": {
+     "success": false,
+     "correct_object": true,
+     "error_m": -0.2993,
+     "probes": 4
+    },
+    "L00001": {
+     "success": false,
+     "correct_object": true,
+     "error_m": 94.1754,
+     "probes": 4
+    },
+    "L00002": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0151,
+     "probes": 2
+    },
+    "L00003": {
+     "success": false,
+     "correct_object": true,
+     "error_m": 107.1795,
+     "probes": 1
+    },
+    "L00004": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0011,
+     "probes": 4
+    },
+    "L00005": {
+     "success": false,
+     "correct_object": true,
+     "error_m": 0.0674,
+     "probes": 4
+    },
+    "L00006": {
+     "success": false,
+     "correct_object": true,
+     "error_m": 0.5232,
+     "probes": 1
+    },
+    "L00007": {
+     "success": false,
+     "correct_object": true,
+     "error_m": -0.5281,
+     "probes": 3
+    },
+    "L00008": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0111,
+     "probes": 3
+    },
+    "L00009": {
+     "success": false,
+     "correct_object": false,
+     "error_m": -0.0326,
+     "probes": 4
+    },
+    "L00010": {
+     "success": false,
+     "correct_object": false,
+     "error_m": -0.7195,
+     "probes": 4
+    },
+    "L00011": {
+     "success": false,
+     "correct_object": true,
+     "error_m": -0.0987,
+     "probes": 3
+    },
+    "L00012": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0079,
+     "probes": 4
+    },
+    "L00013": {
+     "success": false,
+     "correct_object": true,
+     "error_m": 8.6302,
+     "probes": 4
+    },
+    "L00014": {
+     "success": true,
+     "correct_object": true,
+     "error_m": 0.0037,
+     "probes": 4
+    },
+    "L00015": {
+     "success": false,
+     "correct_object": true,
+     "error_m": 0.1319,
+     "probes": 1
+    },
+    "L00016": {
+     "success": false,
+     "correct_object": true,
+     "error_m": 0.2789,
+     "probes": 3
+    },
+    "L00017": {
+     "success": false,
+     "correct_object": true,
+     "error_m": -0.3411,
+     "probes": 2
+    },
+    "L00018": {
+     "success": false,
+     "correct_object": true,
+     "error_m": -0.1718,
+     "probes": 4
+    },
+    "L00019": {
+     "success": false,
+     "correct_object": false,
+     "error_m": -0.4435,
+     "probes": 4
+    },
+    "L00020": {
+     "success": false,
+     "correct_object": true,
+     "error_m": -0.0749,
+     "probes": 1
+    },
+    "L00021": {
+     "success": false,
+     "correct_object": true,
+     "error_m": 0.2122,
+     "probes": 3
+    },
+    "L00022": {
+     "success": false,
+     "correct_object": true,
+     "error_m": 0.4174,
+     "probes": 2
+    },
+    "L00023": {
+     "success": false,
+     "correct_object": true,
+     "error_m": 29.9527,
+     "probes": 2
+    },
+    "L00024": {
+     "success": false,
+     "correct_object": true,
+     "error_m": -0.3134,
+     "probes": 4
+    },
+    "L00025": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0189,
+     "probes": 4
+    },
+    "L00026": {
+     "success": false,
+     "correct_object": true,
+     "error_m": 9.0345,
+     "probes": 2
+    },
+    "L00027": {
+     "success": false,
+     "correct_object": true,
+     "error_m": 0.6424,
+     "probes": 4
+    },
+    "L00028": {
+     "success": true,
+     "correct_object": true,
+     "error_m": -0.0374,
+     "probes": 4
+    },
+    "L00029": {
+     "success": false,
+     "correct_object": false,
+     "error_m": -0.0023,
+     "probes": 4
+    }
+   }
+  },
+  {
+   "run": "none",
+   "label": "No probes",
+   "n": 30,
+   "solved": 0,
+   "episodes": {
+    "L00000": {
+     "success": false,
+     "correct_object": false,
+     "error_m": -0.3181,
+     "probes": 0
+    },
+    "L00001": {
+     "success": false,
+     "correct_object": true,
+     "error_m": 94.1754,
+     "probes": 0
+    },
+    "L00002": {
+     "success": false,
+     "correct_object": true,
+     "error_m": 7.8395,
+     "probes": 0
+    },
+    "L00003": {
+     "success": false,
+     "correct_object": true,
+     "error_m": 107.1795,
+     "probes": 0
+    },
+    "L00004": {
+     "success": false,
+     "correct_object": true,
+     "error_m": -0.2641,
+     "probes": 0
+    },
+    "L00005": {
+     "success": false,
+     "correct_object": false,
+     "error_m": -0.1875,
+     "probes": 0
+    },
+    "L00006": {
+     "success": false,
+     "correct_object": true,
+     "error_m": 0.5232,
+     "probes": 0
+    },
+    "L00007": {
+     "success": false,
+     "correct_object": true,
+     "error_m": -0.5281,
+     "probes": 0
+    },
+    "L00008": {
+     "success": false,
+     "correct_object": true,
+     "error_m": -0.9003,
+     "probes": 0
+    },
+    "L00009": {
+     "success": false,
+     "correct_object": true,
+     "error_m": -0.4083,
+     "probes": 0
+    },
+    "L00010": {
+     "success": false,
+     "correct_object": true,
+     "error_m": -0.573,
+     "probes": 0
+    },
+    "L00011": {
+     "success": false,
+     "correct_object": true,
+     "error_m": -0.2382,
+     "probes": 0
+    },
+    "L00012": {
+     "success": false,
+     "correct_object": false,
+     "error_m": 0.1297,
+     "probes": 0
+    },
+    "L00013": {
+     "success": false,
+     "correct_object": true,
+     "error_m": 15.8107,
+     "probes": 0
+    },
+    "L00014": {
+     "success": false,
+     "correct_object": true,
+     "error_m": -0.4412,
+     "probes": 0
+    },
+    "L00015": {
+     "success": false,
+     "correct_object": true,
+     "error_m": 0.1319,
+     "probes": 0
+    },
+    "L00016": {
+     "success": false,
+     "correct_object": true,
+     "error_m": 0.2789,
+     "probes": 0
+    },
+    "L00017": {
+     "success": false,
+     "correct_object": true,
+     "error_m": -0.3411,
+     "probes": 0
+    },
+    "L00018": {
+     "success": false,
+     "correct_object": true,
+     "error_m": 0.5502,
+     "probes": 0
+    },
+    "L00019": {
+     "success": false,
+     "correct_object": false,
+     "error_m": 37.8808,
+     "probes": 0
+    },
+    "L00020": {
+     "success": false,
+     "correct_object": true,
+     "error_m": 5.5513,
+     "probes": 0
+    },
+    "L00021": {
+     "success": false,
+     "correct_object": true,
+     "error_m": -0.2762,
+     "probes": 0
+    },
+    "L00022": {
+     "success": false,
+     "correct_object": true,
+     "error_m": 8.2103,
+     "probes": 0
+    },
+    "L00023": {
+     "success": false,
+     "correct_object": true,
+     "error_m": 29.9527,
+     "probes": 0
+    },
+    "L00024": {
+     "success": false,
+     "correct_object": false,
+     "error_m": -0.7414,
+     "probes": 0
+    },
+    "L00025": {
+     "success": false,
+     "correct_object": false,
+     "error_m": 0.055,
+     "probes": 0
+    },
+    "L00026": {
+     "success": false,
+     "correct_object": true,
+     "error_m": 9.0345,
+     "probes": 0
+    },
+    "L00027": {
+     "success": false,
+     "correct_object": false,
+     "error_m": 4.5617,
+     "probes": 0
+    },
+    "L00028": {
+     "success": false,
+     "correct_object": false,
+     "error_m": 7.3857,
+     "probes": 0
+    },
+    "L00029": {
+     "success": false,
+     "correct_object": false,
+     "error_m": 0.5696,
+     "probes": 0
+    }
+   }
+  }
+ ]
+}

@@ -1,0 +1,24 @@
+// Plays a level in the browser: lift + push C, then flick with the notebook estimate.
+import { chromium } from 'playwright';
+const [,, url, outPrefix] = process.argv;
+const browser = await chromium.launch({ executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', headless: true, args: ['--use-angle=metal', '--enable-gpu', '--ignore-gpu-blocklist'] });
+const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+const logs = [];
+page.on('pageerror', e => logs.push('PAGEERROR ' + e.message));
+page.on('console', m => { if (m.type() === 'error') logs.push(m.text().slice(0, 300)); });
+await page.goto(url, { waitUntil: 'load' });
+await page.waitForTimeout(3000);
+const click = async (name) => { await page.getByRole('button', { name, exact: false }).first().click(); };
+await page.getByRole('button', { name: 'C', exact: true }).click();
+await click('lift'); await page.waitForTimeout(2800);
+await page.locator('input[type=range]').first().fill('0.62');
+await click('push'); await page.waitForTimeout(6000);
+await page.screenshot({ path: outPrefix + '_probe.png' });
+await page.getByText('lab notebook').click();
+await page.waitForTimeout(300);
+const nb = await page.locator('.font-mono.text-xs.leading-relaxed').innerText().catch(() => 'no notebook');
+await page.getByText('use it').click().catch(() => logs.push('no estimate to use'));
+await click('Flick it'); await page.waitForTimeout(9000);
+await page.screenshot({ path: outPrefix + '_result.png' });
+console.log(JSON.stringify({ nb, logs }, null, 1));
+await browser.close();
