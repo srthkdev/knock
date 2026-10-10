@@ -66,3 +66,16 @@ def test_llm_schema_covers_pack_tools():
     assert {"force_N", "impulse_Ns"} <= set(s["properties"]["args"]["properties"])
     assert {"moved_mm", "stop_x_m"} <= set(s["properties"]["prediction"]["properties"])
     assert Push.prediction_required and Flick.prediction_required and Cube.kind == "cube"
+
+
+def test_llm_prompt_is_generic_and_leak_free():
+    from knock.agents.llm import build_prompt
+    sc = scenario_from_level(valid_level(11))
+    ep = Episode(sc.world, sc.task)
+    ep.call(ToolCall("lift", "A"))
+    prompt = build_prompt(ep.view(), [])
+    for name in ("push", "lift", "tap", "shake", "flick", "REQUIRED", "DECISIVE ACT"):
+        assert name in prompt
+    for c in sc.world.components:
+        assert str(c.hidden["friction"]) not in prompt
+        assert f'"material": "{c.hidden["material"]}"' not in prompt
