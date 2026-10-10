@@ -12,7 +12,7 @@ export interface TaskEntry {
 }
 
 const ENV_INFO: Record<string, { name: string; blurb: string }> = {
-  factory: { name: 'Factory · Bottling line', blurb: 'Commission a real line over many turns: belt speed, checkweigher threshold, reject pusher timing.' },
+  factory: { name: 'Factory', blurb: 'Physical Factorio: the agent places belts, scales, pushers and bins on a grid, runs the factory on MuJoCo physics, sees what spills and jams, fixes it, then hands it over for a scored production run.' },
   cube: { name: 'Cube lab', blurb: 'Identical-looking cubes hide mass, friction and contents. Probe, then one flick.' },
 }
 
@@ -69,11 +69,8 @@ export function Tasks({ mode }: { mode: 'watch' | 'play' }) {
         <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {list.map((t) => (
             <div key={t.id} className="flex flex-col rounded-2xl border border-line bg-white p-4">
-              <div className="flex items-center justify-between">
-                <span className="font-mono text-xs text-muted">{t.id}</span>
-                <span className="text-xs text-muted">{t.detail}</span>
-              </div>
-              <div className="mt-1 font-semibold">{t.title}</div>
+              <div className="font-semibold">{t.title}</div>
+              <p className="mt-1 text-sm leading-snug text-muted">{t.detail}</p>
               {mode === 'watch' ? (
                 <div className="mt-3 flex flex-wrap gap-1.5">
                   {t.runs.length === 0 && <span className="text-xs text-muted">no agent runs yet</span>}

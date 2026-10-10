@@ -72,7 +72,8 @@ class World:
         return [c.id for c in self.components if kind is None or c.kind == kind]
 
     def public(self) -> dict:
-        return {"components": [c.public() for c in self.components], "settings": self.settings}
+        return {"components": [c.public() for c in self.components],
+                "settings": {k: v for k, v in self.settings.items() if not k.startswith("_")}}  # "_" = hidden
 
     # mutation (games: building, removing, reconfiguring)
     def add(self, component: Component) -> Component:

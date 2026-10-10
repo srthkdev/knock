@@ -1,5 +1,6 @@
 import { Build } from './pages/Build'
 import { Factory } from './pages/Factory'
+import { FactoryWatch } from './pages/FactoryWatch'
 import { Home } from './pages/Home'
 import { Play } from './pages/Play'
 import { Tasks } from './pages/Tasks'
@@ -25,7 +26,7 @@ export default function App() {
     else if (isEnv(rest[0])) {
       const [env, run, task] = rest.map(clean)
       body = env === 'factory'
-        ? <Factory key={route.join('/')} run={run} taskId={task} />
+        ? (run && run !== 'demo' && task ? <FactoryWatch key={route.join('/')} run={run} taskId={task} /> : <Factory key={route.join('/')} />)
         : <Watch key={route.join('/')} run={run || 'sol'} levelId={task || 'L00000'} />
     } else body = <Watch key={route.join('/')} run={clean(rest[0]) || 'sol'} levelId={clean(rest[1]) || 'L00000'} />
   } else if (page === 'play') {

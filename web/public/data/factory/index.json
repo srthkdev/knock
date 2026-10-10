@@ -1,1 +1,79 @@
-{"tasks":[{"id":"demo","title":"Bottling line (replay)","detail":"physics replay","runs":[{"run":"demo","label":"replay","success":true}]}]}
+{
+ "tasks": [
+  {
+   "id": "first_line",
+   "title": "First line",
+   "detail": "Get every box from the inlet to the shipping bin. Walls are in the way.",
+   "runs": [
+    {
+     "run": "astra",
+     "label": "GPT-6 Astra",
+     "success": true,
+     "score": 55,
+     "turns": 4
+    },
+    {
+     "run": "sol",
+     "label": "GPT-6.1 Sol",
+     "success": true,
+     "score": 54,
+     "turns": 4
+    }
+   ]
+  },
+  {
+   "id": "quality_gate",
+   "title": "Quality gate",
+   "detail": "Some boxes leave filling underfilled. Ship the good ones, keep the bad ones out of the shipping bin.",
+   "runs": [
+    {
+     "run": "astra",
+     "label": "GPT-6 Astra",
+     "success": true,
+     "score": 33,
+     "turns": 4
+    },
+    {
+     "run": "sol",
+     "label": "GPT-6.1 Sol",
+     "success": false,
+     "score": 32,
+     "turns": 4
+    }
+   ]
+  },
+  {
+   "id": "two_lines",
+   "title": "Two lines, one dock",
+   "detail": "Two filling lines feed one shipping dock. Line B sometimes double-packs. Merge both lines and ship only good boxes.",
+   "runs": [
+    {
+     "run": "astra",
+     "label": "GPT-6 Astra",
+     "success": false,
+     "score": 64,
+     "turns": 5
+    },
+    {
+     "run": "sol",
+     "label": "GPT-6.1 Sol",
+     "success": true,
+     "score": 68,
+     "turns": 4
+    }
+   ]
+  },
+  {
+   "id": "bottling",
+   "title": "Bottling line (physics replay)",
+   "detail": "A recorded MuJoCo run of a bottling line: checkweigher and reject pusher. No agent.",
+   "runs": [
+    {
+     "run": "demo",
+     "label": "Watch replay",
+     "success": true
+    }
+   ]
+  }
+ ]
+}

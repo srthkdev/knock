@@ -23,6 +23,14 @@ your honest best estimate, because prediction accuracy is scored separately and 
 understand this world. Do NOT run commands, read files, or browse. Answer only with the JSON action."""
 
 
+GAME_INSTRUCTIONS = """\
+You are the agent in a physical simulation game. You see the world through your tools; the physics
+(friction, delays, noise, what arrives) is real and partly hidden, so test, measure and fix. Tools
+that require a prediction want your honest numeric estimate before they run: prediction accuracy is
+scored separately. The game ends when you use the finishing tool or run out of turns. Do NOT run
+commands, read files, or browse. Answer only with the JSON action."""
+
+
 def _tool_lines(tools: list[dict]) -> str:
     out = []
     for t in tools:
@@ -34,7 +42,8 @@ def _tool_lines(tools: list[dict]) -> str:
         if t["prediction"]:
             fields = ", ".join(f"{k} ({p.get('description', '')})" for k, p in t["prediction"]["properties"].items())
             pred = f"\n    prediction {'REQUIRED' if t['prediction_required'] else 'optional'}: {fields}"
-        kind = "DECISIVE ACT, ends the episode" if t["terminal"] else f"probe, costs {t['cost']}"
+        kind = ("DECISIVE ACT, ends the episode" if t["terminal"] else "ENDS THE GAME, final scoring" if t["finishes"]
+                else f"costs {t['cost']}" if t["cost"] else "free")
         targets = f"target: a {' or '.join(t['targets'])}" if t["targets"] else "no target"
         out.append(f"- {t['name']} [{kind}; {targets}]: {t['description']}\n    args: {args}{pred}")
     return "\n".join(out)
@@ -63,7 +72,13 @@ def build_prompt(view: AgentView, image_labels: list[str], extra: str = "") -> s
     only_act = has_act and all(t["terminal"] for t in view.tools)
     ask = ("No budget left for other tools: you MUST use the decisive act now." if only_act else
            f"Budgets left: {json.dumps(left)}. Choose your next tool call.")
-    return f"""{INSTRUCTIONS}{chr(10) + extra if extra else ""}
+    state = view.world.get("settings", {}).get("state")
+    state_txt = ""
+    if state:
+        state_txt = "\nCurrent state\n" + "\n".join(f"{k}:\n{v}" if k == "map" else f"{k}: {json.dumps(v)}"
+                                                   for k, v in state.items()) + "\n"
+    head = INSTRUCTIONS if view.task.get("act") else GAME_INSTRUCTIONS
+    return f"""{head}{chr(10) + extra if extra else ""}
 
 World rules
 {rules}
@@ -75,6 +90,7 @@ Task details: {json.dumps(task)}
 Components (what you can see)
 {json.dumps(view.world["components"], indent=1)}
 
+{state_txt}
 Tools available now
 {_tool_lines(view.tools)}
 
