@@ -1,0 +1,74 @@
+{
+ "id": "B00008",
+ "pack": "bottling",
+ "world": {
+  "seed": 8,
+  "settings": {},
+  "components": [
+   {
+    "kind": "bottling_line",
+    "id": "line",
+    "visible": {},
+    "hidden": {
+     "belt_mu": 0.4298347521330584,
+     "pusher_speed": 1.7847322120055107,
+     "pusher_lag": 0.05187108384855167,
+     "sensor_noise_g": 2.846177886639422
+    },
+    "pose": {}
+   },
+   {
+    "kind": "bottle_lot",
+    "id": "lot",
+    "visible": {},
+    "hidden": {
+     "underfill_rate": 0.3609689535088649,
+     "underfill_level": 0.9364255618746462,
+     "glass_sd_g": 3.0325865559297958
+    },
+    "pose": {}
+   }
+  ]
+ },
+ "task": {
+  "kind": "commission_line",
+  "goal": "Commission this bottling line, then start production. Production (40 bottles) must ship at least 45 good bottles per minute, ship at most 0 underfilled bottles, reject at most 1 good bottles, and tip none.",
+  "budget": {
+   "turns": 8.0,
+   "sim_seconds": 240.0,
+   "audits": 2.0
+  },
+  "probes": [
+   "test_run",
+   "lab_audit"
+  ],
+  "act": "start_production",
+  "params": {
+   "target_good_per_min": 45.0,
+   "max_defects_shipped": 0,
+   "max_good_rejected": 1,
+   "rules": "You are commissioning a bottling line. Bottles are fed onto a conveyor, cross a checkweigher\nplatform (x = 2.0..2.4 m along the line, a load cell under a belt section), and a\npneumatic pusher at x = 3.6 m knocks flagged bottles off into a reject chute. The line is 5.0 m long.\nEmpty bottles weigh about 300 g (glass varies a little bottle to bottle); a full bottle holds\n330 g of product. A bottle is DEFECTIVE if it holds less than 97% of nominal fill.\nThe checkweigher reports the gross weight. It flags a bottle when its reading is below `reject_below_g`.\nThe pusher fires when a flagged bottle is `pusher_offset_mm` before the pusher (encoder tracking), and\nstays extended for `stroke_ms`. Bottle pitch on the belt = belt_speed * 60 / feed_per_min.\nEverything else (belt grip, pusher speed and valve delay, load-cell noise, how many bottles are\nunderfilled and by how much) you must find out from test runs. Each test run costs line time\n(sim_seconds). Lab audits tell you the true fill of every bottle in your most recent test run."
+  }
+ },
+ "notes": {
+  "reference_settings": {
+   "belt_speed": 1.0,
+   "feed_per_min": 120.0,
+   "reject_below_g": 619.5102177093166,
+   "pusher_offset_mm": 89.97203789789229,
+   "stroke_ms": 112.06162955688417
+  },
+  "reference_outcome": {
+   "good_shipped": 19,
+   "defects_shipped": 0,
+   "good_rejected": 0,
+   "defects_rejected": 21,
+   "good_per_min": 57.0,
+   "tipped": 0,
+   "shipped_per_min": 57.0,
+   "shipped": 19,
+   "rejected": 21,
+   "bottles": 40
+  }
+ }
+}

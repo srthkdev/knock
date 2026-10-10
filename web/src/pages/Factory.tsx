@@ -212,7 +212,7 @@ export function FactoryScene({ demo, frameRef, playing = true, speed = 1, hero =
   )
 }
 
-export function Factory() {
+export function Factory(_: { run?: string; taskId?: string } = {}) {
   const demo = useBottlingDemo()
   const [playing, setPlaying] = useState(true)
   const [speed, setSpeed] = useState(1)

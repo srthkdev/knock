@@ -4,6 +4,7 @@ Nothing here is specific to any pack: tools and tasks bring all the physics.
 """
 from __future__ import annotations
 
+import inspect
 import json
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -114,7 +115,10 @@ class Episode:
         self.events.emit("tool_call", step, call=call.to_dict())
         ctx = ToolContext(self.world, step, self.out_dir, list(self.history))
         if tool.terminal:
-            outcome = tool.outcome(self.world, target, args)
+            if "record_dir" in inspect.signature(tool.outcome).parameters:  # acts that can save a replay
+                outcome = tool.outcome(self.world, target, args, record_dir=self.out_dir)
+            else:
+                outcome = tool.outcome(self.world, target, args)
             obs = Observation(data=dict(outcome), truth=dict(outcome))
         else:
             obs = tool.run(ctx, target, args)
