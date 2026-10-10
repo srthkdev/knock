@@ -24,7 +24,8 @@ def run_episode(agent: Agent, episode: Episode, max_calls: int | None = None) ->
     Invalid calls are returned to the agent as error observations (they cost no budget). If the
     agent keeps failing, the episode ends without an act and is scored as a failure.
     """
-    limit = max_calls or (episode.task.budget + 6)
+    b = episode.task.budgets
+    limit = max_calls or int(b.get("probes", 0) + b.get("turns", 0) + (200 if not ("probes" in b or "turns" in b) else 6))
     if hasattr(agent, "reset"):
         agent.reset(episode.view())
     for _ in range(limit):

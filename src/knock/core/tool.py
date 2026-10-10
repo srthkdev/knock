@@ -33,10 +33,12 @@ class Attachment:
 
 @dataclass
 class Observation:
-    """What a tool reports back. `data` is shown to the agent; `truth` is for scoring only."""
+    """What a tool reports back. `data` is shown to the agent; `truth` is for scoring only.
+    `reward` (optional) is a step reward for RL and live scores; it is emitted as an event."""
     data: dict[str, Any]
     attachments: list[Attachment] = field(default_factory=list)
     truth: dict[str, Any] = field(default_factory=dict)
+    reward: float | None = None
 
 
 @dataclass
@@ -69,12 +71,17 @@ class Tool:
     # predicted field -> observed field it is scored against, and the error unit
     prediction_targets: ClassVar[dict[str, tuple[str, str]]] = {}
     targets: ClassVar[tuple[str, ...]] = ()  # component kinds; empty = tool takes no target
-    cost: ClassVar[int] = 1
+    cost: ClassVar[int | dict[str, float]] = 1  # int = probe budget units; dict = named budgets
     terminal: ClassVar[bool] = False  # an act: ends the episode and is scored by the task
+    finishes: ClassVar[bool] = False  # e.g. "end shift": ends the episode; the task's final score applies
 
     # ------------------------------------------------------------------ behaviour
     def run(self, ctx: ToolContext, target: Component | None, args: BaseModel) -> Observation:
         raise NotImplementedError
+
+    def costs(self, args: BaseModel | None = None) -> dict[str, float]:
+        """Budget consumption of one call. Override for argument-dependent costs (e.g. run seconds)."""
+        return {"probes": float(self.cost)} if isinstance(self.cost, (int, float)) else dict(self.cost)
 
     def outcome(self, world: World, target: Component | None, args: BaseModel) -> dict:
         """Terminal tools: the noise-free result, used by the oracle and the task's scoring."""
@@ -101,6 +108,7 @@ class Tool:
             "targets": list(cls.targets),
             "cost": cls.cost,
             "terminal": cls.terminal,
+            "finishes": cls.finishes,
             "args": cls.Args.model_json_schema(),
             "prediction": cls.Prediction.model_json_schema() if cls.Prediction else None,
             "prediction_required": cls.prediction_required,

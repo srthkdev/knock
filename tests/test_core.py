@@ -175,7 +175,7 @@ def test_episode_budget_validation_and_prediction_scoring(tmp_path):
     assert abs(obs.data["prediction_error"]["moved_mm"]["error"] - 10) < 5
     ep.call(ToolCall("toy_weigh", "B"))
     assert ep.budget_left == 0
-    assert "budget exhausted" in ep.call(ToolCall("toy_weigh", "A")).data["error"]
+    assert "budget too low" in ep.call(ToolCall("toy_weigh", "A")).data["error"]
     assert "requires a prediction" in ep.call(ToolCall("toy_flick", "B", {"impulse_Ns": 1})).data["error"]
     J = b.hidden["mass"] * math.sqrt(2 * b.hidden["mu"] * G * 0.6)
     ep.call(ToolCall("toy_flick", "B", {"impulse_Ns": J}, prediction={"stop_x_m": 0.5}))
@@ -266,3 +266,105 @@ def test_run_episode_drives_any_agent():
     assert r["success"], r
     r2 = run_episode(Stubborn(), Episode(sc.world, sc.task))
     assert not r2["success"] and "error" in r2
+
+
+# ---------------------------------------------------------------------- multi-turn games
+class Lamp(Component):
+    kind = "toy_lamp"
+    params = ParamSet(visible={"watts": Uniform(1, 100)}, hidden={"efficiency": Uniform(0.1, 0.9)})
+
+
+class BuildArgs(BaseModel):
+    model_config = {"extra": "forbid"}
+    watts: float = Field(ge=1, le=100)
+
+
+class BuildLamp(Tool):
+    name = "toy_build_lamp"
+    description = "place a lamp (costs money)"
+    Args = BuildArgs
+    cost = {"money": 30}
+
+    def run(self, ctx, target, args):
+        hid = {"efficiency": float(ctx.rng("eff", len(ctx.world.components)).uniform(0.1, 0.9))}
+        lamp = ctx.world.add(Lamp(ctx.world.next_id("L"), {"watts": args.watts}, hid))
+        return Observation({"built": lamp.id})
+
+
+class RunArgs(BaseModel):
+    model_config = {"extra": "forbid"}
+    seconds: float = Field(ge=1, le=60)
+
+
+class RunShift(Tool):
+    name = "toy_run"
+    description = "run the plant; light produced is the reward"
+    Args = RunArgs
+
+    def costs(self, args=None):
+        return {"sim_seconds": args.seconds if args is not None else 1.0}
+
+    def run(self, ctx, target, args):
+        light = sum(c.visible["watts"] * c.hidden["efficiency"] for c in ctx.world.components) * args.seconds
+        return Observation({"light": round(light, 2)}, reward=light)
+
+
+class Finish(Tool):
+    name = "toy_finish"
+    description = "end the game now"
+    finishes = True
+
+    def run(self, ctx, target, args):
+        return Observation({"finished": True})
+
+
+class LightTask(Task):
+    kind = "toy_light"
+
+    def final(self, world, episode):
+        return {"success": episode.total_reward >= self.params["goal_light"], "score": episode.total_reward,
+                "lamps": len(world.components)}
+
+
+for cls in (Lamp,):
+    COMPONENTS.register()(cls)
+for cls in (BuildLamp, RunShift, Finish):
+    TOOLS.register()(cls)
+from knock.core import TASKS  # noqa: E402
+TASKS.register()(LightTask)
+
+
+def light_game(**budgets):
+    task = LightTask("make light", budgets or {"money": 100, "sim_seconds": 20, "turns": 10},
+                     ["toy_build_lamp", "toy_run", "toy_finish"], None, {"goal_light": 50})
+    return Episode(World([], seed=4), task)
+
+
+def test_game_world_mutation_costs_rewards_and_finish():
+    ep = light_game()
+    assert ep.call(ToolCall("toy_build_lamp", None, {"watts": 50})).data["built"] == "L1"
+    ep.call(ToolCall("toy_build_lamp", None, {"watts": 50}))
+    ep.call(ToolCall("toy_build_lamp", None, {"watts": 50}))
+    assert "not available" in ep.call(ToolCall("toy_build_lamp", None, {"watts": 5})).data["error"]  # money left 10 < 30
+    assert len(ep.world.components) == 3 and ep.budgets_left["money"] == 10
+    assert "not enough budget" in ep.call(ToolCall("toy_run", None, {"seconds": 30})).data["error"]
+    ep.call(ToolCall("toy_run", None, {"seconds": 5}))
+    assert ep.total_reward > 0 and ep.budgets_left["sim_seconds"] == 15 and ep.budgets_left["turns"] == 6
+    ep.call(ToolCall("toy_finish"))
+    r = ep.result
+    assert ep.done and r["end"] == "finished" and r["score"] == ep.total_reward and r["lamps"] == 3
+    kinds = [e.kind for e in ep.events.events]
+    assert "reward" in kinds and kinds[-1] == "episode_end"
+    again = World.from_dict(ep.world.to_dict())
+    assert [c.id for c in again.components] == ["L1", "L2", "L3"]
+
+
+def test_game_ends_when_budgets_run_out():
+    ep = light_game(money=30, sim_seconds=10, turns=10)
+    ep.call(ToolCall("toy_build_lamp", None, {"watts": 80}))
+    ep.call(ToolCall("toy_run", None, {"seconds": 10}))
+    assert ep.done and ep.result["end"] == "budget exhausted"
+    ep2 = light_game(money=100, sim_seconds=100, turns=2)
+    ep2.call(ToolCall("toy_build_lamp", None, {"watts": 10}))
+    ep2.call(ToolCall("toy_run", None, {"seconds": 3}))
+    assert ep2.done and ep2.result["spent"]["turns"] == 2

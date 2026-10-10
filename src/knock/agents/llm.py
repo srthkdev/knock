@@ -53,15 +53,17 @@ def _history_lines(history: list[dict]) -> str:
     return "\n".join(lines)
 
 
-def build_prompt(view: AgentView, image_labels: list[str]) -> str:
+def build_prompt(view: AgentView, image_labels: list[str], extra: str = "") -> str:
     task = dict(view.task)
     rules = task.pop("rules", "")
     goal = task.pop("goal")
     imgs = "\n".join(f"  image {i + 1}: {lbl}" for i, lbl in enumerate(image_labels)) or "  (none)"
-    left = view.budget_left
-    ask = ("You have no probes left: you MUST use the decisive act now." if left <= 0 else
-           f"You have {left} probe(s) left. Choose your next tool call.")
-    return f"""{INSTRUCTIONS}
+    left = {k: round(v, 3) for k, v in view.budgets_left.items()}
+    has_act = any(t["terminal"] for t in view.tools)
+    only_act = has_act and all(t["terminal"] for t in view.tools)
+    ask = ("No budget left for other tools: you MUST use the decisive act now." if only_act else
+           f"Budgets left: {json.dumps(left)}. Choose your next tool call.")
+    return f"""{INSTRUCTIONS}{chr(10) + extra if extra else ""}
 
 World rules
 {rules}
@@ -88,7 +90,9 @@ Reply with JSON: tool, target, args (fill the fields your tool uses, null for th
 
 
 class CodexLLMAgent:
-    def __init__(self, model: str = "gpt-6-luna", effort: str = "high", log_dir: str | Path | None = None):
+    def __init__(self, model: str = "gpt-6-luna", effort: str = "high", log_dir: str | Path | None = None,
+                 extra_instructions: str = ""):
+        self.extra = extra_instructions
         self.model = model
         self.effort = effort
         self.log_dir = Path(log_dir) if log_dir else None
@@ -96,7 +100,7 @@ class CodexLLMAgent:
         self._meta: dict = {}
 
     def reset(self, view: AgentView):
-        self._meta = {"model": self.model, "effort": self.effort, "calls": [], "tainted": False}
+        self._meta = {"model": self.model, "effort": self.effort, "llm_calls": [], "tainted": False}
         self._k = 0
 
     def episode_meta(self) -> dict:
@@ -108,7 +112,7 @@ class CodexLLMAgent:
         tools = [TOOLS.get(t["name"]) for t in tools_specs]
         ids = [c["id"] for c in view.world["components"]]
         images = [a for a in view.attachments if a.kind == "image"]
-        prompt = build_prompt(view, [a.label for a in images])
+        prompt = build_prompt(view, [a.label for a in images], self.extra)
         stem = (self.log_dir / f"call{self._k:02d}") if self.log_dir else None
         self._k += 1
         res = run_codex(prompt, action_schema(tools, ids), model=self.model, effort=self.effort,
@@ -116,7 +120,7 @@ class CodexLLMAgent:
         tainted = res.tainted_items
         if tainted:
             self._meta["tainted"] = True
-        self._meta["calls"].append(res.meta())
+        self._meta["llm_calls"].append(res.meta())
         if res.reply is None:
             return ToolCall("__unparseable__", None, reasoning="reply could not be parsed")
         return parse_action(res.reply, tools)

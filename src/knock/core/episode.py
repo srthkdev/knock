@@ -23,27 +23,31 @@ class AgentView:
     """Everything an agent is allowed to know at a decision point."""
     world: dict
     task: dict
-    budget_left: int
+    budget_left: float  # probe budget left (classic tasks)
     tools: list[dict]
     history: list[dict]
     attachments: list[Attachment] = field(default_factory=list)
     done: bool = False
+    budgets_left: dict[str, float] = field(default_factory=dict)
+    total_reward: float = 0.0
 
 
 class Episode:
     def __init__(self, world: World, task: Task, out_dir: str | Path | None = None, events: EventLog | None = None,
-                 tools: dict[str, Tool] | None = None):
+                 tools: dict[str, Tool] | None = None, require_predictions: bool = True):
+        self.require_predictions = require_predictions  # False: predictions optional (ablations)
         self.world = world
         self.task = task
         self.out_dir = Path(out_dir) if out_dir else None
         if self.out_dir:
             self.out_dir.mkdir(parents=True, exist_ok=True)
         self.events = events or EventLog()
-        names = [*task.probes, task.act]
+        names = [*task.probes, *([task.act] if task.act else [])]
         self._tools = tools or {n: TOOLS.get(n)() for n in names}
-        if not self._tools[task.act].terminal:
+        if task.act and not self._tools[task.act].terminal:
             raise ValueError(f"act {task.act!r} is not a terminal tool")
-        self.used = 0
+        self.spent: dict[str, float] = {k: 0.0 for k in task.budgets}
+        self.total_reward = 0.0
         self.history: list[tuple[ToolCall, Observation]] = []
         self.result: dict | None = None
         self.events.emit("episode_start", 0, world=world.public(), task=task.public())
@@ -54,12 +58,31 @@ class Episode:
         return self.result is not None
 
     @property
-    def budget_left(self) -> int:
-        return self.task.budget - self.used
+    def used(self) -> float:
+        """Probe units spent (classic tasks)."""
+        return self.spent.get("probes", 0.0)
+
+    @property
+    def budgets_left(self) -> dict[str, float]:
+        return {k: self.task.budgets[k] - self.spent.get(k, 0.0) for k in self.task.budgets}
+
+    @property
+    def budget_left(self) -> float:
+        return self.budgets_left.get("probes", 0.0)
+
+    def _fits(self, costs: dict[str, float]) -> bool:
+        left = self.budgets_left
+        need = dict(costs)
+        if "turns" in left:
+            need["turns"] = need.get("turns", 0.0) + 1.0
+        return all(left.get(k, float("inf")) >= v - 1e-9 for k, v in need.items() if v > 0)
 
     def available(self) -> list[Tool]:
-        probes = [self._tools[n] for n in self.task.probes if self._tools[n].cost <= self.budget_left]
-        return [*probes, self._tools[self.task.act]]
+        tools = [self._tools[n] for n in self.task.probes
+                 if self._tools[n].finishes or self._fits(self._tools[n].costs())]
+        if self.task.act:
+            tools.append(self._tools[self.task.act])
+        return tools
 
     def view(self) -> AgentView:
         hist = []
@@ -68,7 +91,8 @@ class Episode:
             hist.append({"call": c.to_dict(), "observation": o.data})
             atts.extend(o.attachments)
         return AgentView(world=self.world.public(), task=self.task.public(), budget_left=self.budget_left,
-                         tools=[t.spec() for t in self.available()], history=hist, attachments=atts, done=self.done)
+                         tools=[t.spec() for t in self.available()], history=hist, attachments=atts, done=self.done,
+                         budgets_left=self.budgets_left, total_reward=self.total_reward)
 
     # ------------------------------------------------------------------ acting
     def call(self, call: ToolCall) -> Observation:
@@ -82,6 +106,11 @@ class Episode:
             self.events.emit("error", step, call=call.to_dict(), error=str(e))
             return obs
 
+        costs = tool.costs(args)
+        if not tool.terminal and not tool.finishes and not self._fits(costs):
+            obs = Observation({"error": f"not enough budget for {tool.name}: needs {costs}, left {self.budgets_left}"})
+            self.events.emit("error", step, call=call.to_dict(), error=obs.data["error"])
+            return obs
         self.events.emit("tool_call", step, call=call.to_dict())
         ctx = ToolContext(self.world, step, self.out_dir, list(self.history))
         if tool.terminal:
@@ -89,7 +118,11 @@ class Episode:
             obs = Observation(data=dict(outcome), truth=dict(outcome))
         else:
             obs = tool.run(ctx, target, args)
-            self.used += tool.cost
+            for k, v in costs.items():
+                if k in self.spent:
+                    self.spent[k] += v
+        if "turns" in self.spent:
+            self.spent["turns"] += 1.0
 
         scores = tool.score_prediction(prediction, obs) if prediction is not None else {}
         if scores:
@@ -98,7 +131,13 @@ class Episode:
         self.events.emit("observation", step, tool=tool.name, target=call.target, data=obs.data,
                          attachments=[a.__dict__ for a in obs.attachments])
         self.history.append((call, obs))
+        if obs.reward is not None:
+            self.total_reward += float(obs.reward)
+            self.events.emit("reward", step, tool=tool.name, reward=float(obs.reward), total=self.total_reward)
 
+        if not tool.terminal and (tool.finishes or self._exhausted()):
+            self._finalize(step, reason="finished" if tool.finishes else "budget exhausted")
+            return obs
         if tool.terminal:
             success = bool(self.task.success(self.world, call, obs.truth))
             self.result = {
@@ -115,10 +154,32 @@ class Episode:
             self.events.emit("episode_end", step, success=success)
         return obs
 
+    def _exhausted(self) -> bool:
+        """Games without an act end when no budgeted tool fits any more (or turns run out)."""
+        if self.task.act:
+            return False
+        left = self.budgets_left
+        if left.get("turns", 1.0) <= 1e-9:
+            return True
+        return not any(self._fits(self._tools[n].costs()) for n in self.task.probes if not self._tools[n].finishes)
+
+    def _finalize(self, step: int, reason: str) -> None:
+        final = self.task.final(self.world, self)
+        self.result = {"success": bool(final.get("success")), "score": final.get("score"), "end": reason,
+                       "spent": dict(self.spent), "total_reward": self.total_reward, "probes_used": self.used,
+                       "probe_predictions": [e.payload for e in self.events.of("prediction_scored")],
+                       **{k: v for k, v in final.items() if k not in ("success", "score")}}
+        self.events.emit("outcome", step, **self.result)
+        self.events.emit("episode_end", step, success=self.result["success"])
+
     def _validate(self, call: ToolCall):
         allowed = {t.name: t for t in self.available()}
         if call.tool not in allowed:
-            reason = "probe budget exhausted" if call.tool in self.task.probes else "not available in this task"
+            if call.tool in self._tools:
+                need = self._tools[call.tool].costs()
+                reason = f"not available: budget too low (needs {need}, left {self.budgets_left})"
+            else:
+                reason = "not available in this task"
             raise ValueError(f"tool {call.tool!r} {reason}; available: {sorted(allowed)}")
         tool = allowed[call.tool]
         target = None
@@ -142,7 +203,7 @@ class Episode:
                     prediction = tool.Prediction.model_validate(call.prediction)
                 except ValidationError as e:
                     raise ValueError(f"bad prediction for {tool.name}: {e.errors()[0]['msg']}") from None
-            elif tool.prediction_required:
+            elif tool.prediction_required and self.require_predictions:
                 raise ValueError(f"{tool.name} requires a prediction: {list(tool.Prediction.model_fields)}")
         return tool, target, args, prediction
 
@@ -150,6 +211,7 @@ class Episode:
     def trace(self, extra: dict | None = None) -> dict:
         from .. import BENCHMARK_VERSION
         return {
+            **(extra or {}),  # agent metadata first: core fields below can never be overwritten
             "benchmark_version": BENCHMARK_VERSION,
             "world": self.world.to_dict(),
             "task": self.task.to_dict(),
@@ -157,7 +219,6 @@ class Episode:
                       for c, o in self.history],
             "result": self.result,
             "events": [e.to_dict() for e in self.events.events],
-            **(extra or {}),
         }
 
     def save(self, extra: dict | None = None) -> Path | None:

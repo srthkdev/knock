@@ -74,6 +74,24 @@ class World:
     def public(self) -> dict:
         return {"components": [c.public() for c in self.components], "settings": self.settings}
 
+    # mutation (games: building, removing, reconfiguring)
+    def add(self, component: Component) -> Component:
+        if component.id in self.ids():
+            raise ValueError(f"component id {component.id!r} already exists")
+        self.components.append(component)
+        return component
+
+    def remove(self, id: str) -> Component:
+        c = self.get(id)
+        self.components.remove(c)
+        return c
+
+    def next_id(self, prefix: str) -> str:
+        n = 1
+        while f"{prefix}{n}" in self.ids():
+            n += 1
+        return f"{prefix}{n}"
+
     def replace(self, component: Component) -> "World":
         """A copy of the world with one component swapped (counterfactuals, oracle search)."""
         comps = [component if c.id == component.id else c for c in self.components]

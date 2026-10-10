@@ -11,7 +11,7 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Callable
 
-KINDS = ("episode_start", "tool_call", "observation", "prediction_scored", "outcome", "error", "episode_end")
+KINDS = ("episode_start", "tool_call", "observation", "prediction_scored", "reward", "outcome", "error", "episode_end")
 
 
 @dataclass
