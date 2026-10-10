@@ -46,6 +46,7 @@ class Scenario:
 class Pack:
     name: ClassVar[str]
     description: ClassVar[str] = ""
+    rules: ClassVar[str] = ""  # world rules shown to agents (physics conventions, units)
     components: ClassVar[list[type[Component]]] = []
     tools: ClassVar[list[type[Tool]]] = []
     tasks: ClassVar[list[type[Task]]] = []
