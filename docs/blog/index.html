@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yantra: Physical Reasoning Env</title>
+<meta name="description" content="Yantra is a MuJoCo environment for training and evaluating agents that have to identify hidden physical parameters, tune a system and hand it over. Notes on the design and on what four frontier models did.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<style>
+:root {
+  --bg: #060a12; --panel: #0b1220; --panel2: #0f1829; --ink: #d9e3f2; --muted: #8494ac; --faint: #4a5a74;
+  --line: #1a2740; --grid: rgba(90,162,255,.045);
+  --blue: #5aa2ff; --cyan: #5fd4ff; --deep: #2b5fb8; --amber: #f2b84b; --red: #ff7a6b;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 17.5px/1.72 "IBM Plex Serif", Georgia, serif;
+  background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+.wrap { max-width: 720px; margin: 0 auto; padding: 0 16px; }
+header { padding: 80px 0 28px; border-bottom: 1px solid var(--line); margin-bottom: 36px; }
+.label { font: 500 12px "IBM Plex Mono", monospace; letter-spacing: .08em; color: var(--blue); }
+h1 { font: 600 clamp(30px, 5.2vw, 44px)/1.12 "IBM Plex Sans", sans-serif; letter-spacing: -.015em; margin: 14px 0 16px; }
+.dek { font-size: 19px; color: var(--muted); margin: 0 0 20px; }
+.byline { font: 13px "IBM Plex Mono", monospace; color: var(--faint); }
+h2 { font: 600 23px/1.25 "IBM Plex Sans", sans-serif; margin: 56px 0 14px; }
+h2 .s { font: 500 13px "IBM Plex Mono", monospace; color: var(--blue); margin-right: 10px; }
+h3 { font: 600 17px/1.35 "IBM Plex Sans", sans-serif; margin: 30px 0 8px; }
+p { margin: 0 0 17px; }
+ul, ol { margin: 0 0 18px; padding-left: 22px; }
+li { margin-bottom: 6px; }
+a { color: var(--cyan); text-underline-offset: 3px; text-decoration-color: rgba(95,212,255,.4); }
+b, strong { font-weight: 500; color: #fff; }
+.mono { font-family: "IBM Plex Mono", monospace; font-size: .86em; color: var(--cyan); }
+figure { margin: 30px 0 34px; }
+.plate { background: var(--panel); border: 1px solid var(--line); padding: 18px 18px 14px; }
+figcaption { font: 13.5px/1.55 "IBM Plex Sans", sans-serif; color: var(--muted); margin-top: 12px; }
+figcaption .fig { font: 600 12px "IBM Plex Mono", monospace; color: var(--blue); margin-right: 6px; }
+svg { display: block; width: 100%; height: auto; overflow: visible; }
+.eq { border-left: 2px solid var(--deep); padding: 2px 0 2px 16px; margin: 0 0 18px; overflow-x: auto; }
+.eq .katex-display { margin: .5em 0; }
+.lead { font-size: 19px; }
+table { width: 100%; border-collapse: collapse; font: 14.5px/1.45 "IBM Plex Sans", sans-serif; }
+th, td { padding: 9px 8px; border-bottom: 1px solid var(--line); text-align: right; vertical-align: top; }
+th:first-child, td:first-child { text-align: left; }
+th { font: 500 11.5px "IBM Plex Mono", monospace; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+td.l, th.l { text-align: left; }
+.tbl { overflow-x: auto; margin: 0 0 12px; }
+.note { font: 13.5px/1.55 "IBM Plex Sans", sans-serif; color: var(--muted); }
+.ep { border-top: 1px solid var(--line); padding-top: 18px; margin-top: 24px; }
+.ep h3 { margin-top: 0; }
+.res { font: 500 12px "IBM Plex Mono", monospace; margin-left: 8px; }
+.ok { color: var(--cyan); } .no { color: var(--red); }
+.log { font: 13.5px/1.65 "IBM Plex Mono", monospace; color: var(--muted); background: var(--panel); border: 1px solid var(--line); padding: 12px 14px; margin: 0 0 14px; overflow-x: auto; }
+.log div { white-space: pre-wrap; }
+.log .t { color: var(--faint); }
+blockquote { margin: 0 0 16px; padding: 2px 0 2px 16px; border-left: 2px solid var(--cyan); color: var(--ink); font-style: italic; }
+.gif { width: 100%; display: block; border: 1px solid var(--line); }
+footer { margin: 72px 0 48px; padding-top: 18px; border-top: 1px solid var(--line); font: 13.5px/1.6 "IBM Plex Sans", sans-serif; color: var(--muted); }
+/* svg text */
+.sx { font: 500 12px "IBM Plex Sans", sans-serif; fill: var(--ink); }
+.sm { font: 500 11px "IBM Plex Mono", monospace; fill: var(--muted); }
+.sb { font: 600 13px "IBM Plex Sans", sans-serif; fill: var(--ink); }
+.si { font: italic 14px "IBM Plex Serif", serif; fill: var(--ink); }
+@media (max-width: 640px) { body { font-size: 16.5px; } header { padding-top: 56px; } .plate { padding: 12px 10px; } }
+</style>
+</head>
+<body>
+<main class="wrap">
+
+<header>
+  <div class="label">YANTRA / NOTES 01</div>
+  <h1>Training agents to find what the physics is hiding</h1>
+  <p class="dek">A MuJoCo environment where an agent must infer hidden friction, actuator latency and sensor noise from its own experiments, then tune a physical system that has to work on a run it has never seen.</p>
+  <div class="byline">October 2026 · MuJoCo 3 · 29 levels · 4 models · 116 episodes</div>
+</header>
+
+<p class="lead">GPT-6.1 Sol predicted its last test run exactly: 92 boxes shipped, and 92 shipped. It handed the line over. In the scored run on a fresh seed it shipped 93 good boxes and one underweight one, so the level counted as a fail.</p>
+<p>Sol was the strongest model we tested, and this was one of its better episodes. It found the defect in the scale data, worked out why its reject pushers were missing, fixed both and verified the result. What it did not do was leave enough margin for measurement noise it had already seen. This post explains the environment that produced that failure, the capability it is meant to train, and what four models did in it.</p>
+
+<h2><span class="s">§1</span>The capability</h2>
+<p>A robot policy can be very good at following a trajectory and still fail on a real cell. The belt is slicker than expected, a gripper valve lags by 40 ms, or a load cell drifts. Today a person closes that gap: they commission the cell. They run it, watch where it goes wrong, infer the parameter that is off, adjust speeds, timings and thresholds, and run it again until it holds.</p>
+<p>That job sits above the low-level controller, and it is the capability Yantra is built to train and measure. We break it into four parts:</p>
+<ol>
+<li><b>System identification.</b> Infer unobserved physical parameters (friction, latency, noise, defect distributions) from the outcomes of your own actions.</li>
+<li><b>Forward prediction.</b> Before each experiment, say what will happen. A model that can't predict its own test run doesn't understand the system it built.</li>
+<li><b>Design for margin.</b> Pick settings that will work under conditions you haven't sampled, not just the ones you tested.</li>
+<li><b>Verification.</b> Don't ship a configuration you never ran.</li>
+</ol>
+<p>Each part can be measured separately from the episode traces. The results in §6 measure each one.</p>
+
+<h2><span class="s">§2</span>The environment</h2>
+<p>Every Yantra level is a MuJoCo world with two kinds of parameters. <b>Visible</b> ones are what the agent builds and sets: layout, part positions, speeds, thresholds, timings. <b>Hidden</b> ones are drawn per level and never shown: surface friction μ, actuator speed and valve delay, sensor noise σ, and the distribution of what the input produces. In RL terms each level is a POMDP whose transition function depends on a latent θ, and θ changes from level to level. That is domain randomisation, with the agent responsible for working out which domain it landed in.</p>
+<p>The agent works through tools. A world exposes a few, each typed, and any tool that runs the physics needs a numeric prediction first. Episodes have budgets for turns, simulated test time and money. A terminal tool ends the episode and triggers a scored run on a seed the agent never saw, so tuning to its own test seeds doesn't pay. That held-out run plays the same role as deployment after sim training.</p>
+<p>The same core runs three worlds so far: a <b>cube lab</b> (probe identical-looking cubes, then make one flick), a <b>bottling line</b> (checkweigher plus reject pusher), and a <b>factory floor</b> on a grid, which is the largest and is what most of this post covers.</p>
+
+<figure><img class="gif" src="../../assets/factory-watch.gif" alt="Factory level replay: the agent's build commands and reasoning on the left, a 3D MuJoCo replay of its test run in the centre"><figcaption><span class="fig">FIG. 1</span>A factory episode in the trace viewer. On the left: the agent's commands, reasoning, and prediction next to the actual outcome. In the centre: the MuJoCo replay of that test run.</figcaption></figure>
+
+<h3>The factory world</h3>
+<p>The floor is a grid of 0.5 m cells with walls, one or two inlets, and a shipping dock. The agent places belts, scales, pushers and bins using a small build language with costs attached, runs the line for 10 to 90 simulated seconds, and gets a report: bin counts and weights, spills and jams by cell, every scale reading, and every pusher firing. To pass, the 90 s production run must reach a throughput target with zero bad items shipped, zero spills and zero jams.</p>
+<p>Levels come in three tiers. Tier 1 is routing at speed. In tier 2 the inlet sends some items out of spec, and the brief doesn't say in which direction. In tier 3 two lines with different defects merge into one dock. Some lines carry toys instead of boxes: a rubber duck, a fish, and a cow that stands on four legs.</p>
+
+<h2><span class="s">§3</span>Where the difficulty comes from</h2>
+<p>No rule in the code says an item spills. Spills, jams and misreads come out of contact dynamics at 250 Hz. Two mechanisms do most of the work, and both carry over directly to robotics.</p>
+
+<h3>Friction-limited drive, applied at the contact</h3>
+<p>A belt pushes each item toward belt velocity, but the force it can apply is capped by friction. It also acts at the item's base, not at its centre of mass:</p>
+<div class="eq">$$\mathbf F=\operatorname{clip}_{\,\mu m g}\!\Big(m\,\frac{v_b\hat{\mathbf u}-\mathbf v}{\Delta t}\Big),\qquad \boldsymbol\tau=\mathbf r_{\text{contact}}\times\mathbf F$$</div>
+<p>Two consequences follow. At a turn, an item has to lose its whole velocity component along the old direction at no more than μg, so it slides about $v_b^2/2\mu g$ before it is moving the new way. With μ unknown, the safe speed is something the agent has to find out. And a tall item tips when the capped force's torque beats gravity's restoring torque.</p>
+
+<figure class="plate">
+<svg viewBox="0 0 680 220" role="img" aria-label="A box slides under capped traction; a tall item tips because the force acts at its base">
+  <defs>
+    <marker id="mb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--cyan)"/></marker>
+    <marker id="mg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--blue)"/></marker>
+    <pattern id="hb" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="7" style="stroke:var(--line);stroke-width:3"/></pattern>
+  </defs>
+  <rect x="10" y="168" width="300" height="16" fill="url(#hb)" style="stroke:var(--faint)"/>
+  <rect x="110" y="84" width="84" height="84" style="fill:var(--panel2);stroke:var(--ink);stroke-width:1.3"/>
+  <circle cx="152" cy="126" r="3.5" style="fill:var(--ink)"/>
+  <path d="M152 130 V164" style="stroke:var(--blue);stroke-width:1.8" marker-end="url(#mg)"/>
+  <text x="140" y="156" text-anchor="end" class="si" style="fill:var(--blue)">mg</text>
+  <path d="M128 168 H206" style="stroke:var(--cyan);stroke-width:2.2" marker-end="url(#mb)"/>
+  <text x="212" y="164" class="si" style="fill:var(--cyan)">F ≤ μmg</text>
+  <path d="M110 74 H194" style="stroke:var(--faint)"/><text x="152" y="66" text-anchor="middle" class="sm">2a</text>
+  <text x="152" y="208" text-anchor="middle" class="sm">μh &lt; a : slides</text>
+  <g transform="translate(370,0)">
+    <rect x="0" y="168" width="300" height="16" fill="url(#hb)" style="stroke:var(--faint)"/>
+    <g transform="rotate(11 150 168)"><rect x="108" y="40" width="42" height="128" style="fill:var(--panel2);stroke:var(--ink);stroke-width:1.3"/></g>
+    <circle cx="140" cy="104" r="3.5" style="fill:var(--ink)"/>
+    <path d="M112 168 H190" style="stroke:var(--cyan);stroke-width:2.2" marker-end="url(#mb)"/>
+    <path d="M162 54 A60 60 0 0 1 196 104" fill="none" style="stroke:var(--cyan);stroke-width:1.5" marker-end="url(#mb)"/>
+    <text x="204" y="88" class="si" style="fill:var(--cyan)">τ = r × F</text>
+    <path d="M92 168 V104" style="stroke:var(--faint);stroke-dasharray:3 3"/><text x="84" y="140" text-anchor="end" class="si">h</text>
+    <text x="150" y="208" text-anchor="middle" class="sm">μh &gt; a : tips</text>
+  </g>
+</svg>
+<figcaption><span class="fig">FIG. 2</span>The same capped drive force, two outcomes. Roughly, an item tips when μmgh &gt; mga: h is the height of its centre of mass and a is half its base. The cow tips on hard accelerations and then jams the line behind it. Grasps and pushes in manipulation fail the same way.</figcaption>
+</figure>
+
+<h3>Sensors read physics, with noise</h3>
+<p>A scale is a separate body, and its reading is the contact force MuJoCo computes on it, averaged while the item sits fully on the platform. Noise is added, and it shrinks the longer the item stays on the platform:</p>
+<div class="eq">$$\hat w=\tfrac1g\,\overline{|F_z|}+\varepsilon,\qquad \varepsilon\sim\mathcal N\!\Big(0,\;\sigma^2\,\frac{0.5\,\text{s}}{T_{\text{dwell}}}\Big),\qquad T_{\text{dwell}}\propto 1/v_b$$</div>
+<p>This sets up the trade-off at the centre of tiers 2 and 3. Running the belt faster raises throughput but makes each weight noisier. If items are packed too close, two of them share the platform and read as one heavy item, because the contact forces simply add. Pushers have the same structure: the paddle fires after a hidden valve delay and moves at a hidden speed, so the trigger offset has to lead the item by about $v_b(\tau + s/v_p)$, and neither τ nor $v_p$ is given.</p>
+
+<h2><span class="s">§4</span>Levels that are solvable by construction</h2>
+<p>Random physical levels are often impossible or trivial, so a generator alone isn't enough. Each generated level is solved before it's kept. The generator routes a reference factory itself, using Dijkstra with a turn penalty because every turn is a place momentum can throw an item. On tiered maps it places a scale, a gap and a pusher on a straight run. Then it grid-searches speeds, thresholds and pusher timing against the true θ in full physics. If no configuration passes, the level is discarded.</p>
+<p>The reference build knows θ and the agent doesn't, so the agent gets slack. The throughput target is 90% of the reference's, the money cap is 1.3× its cost, and the brief only says items may be "out of spec". A third of generated levels are held out. Their layouts and replays are never published, only their scores. For RL this means an unlimited supply of levels, each with a known-feasible solution and a difficulty tier you can build a curriculum from.</p>
+
+<h2><span class="s">§5</span>One episode, step by step</h2>
+<p>Here's what system identification looks like when it works. In this level, 30% of boxes leave the filler about 100 g light. Sol isn't told that, and it isn't told the scale's noise level either.</p>
+
+<figure class="plate">
+<svg id="strip" viewBox="0 0 680 330" role="img" aria-label="Scale readings from three of Sol's test runs with its reject threshold moving from 900 to 950 to 970 grams"></svg>
+<figcaption><span class="fig">FIG. 3</span>Every scale reading from Sol's three test runs on <span class="mono">quality_gate-1</span>, with the hidden truth drawn behind them: underfilled boxes at 900 ± 15 g (30%), good boxes at 1000 ± 12 g (70%), and load-cell noise σ ≈ 11 g. Readings above the cutoff ship. Run 1's 900 g cutoff let 901, 919 and 925 g boxes through. Sol saw them, moved the cutoff to 950 g, saw a 951 g reading in the gap, and moved it to 970 g, about 2σ below the good cluster and 4σ above the bad one. It passed.</figcaption>
+</figure>
+
+<blockquote>"The 900 g cutoff appears to let underfilled boxes near 920 g ship. Raise it to 950 g, between those readings and the good-box cluster."</blockquote>
+<p>Each change is driven by evidence from the previous run, and the final threshold leaves room for noise. That last part is what Sol skipped on the level in the opening, where it stopped at a cutoff that had held in two tests.</p>
+
+<h2><span class="s">§6</span>Results</h2>
+<p>We ran four models on 29 levels: 12 hand-built and 17 generated, 4 of them held out. Each model played each level once. GPT models ran through <span class="mono">codex exec</span> in a read-only sandbox with an empty working directory, and any tool use flagged the episode. Claude ran through <span class="mono">claude -p</span> with all tools disabled. Both answered in a strict JSON action schema.</p>
+
+<div class="tbl"><table>
+<thead><tr><th>Model</th><th>Passed</th><th>Tier 1</th><th>Tier 2</th><th>Tier 3</th><th>Held-out</th><th>Mean score</th></tr></thead>
+<tbody>
+<tr><td>GPT-6.1 Sol</td><td><b>22/29</b></td><td>10/10</td><td>9/12</td><td>3/7</td><td>4/4</td><td>48</td></tr>
+<tr><td>Claude Sonnet 5.5</td><td><b>19/29</b></td><td>10/10</td><td>6/12</td><td>3/7</td><td>4/4</td><td>31</td></tr>
+<tr><td>GPT-6 Luna</td><td><b>11/29</b></td><td>9/10</td><td>1/12</td><td>1/7</td><td>2/4</td><td>14</td></tr>
+<tr><td>GPT-5.6 Terra</td><td><b>9/29</b></td><td>6/10</td><td>2/12</td><td>1/7</td><td>2/4</td><td>−2</td></tr>
+</tbody></table></div>
+<p class="note">Score = good items shipped in the 90 s production run − 5 per bad item − 2 per spill − 3 per jam. Pass requires throughput ≥ target and zero bad items, spills and jams.</p>
+
+<p>Routing is mostly solved: 35 of 40 tier-1 attempts passed. Once items have to be measured and sorted, pass rates drop to 18 of 48 in tier 2 and 8 of 28 in tier 3. The rest of this section maps the failures onto the four capabilities from §1.</p>
+
+<h3>Verification: the largest single effect</h3>
+<figure class="plate">
+<svg id="verify" viewBox="0 0 680 250" role="img" aria-label="Pass rate when the final configuration was tested versus not tested, and untested handovers per model"></svg>
+<figcaption><span class="fig">FIG. 4</span>Left: pass rate by whether the agent ran its final configuration before handing it over, pooled over all 116 episodes. Right: how many of each model's 29 episodes ended with an untested change. Luna made a change after its last test in 14 of 29 episodes.</figcaption>
+</figure>
+<p>Agents that tested their final configuration passed 56 of 82 times (68%). Agents that changed something after their last test passed 5 of 34 times (15%). Some of this is selection, since an agent that runs out of turns can't test. But the traces show where the missing turn went: earlier turns spent on guesses, then a final change that's judged "should be safe" and handed over. Terra's Rush Hour run is the clearest case (§7).</p>
+
+<h3>Forward prediction tracks competence</h3>
+<p>Every test run requires a prediction of items shipped and spilled. Over an episode, the error measures how well the model understands the system it built:</p>
+<div class="tbl"><table>
+<thead><tr><th>Model</th><th>Test runs</th><th>Median miss, items shipped</th><th>Passed</th></tr></thead>
+<tbody>
+<tr><td>GPT-6.1 Sol</td><td>87</td><td>3</td><td>22</td></tr>
+<tr><td>Claude Sonnet 5.5</td><td>65</td><td>4</td><td>19</td></tr>
+<tr><td>GPT-6 Luna</td><td>77</td><td>10</td><td>11</td></tr>
+<tr><td>GPT-5.6 Terra</td><td>72</td><td>12</td><td>9</td></tr>
+</tbody></table></div>
+<p>The ordering is the same as the leaderboard, and it holds within episodes too. In episodes that passed, the median miss on the last test run was 2 items; in failed episodes it was 7.5. Prediction error needs no labels and is available at every step, which makes it a natural auxiliary reward or early-stopping signal for training.</p>
+
+<h3>Quality fails in two different ways</h3>
+<figure class="plate">
+<svg id="fails" viewBox="0 0 680 230" role="img" aria-label="Failed production checks per model, split by quality, spills, throughput and jams"></svg>
+<figcaption><span class="fig">FIG. 5</span>Failed production checks per model; one failed episode can fail several checks. "Quality" means at least one bad item was shipped, and it is the most common failure for every model.</figcaption>
+</figure>
+<p>Spills and jams are motion problems, and the stronger models mostly solved them. Quality failures, where a bad item reaches the dock, split into two kinds when you look at how many bad items shipped:</p>
+<ul>
+<li><b>The station never worked</b> (8 to 30 bad items shipped). This covers all 10 of Sonnet's quality failures and 3 of Sol's. The threshold was on the wrong side of the defect cluster, or the pusher fired but didn't move the box. This is a failure of system identification: the agent never correctly worked out which items were bad or how its actuator behaved.</li>
+<li><b>The station worked, but without margin</b> (exactly 1 bad item). This is 2 of Sol's 5, including the opening example. The agent identified the system correctly and set a threshold that had held in testing, but too close to a distribution it had already sampled.</li>
+</ul>
+<p>The first kind shrinks as models get better at experiment design. The second needs something different: reasoning about tails and sample size, and deliberately trading a little throughput for safety. That is §1's capability 3, and none of the four models did it consistently.</p>
+
+<h2><span class="s">§7</span>Three traces</h2>
+
+<div class="ep">
+<h3>Sol · mixed_merge-2 <span class="res no">FAIL · score 88</span></h3>
+<div class="log"><div><span class="t">t2 run 30s </span> shipped 31 (pred 27) · readings 925–940 g slip past the 900 g cutoff</div><div><span class="t">t3 build   </span> both cutoffs → 970 g</div><div><span class="t">t4 run 90s </span> shipped 121 (pred 104)</div><div><span class="t">t5 build   </span> "both pushers fired but rejected nothing" → slow inspection belts, stroke 220 → 700 ms</div><div><span class="t">t7 run 90s </span> shipped 92 (pred 92)</div><div><span class="t">production </span> good 93 · bad 1 · fail</div></div>
+<p>The diagnosis was right, including the hard part: the pushers were firing, but the paddles weren't staying in contact long enough to move the boxes off. What it missed was margin. Its last two tests shipped about 120 items, and the production check allows zero escapes. A threshold that let none through in 120 samples can still let one through in the next 90.</p>
+</div>
+
+<div class="ep">
+<h3>Terra · rush_hour-1 <span class="res no">FAIL · score −198</span></h3>
+<div class="log"><div><span class="t">t4 run 90s </span> shipped 0 (pred 92)</div><div><span class="t">t5 build   </span> all belts → 1.8 m/s "to eliminate the entry backlog"</div><div><span class="t">t6 run 90s </span> shipped 0 (pred 90)</div><div><span class="t">t7 build   </span> finds it: belt at (3,1) points east into a wall → turn north</div><div><span class="t">t8 run 60s </span> shipped 0, spilled 67 (pred 60, 0)</div><div><span class="t">t9 build   </span> all belts → 0.8 m/s</div><div><span class="t">t10 finish </span> "0.8 m/s should safely sustain the arrival spacing" · untested</div><div><span class="t">production </span> shipped 0 · spilled 99</div></div>
+<p>Terra changed a parameter before finding the cause (t5), then found the real bug two turns later. That left one turn. It had just missed its spill prediction by 67 items, and it used the last build to change every belt speed at once, knowing it couldn't test the result. The early guess at t5 cost the turn it needed at the end.</p>
+</div>
+
+<div class="ep">
+<h3>Sonnet vs Sol · tight_spec-3 <span class="res ok">SONNET PASS · 59</span><span class="res no">SOL FAIL · −57</span></h3>
+<p>The same level: a narrow spec band and 10 turns. The two models took opposite approaches.</p>
+<div class="log"><div><span class="t">sonnet t4 </span> "Pusher fired 6 times but rejects still reached ship bin … the pusher sits at the scale cell. Move pusher and reject bin one cell downstream so the flag precedes the paddle line."</div><div><span class="t">sonnet t7 </span> slow the belt under the pusher, longer stroke → 4 rejects land in the bin</div><div><span class="t">sonnet t9 </span> "Pusher fired too late (boxes carried off … before being pushed); fire earlier with larger offset"</div><div><span class="t">production</span> good 59 · bad 0 · pass</div></div>
+<div class="log"><div><span class="t">sol t3    </span> one build changes scale speed, threshold, pusher offset and stroke → 37 of 42 items spill</div><div><span class="t">sol t5    </span> moves the scale and pusher to a different part of the line</div><div><span class="t">sol t7–9  </span> retunes all belt speeds and the pusher twice more; last change untested</div><div><span class="t">production</span> good 62 · bad 19 · spilled 12 · fail</div></div>
+<p>Sonnet reasoned about geometry and timing (where the flag happens relative to the paddle line) and changed one or two parameters per test, so each result told it something. Sol changed four parameters at once, couldn't attribute the spill to any of them, and kept moving the station. Neither tested its final change: Sonnet's handover was one of only five untested ones in the whole set that passed. One-variable-at-a-time testing isn't taught anywhere in the prompt, and the models that did it did better.</p>
+</div>
+
+<h2><span class="s">§8</span>As a training environment</h2>
+<p>We haven't trained on Yantra yet; that's the next milestone. It was designed for training from the start, though:</p>
+<ul>
+<li><b>Reward that can't be gamed.</b> The terminal reward is the production score on an unseen seed. Overfitting test runs doesn't pay, and there is no judge model to exploit.</li>
+<li><b>Dense auxiliary signal.</b> Prediction error comes at every test run with no labels, and it correlates with final success (2 vs 7.5 items).</li>
+<li><b>Domain randomisation built in.</b> θ is drawn per level, so a policy has to learn to identify the plant, not memorise one.</li>
+<li><b>Curriculum.</b> Three tiers, each level with a reference solution and known slack.</li>
+<li><b>Throughput.</b> A 90 s production run simulates in about 5 s on one CPU core. Episodes are deterministic given (layout, θ, seed), so any trajectory can be replayed exactly.</li>
+<li><b>Baselines.</b> In the cube lab, a neural posterior estimator (PyTorch <span class="mono">sbi</span>) that picks probes by expected information gain solves 91 of 100 held-out levels. A scripted Bayesian agent solves 90 and random probing solves 20. GPT-6.1 Sol solved 26 of 30 dev levels. Explicit belief tracking is still the bar an LLM agent has to clear.</li>
+</ul>
+<p>The first experiment we plan is a small open model trained with the terminal reward plus a calibration bonus, evaluated only on held-out levels. Next comes a robot-arm part for the factory, so pick-and-place with unknown grasp friction and payload becomes one more component the agent has to identify and tune.</p>
+
+<h2><span class="s">§9</span>Stack</h2>
+<div class="tbl"><table>
+<thead><tr><th class="l">Layer</th><th class="l">What</th></tr></thead>
+<tbody>
+<tr><td>Physics</td><td class="l">MuJoCo 3 (Python), 4 ms step, elliptic friction cones; items built from analytic primitives with explicit inertia</td></tr>
+<tr><td>Core</td><td class="l"><span class="mono">yantra.core</span>: components with visible and hidden params, typed tools with predictions, named budgets, episode event stream. Each world is a pack on top.</td></tr>
+<tr><td>Browser</td><td class="l">MuJoCo compiled to WebAssembly in a Web Worker; a line-by-line TypeScript port of the engine; shared mulberry32 RNG and op order. Bit-identical to the Python scorer for boxes, ducks and fish.</td></tr>
+<tr><td>Viewer</td><td class="l">React Three Fiber; replays at 6 fps in integer mm, interpolated (lerp/slerp) on playback; 141 MB → 53 MB for the suite</td></tr>
+<tr><td>Audio</td><td class="l">Rust engine (PyO3 + WASM) synthesising tap sounds from FEM vibration modes, for the cube lab</td></tr>
+<tr><td>Agents</td><td class="l">Codex CLI (sandboxed, with taint detection) and Claude CLI (no tools), both returning JSON validated against a schema generated from the tool specs</td></tr>
+<tr><td>Tooling</td><td class="l">uv, pytest, Playwright for visual checks</td></tr>
+</tbody></table></div>
+<p>The hardest part to get right was parity. Native and WASM MuJoCo differed in the last bit of mesh inertia and ellipsoid contacts, and over a 90 s run that grew into different outcomes. Replacing meshes with analytic primitives fixed it for every item except the cow. Its tipping is chaotic enough that last-bit differences still sometimes change the run, and we document that rather than hide it.</p>
+
+<h2><span class="s">§10</span>Limitations</h2>
+<ul>
+<li>One episode per model per level. Differences of two or three passes are within noise. The verification and calibration effects are large enough not to be.</li>
+<li>Four held-out levels is too few to make strong claims about generalisation.</li>
+<li>GPT-6 Luna ran no-op shell commands (<span class="mono">true</span>, <span class="mono">pwd</span>) in 20 of 29 episodes. They could read nothing, so we counted the episodes and flagged them.</li>
+<li>The factory is a stylised plant. Friction, latency and noise are modelled; belt wear, compliance and electrical faults are not.</li>
+</ul>
+
+</main>
+<footer class="wrap">
+Code, levels and traces: <a href="https://github.com/srthkdev/yantra">github.com/srthkdev/yantra</a>. Physics by <a href="https://mujoco.org">MuJoCo</a>. Factory models by <a href="https://kenney.nl">Kenney</a>; Spot, Bob and Blub by <a href="https://www.cs.cmu.edu/~kmcrane/Projects/ModelRepository/">Keenan Crane</a> (CC0). Related: the <a href="https://jackhopkins.github.io/factorio-learning-environment/">Factorio Learning Environment</a> evaluates discrete logistics in the real game; Yantra is about continuous dynamics and hidden parameters.
+</footer>
+
+<script>
+(function () {
+  var NS = 'http://www.w3.org/2000/svg';
+  function mk(svg) { return function (tag, a, txt) { var e = document.createElementNS(NS, tag); for (var k in a) e.setAttribute(k, a[k]); if (txt != null) e.textContent = txt; svg.appendChild(e); return e; }; }
+
+  // FIG 3: strip plots of Sol's scale readings
+  (function () {
+    var el = mk(document.getElementById('strip'));
+    var runs = [
+      { cut: 900, label: 'run 1 · 30 s · cutoff 900 g', r: [869,880,884,891,901,919,925,958,987,990,993,994,995,998,1006,1008,1009,1026,1039] },
+      { cut: 950, label: 'run 2 · 90 s · cutoff 950 g', r: [851,871,880,880,881,888,891,893,897,906,912,919,920,921,924,925,951,976,986,987,988,988,989,989,990,996,997,997,997,998,998,999,999,999,1000,1000,1000,1000,1001,1002,1002,1002,1003,1004,1004,1007,1007,1010,1012,1013,1013,1015,1017,1019,1020,1021,1025,1025,1033] },
+      { cut: 970, label: 'run 3 · 90 s · cutoff 970 g', r: [858,869,877,890,890,895,895,896,901,902,903,904,909,915,928,979,983,984,987,988,989,990,990,992,994,995,996,996,997,997,997,997,997,999,999,999,1000,1001,1001,1001,1002,1002,1004,1004,1005,1005,1006,1006,1006,1014,1014,1015,1015,1019,1020,1021,1028,1028,1036] }
+    ];
+    var x0 = 40, x1 = 660, lo = 830, hi = 1060;
+    function X(w) { return x0 + (w - lo) / (hi - lo) * (x1 - x0); }
+    // hidden truth curves
+    function curve(mu, sd, share, color, yb, hgt) {
+      var d = '', s = Math.sqrt(sd * sd + 11 * 11);
+      for (var w = lo; w <= hi; w += 2) { var y = yb - hgt * share / 0.7 * Math.exp(-0.5 * Math.pow((w - mu) / s, 2)); d += (d ? 'L' : 'M') + X(w).toFixed(1) + ' ' + y.toFixed(1); }
+      el('path', { d: d, style: 'fill:none;stroke:' + color + ';stroke-width:1.2;stroke-dasharray:4 3;opacity:.8' });
+    }
+    curve(900, 15, 0.3, 'var(--red)', 70, 46);
+    curve(1000, 12, 0.7, 'var(--cyan)', 70, 46);
+    el('text', { x: X(900), y: 16, 'text-anchor': 'middle', 'class': 'sm', style: 'fill:var(--red)' }, 'hidden: underfilled 30%');
+    el('text', { x: X(1000), y: 16, 'text-anchor': 'middle', 'class': 'sm', style: 'fill:var(--cyan)' }, 'hidden: good 70%');
+    el('line', { x1: x0, x2: x1, y1: 70, y2: 70, style: 'stroke:var(--line)' });
+    runs.forEach(function (run, i) {
+      var yb = 120 + i * 72;
+      el('text', { x: x0, y: yb - 26, 'class': 'sm' }, run.label);
+      el('line', { x1: x0, x2: x1, y1: yb, y2: yb, style: 'stroke:var(--line)' });
+      var bins = {};
+      run.r.forEach(function (w) {
+        var b = Math.round(w / 4); bins[b] = (bins[b] || 0) + 1;
+        var ship = w >= run.cut, bad = w < 950;
+        el('circle', { cx: X(w).toFixed(1), cy: yb - 6 - (bins[b] - 1) * 7, r: 3.1,
+          style: 'fill:' + (ship ? (bad ? 'var(--red)' : 'var(--cyan)') : 'none') + ';stroke:' + (bad ? 'var(--red)' : 'var(--cyan)') + ';stroke-width:1.1;opacity:' + (ship ? 1 : .55) });
+      });
+      el('line', { x1: X(run.cut), x2: X(run.cut), y1: yb - 42, y2: yb + 6, style: 'stroke:var(--amber);stroke-width:1.6' });
+      el('text', { x: X(run.cut) + 5, y: yb - 32, 'class': 'sm', style: 'fill:var(--amber)' }, run.cut + ' g');
+    });
+    [850, 900, 950, 1000, 1050].forEach(function (w) { el('text', { x: X(w), y: 324, 'text-anchor': 'middle', 'class': 'sm' }, w); });
+    el('text', { x: x1, y: 324, 'text-anchor': 'end', 'class': 'sm', dy: -14 }, 'reading (g)');
+    el('circle', { cx: 46, cy: 300, r: 3.1, style: 'fill:var(--cyan)' }); el('text', { x: 54, y: 304, 'class': 'sm' }, 'shipped');
+    el('circle', { cx: 120, cy: 300, r: 3.1, style: 'fill:none;stroke:var(--cyan)' }); el('text', { x: 128, y: 304, 'class': 'sm' }, 'rejected');
+    el('circle', { cx: 196, cy: 300, r: 3.1, style: 'fill:var(--red)' }); el('text', { x: 204, y: 304, 'class': 'sm' }, 'reading < 950 g shipped');
+  })();
+
+  // FIG 4: verification
+  (function () {
+    var el = mk(document.getElementById('verify'));
+    var base = 200, H = 160;
+    el('text', { x: 20, y: 18, 'class': 'sm' }, 'pass rate, all models');
+    [['final config tested', 56, 82, 'var(--cyan)'], ['changed after last test', 5, 34, 'var(--red)']].forEach(function (d, i) {
+      var x = 40 + i * 120, h = H * d[1] / d[2];
+      el('rect', { x: x, y: base - h, width: 70, height: h, style: 'fill:' + d[3] + ';opacity:.85' });
+      el('text', { x: x + 35, y: base - h - 8, 'text-anchor': 'middle', 'class': 'sb' }, Math.round(100 * d[1] / d[2]) + '%');
+      el('text', { x: x + 35, y: base + 18, 'text-anchor': 'middle', 'class': 'sm' }, d[1] + ' / ' + d[2]);
+      el('text', { x: x + 35, y: base + 34, 'text-anchor': 'middle', 'class': 'sx' }, d[0]);
+    });
+    el('line', { x1: 20, x2: 300, y1: base, y2: base, style: 'stroke:var(--faint)' });
+    el('line', { x1: 340, x2: 340, y1: 10, y2: 236, style: 'stroke:var(--line)' });
+    el('text', { x: 370, y: 18, 'class': 'sm' }, 'untested hand-overs (of 29)');
+    [['Sol', 5], ['Sonnet', 5], ['Luna', 14], ['Terra', 10]].forEach(function (d, i) {
+      var y = 46 + i * 44, w = 260 * d[1] / 29;
+      el('text', { x: 370, y: y + 13, 'class': 'sx' }, d[0]);
+      el('rect', { x: 430, y: y, width: 260, height: 18, style: 'fill:var(--panel2)' });
+      el('rect', { x: 430, y: y, width: w, height: 18, style: 'fill:var(--red);opacity:.8' });
+      el('text', { x: 436 + w, y: y + 13, 'class': 'sm' }, d[1]);
+    });
+  })();
+
+  // FIG 5: failed checks
+  (function () {
+    var el = mk(document.getElementById('fails'));
+    var keys = [['quality', 'var(--red)'], ['spills', 'var(--amber)'], ['throughput', 'var(--blue)'], ['jams', 'var(--faint)']];
+    var data = [['Sol', [5, 3, 3, 1]], ['Sonnet', [10, 1, 1, 0]], ['Luna', [15, 3, 4, 0]], ['Terra', [14, 7, 5, 0]]];
+    var x0 = 90, scale = 15;
+    data.forEach(function (d, i) {
+      var y = 20 + i * 42, x = x0;
+      el('text', { x: 20, y: y + 15, 'class': 'sx' }, d[0]);
+      d[1].forEach(function (v, k) { if (!v) return; el('rect', { x: x, y: y, width: v * scale - 2, height: 22, style: 'fill:' + keys[k][1] + ';opacity:.85' }); if (v * scale > 18) el('text', { x: x + v * scale / 2 - 1, y: y + 15, 'text-anchor': 'middle', 'class': 'sm', style: 'fill:#060a12' }, v); x += v * scale; });
+      el('text', { x: x + 6, y: y + 15, 'class': 'sm' }, d[1].reduce(function (a, b) { return a + b; }, 0));
+    });
+    keys.forEach(function (k, i) { var x = 90 + i * 130; el('rect', { x: x, y: 200, width: 12, height: 12, style: 'fill:' + k[1] }); el('text', { x: x + 18, y: 210, 'class': 'sm' }, k[0]); });
+  })();
+
+  function render() { if (window.renderMathInElement) renderMathInElement(document.body, { delimiters: [{ left: '$$', right: '$$', display: true }, { left: '$', right: '$', display: false }], throwOnError: false }); }
+  if (document.readyState === 'complete') render(); else window.addEventListener('load', render);
+})();
+</script>
+</body>
+</html>
