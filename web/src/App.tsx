@@ -13,8 +13,8 @@ export default function App() {
   let body
   if (page === 'watch') body = <Watch key={route.join('/')} run={clean(rest[0]) || 'sol'} levelId={clean(rest[1]) || 'L00000'} />
   else if (page === 'play') body = <Play key={route.join('/')} levelId={clean(rest[0]) || 'L00000'} />
-  else if (page === 'build') body = <Build />
   else if (page === 'factory') body = <Factory />
+  else if (page === 'build') body = <Build />
   else body = <Home />
 
   return (
@@ -25,6 +25,7 @@ export default function App() {
           <span className="text-xl font-extrabold tracking-tight">knock</span>
         </button>
         <div className="glass flex items-center gap-1 rounded-full px-1.5 py-1 text-sm">
+          <button onClick={() => navigate('/factory')} className={`rounded-full px-3 py-1.5 ${page === 'factory' ? 'bg-ink text-white' : 'hover:bg-black/5'}`}>Factory</button>
           <button onClick={() => navigate('/watch/sol/L00000')} className={`rounded-full px-3 py-1.5 ${page === 'watch' ? 'bg-ink text-white' : 'hover:bg-black/5'}`}>Watch</button>
           <button onClick={() => navigate('/play/L00005')} className={`rounded-full px-3 py-1.5 ${page === 'play' ? 'bg-ink text-white' : 'hover:bg-black/5'}`}>Play</button>
           <button onClick={() => navigate('/build')} className={`rounded-full px-3 py-1.5 ${page === 'build' ? 'bg-ink text-white' : 'hover:bg-black/5'}`}>Build</button>

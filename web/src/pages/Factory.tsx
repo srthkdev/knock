@@ -161,13 +161,63 @@ function Clock({ demo, frameRef, playing, speed }: { demo: Demo; frameRef: React
   return null
 }
 
-export function Factory() {
+function AutoOrbit({ target, radius, height }: { target: [number, number, number]; radius: number; height: number }) {
+  useFrame(({ camera, clock }) => {
+    const a = 0.55 + Math.sin(clock.elapsedTime * 0.06) * 0.35
+    camera.position.set(target[0] + Math.sin(a) * radius, height, target[2] + Math.cos(a) * radius)
+    camera.lookAt(target[0], target[1], target[2])
+  })
+  return null
+}
+
+export function useBottlingDemo() {
   const [demo, setDemo] = useState<Demo | null>(null)
+  useEffect(() => { fetch(`${BASE}data/factory/bottling_demo.json`).then((r) => r.json()).then(setDemo) }, [])
+  return demo
+}
+
+export function FactoryScene({ demo, frameRef, playing = true, speed = 1, hero = false }: {
+  demo: Demo; frameRef: React.RefObject<number>; playing?: boolean; speed?: number; hero?: boolean
+}) {
+  const L = demo.line.length / S
+  return (
+    <Canvas shadows dpr={[1, 2]} camera={{ position: [L * 0.5, 15, 21], fov: 36 }} gl={{ antialias: false, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.0 }}>
+      <color attach="background" args={['#2a2b38']} />
+      <fog attach="fog" args={['#2a2b38', 22, 48]} />
+      <ambientLight intensity={0.55} />
+      <directionalLight position={[8, 16, 9]} intensity={2.4} castShadow shadow-mapSize={[4096, 4096]}
+        shadow-camera-left={-20} shadow-camera-right={30} shadow-camera-top={15} shadow-camera-bottom={-15} shadow-bias={-0.0003} />
+      <Environment resolution={256}>
+        <Lightformer form="rect" intensity={2} position={[0, 10, 0]} rotation={[Math.PI / 2, 0, 0]} scale={[30, 30, 1]} />
+        <Lightformer form="rect" intensity={1.2} color="#ffd9b0" position={[-10, 4, 6]} rotation={[0, Math.PI / 2, 0]} scale={[10, 4, 1]} />
+        <Lightformer form="rect" intensity={0.8} color="#b9c7ff" position={[20, 4, -6]} rotation={[0, -Math.PI / 2, 0]} scale={[10, 4, 1]} />
+      </Environment>
+      <Suspense fallback={null}>
+        <Building />
+        <Line demo={demo} />
+        <Pusher demo={demo} frameRef={frameRef} />
+        <Bottles demo={demo} frameRef={frameRef} />
+        <ContactShadows position={[L / 2, 0.01, 0]} scale={[L + 8, 10]} opacity={0.35} blur={2.5} far={4} />
+      </Suspense>
+      <Clock demo={demo} frameRef={frameRef} playing={playing} speed={speed} />
+      {hero ? <AutoOrbit target={[L * 0.55, 0.3, 0.5]} radius={15} height={8.5} />
+        : <OrbitControls makeDefault target={[L * 0.5, 0.2, 1]} maxPolarAngle={Math.PI / 2.1} minDistance={4} maxDistance={40} />}
+      <EffectComposer multisampling={0}>
+        <N8AO aoRadius={0.6} intensity={2} distanceFalloff={1} halfRes />
+        <Bloom intensity={0.3} luminanceThreshold={0.9} mipmapBlur />
+        <SMAA />
+        <Vignette offset={0.3} darkness={0.45} />
+      </EffectComposer>
+    </Canvas>
+  )
+}
+
+export function Factory() {
+  const demo = useBottlingDemo()
   const [playing, setPlaying] = useState(true)
   const [speed, setSpeed] = useState(1)
   const frameRef = useRef(0)
   const [hud, setHud] = useState({ t: 0, checked: 0, rejected: 0 })
-  useEffect(() => { fetch(`${BASE}data/factory/bottling_demo.json`).then((r) => r.json()).then(setDemo) }, [])
   useEffect(() => {
     const id = setInterval(() => {
       if (!demo) return
@@ -178,38 +228,10 @@ export function Factory() {
   }, [demo])
 
   if (!demo) return <div className="grid h-full place-items-center bg-[#2a2b38] text-white/60">Loading line…</div>
-  const L = demo.line.length / S
   const throughput = hud.t > 1 ? ((hud.checked - hud.rejected) / hud.t) * 60 : 0
   return (
     <div className="relative h-full w-full bg-[#2a2b38]">
-      <Canvas shadows dpr={[1, 2]} camera={{ position: [L * 0.5, 15, 21], fov: 36 }} gl={{ antialias: false, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.0 }}>
-        <color attach="background" args={['#2a2b38']} />
-        <fog attach="fog" args={['#2a2b38', 22, 48]} />
-        <ambientLight intensity={0.55} />
-        <directionalLight position={[8, 16, 9]} intensity={2.4} castShadow shadow-mapSize={[4096, 4096]}
-          shadow-camera-left={-20} shadow-camera-right={30} shadow-camera-top={15} shadow-camera-bottom={-15} shadow-bias={-0.0003} />
-        <Environment resolution={256}>
-          <Lightformer form="rect" intensity={2} position={[0, 10, 0]} rotation={[Math.PI / 2, 0, 0]} scale={[30, 30, 1]} />
-          <Lightformer form="rect" intensity={1.2} color="#ffd9b0" position={[-10, 4, 6]} rotation={[0, Math.PI / 2, 0]} scale={[10, 4, 1]} />
-          <Lightformer form="rect" intensity={0.8} color="#b9c7ff" position={[20, 4, -6]} rotation={[0, -Math.PI / 2, 0]} scale={[10, 4, 1]} />
-        </Environment>
-        <Suspense fallback={null}>
-          <Building />
-          <Line demo={demo} />
-          <Pusher demo={demo} frameRef={frameRef} />
-          <Bottles demo={demo} frameRef={frameRef} />
-          <ContactShadows position={[L / 2, 0.01, 0]} scale={[L + 8, 10]} opacity={0.35} blur={2.5} far={4} />
-        </Suspense>
-        <Clock demo={demo} frameRef={frameRef} playing={playing} speed={speed} />
-        <OrbitControls makeDefault target={[L * 0.5, 0.2, 1]} maxPolarAngle={Math.PI / 2.1} minDistance={4} maxDistance={40} />
-        <EffectComposer multisampling={0}>
-          <N8AO aoRadius={0.6} intensity={2} distanceFalloff={1} halfRes />
-          <Bloom intensity={0.3} luminanceThreshold={0.9} mipmapBlur />
-          <SMAA />
-          <Vignette offset={0.3} darkness={0.45} />
-        </EffectComposer>
-      </Canvas>
-
+      <FactoryScene demo={demo} frameRef={frameRef} playing={playing} speed={speed} />
       <div className="pointer-events-none absolute left-4 top-20 w-[300px] rounded-2xl bg-[#17181f]/90 p-4 text-white shadow-2xl ring-1 ring-white/10">
         <div className="text-xs uppercase tracking-wider text-white/50">Line 1 · Bottling · commissioning</div>
         <div className="mt-2 grid grid-cols-2 gap-3 font-mono">
@@ -224,8 +246,8 @@ export function Factory() {
       </div>
       <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full bg-[#17181f]/90 px-3 py-2 text-sm text-white ring-1 ring-white/10">
         <button className="rounded-full bg-white/10 px-3 py-1" onClick={() => setPlaying(!playing)}>{playing ? 'Pause' : 'Play'}</button>
-        {[0.5, 1, 2].map((s) => (
-          <button key={s} className={`rounded-full px-2.5 py-1 ${speed === s ? 'bg-white text-black' : 'bg-white/10'}`} onClick={() => setSpeed(s)}>{s}×</button>
+        {[0.5, 1, 2].map((v) => (
+          <button key={v} className={`rounded-full px-2.5 py-1 ${speed === v ? 'bg-white text-black' : 'bg-white/10'}`} onClick={() => setSpeed(v)}>{v}×</button>
         ))}
       </div>
     </div>

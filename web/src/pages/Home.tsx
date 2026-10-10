@@ -1,65 +1,66 @@
-import { useEffect, useState } from 'react'
-import { loadIndex, loadLevel, loadReplay, type Index, type LevelBundle, type Replay } from '../data'
-import { usePlayer } from '../replay/Player'
+import { useEffect, useRef, useState } from 'react'
+import { loadIndex, type Index } from '../data'
 import { navigate } from '../router'
-import { World } from '../scene/World'
-import { Pill, readingText, stepTitle } from '../ui/bits'
+import { FactoryScene, useBottlingDemo } from './Factory'
 
-const HERO = { run: 'sol', level: 'L00009' }
+const TRACKS = [
+  {
+    pillar: 'Factory', title: 'Line commissioning', status: 'Playable',
+    body: 'Bring a bottling line up to speed: conveyor, checkweigher, reject pusher. Tune it over many turns until it ships good bottles fast without letting underfilled ones through.',
+    href: '/factory',
+  },
+  {
+    pillar: 'Robot', title: 'Disassembly', status: 'In development',
+    body: 'A robot arm takes apart an unknown device to recover one part intact. Hidden screws, clips and glue; too much force breaks things.',
+  },
+  {
+    pillar: 'Game', title: 'Factory Duel', status: 'In development',
+    body: 'Two models build rival lines from the same budget and compete for the same customer orders. Physics plus economics plus reading your opponent.',
+  },
+]
 
 export function Home() {
   const [index, setIndex] = useState<Index | null>(null)
-  const [level, setLevel] = useState<LevelBundle | null>(null)
-  const [replay, setReplay] = useState<Replay | null>(null)
-  useEffect(() => {
-    loadIndex().then(setIndex)
-    Promise.all([loadLevel(HERO.level), loadReplay(HERO.run, HERO.level)]).then(([l, r]) => { setLevel(l); setReplay(r) })
-  }, [])
-  const { frame, state } = usePlayer(level, replay, { autoplay: true, loop: true })
-  const seg = state?.seg
-  const step = replay && seg && seg.step >= 0 ? replay.steps[seg.step] : null
+  const demo = useBottlingDemo()
+  const frameRef = useRef(0)
+  useEffect(() => { loadIndex().then(setIndex) }, [])
 
   return (
     <div className="h-full overflow-y-auto">
       {/* hero */}
-      <section className="relative h-[100vh] min-h-[640px] w-full">
-        <div className="absolute inset-0">{level && <World level={level} frame={frame} auto framing="hero" />}</div>
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-56 bg-gradient-to-b from-paper via-paper/70 to-transparent" />
+      <section className="relative h-[100vh] min-h-[640px] w-full bg-[#2a2b38]">
+        <div className="absolute inset-0">{demo && <FactoryScene demo={demo} frameRef={frameRef} hero />}</div>
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-gradient-to-b from-[#1d1e27] via-[#1d1e27]/70 to-transparent" />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-paper to-transparent" />
-        <div className="pointer-events-none absolute inset-x-0 top-24 px-6 text-center">
+        <div className="pointer-events-none absolute inset-x-0 top-24 px-6 text-center text-white">
           <h1 className="mx-auto max-w-4xl text-[clamp(2.2rem,5.5vw,4.4rem)] font-extrabold leading-[1.02] tracking-tight">
-            Can an AI figure out<br />what&apos;s inside the box?
+            Can AI run a real factory?
           </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-[clamp(1rem,1.6vw,1.2rem)] text-muted">
-            Knock is a physics lab for AI agents. Every cube looks the same. Mass, friction, material and what&apos;s inside are hidden.
-            Agents get a few experiments, then one shot.
+          <p className="mx-auto mt-4 max-w-2xl text-[clamp(1rem,1.6vw,1.2rem)] text-white/70">
+            Knock puts AI agents in charge of physical production lines, robots and factory games. Real equipment, hidden physics,
+            many turns of experiments and fixes. Every result is checked by the simulator.
           </p>
           <div className="pointer-events-auto mt-7 flex flex-wrap justify-center gap-3">
-            <button onClick={() => navigate(`/watch/sol/${index?.levels[0]?.id ?? 'L00000'}`)} className="rounded-full bg-ink px-6 py-3 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5">Watch GPT-6.1 Sol play</button>
-            <button onClick={() => navigate(`/play/${index?.levels[5]?.id ?? 'L00005'}`)} className="rounded-full bg-white px-6 py-3 text-sm font-semibold shadow-lg ring-1 ring-black/10 transition hover:-translate-y-0.5">Play it yourself</button>
+            <button onClick={() => navigate('/factory')} className="rounded-full bg-white px-6 py-3 text-sm font-semibold text-ink shadow-lg transition hover:-translate-y-0.5">Watch an agent run the line</button>
+            <button onClick={() => document.getElementById('tracks')?.scrollIntoView({ behavior: 'smooth' })} className="rounded-full bg-white/10 px-6 py-3 text-sm font-semibold text-white ring-1 ring-white/25 backdrop-blur transition hover:-translate-y-0.5">What's inside</button>
           </div>
         </div>
-        {step && (
-          <div className="glass absolute bottom-8 left-4 w-[min(420px,calc(100%-2rem))] rounded-2xl px-4 py-3 text-sm sm:left-8">
-            <div className="flex items-center gap-2 text-xs text-muted"><Pill tone="dark">GPT-6.1 Sol</Pill> live replay · {HERO.level}</div>
-            <div className="mt-1 font-medium">{seg?.phase === 'think' ? 'thinking…' : `${stepTitle(step)} → ${readingText(step)}`}</div>
-            {step.reasoning && <div className="mt-0.5 line-clamp-2 text-muted">{step.reasoning}</div>}
-          </div>
-        )}
       </section>
 
-      {/* how it works */}
-      <section className="mx-auto max-w-6xl px-6 py-16">
-        <div className="grid gap-4 md:grid-cols-3">
-          {[
-            ['Probe', 'Push with a chosen force, lift to weigh, tap to hear if it rings or thuds, shake to hear what rattles. Every probe costs budget.'],
-            ['Infer', 'A slow push could mean heavy or sticky. Weighing says nothing about friction. Good agents pick experiments that tell those apart.'],
-            ['Flick', 'One strike. The cube has to stop inside the band. Physics is MuJoCo; sound comes from the simulated impacts themselves.'],
-          ].map(([h, b], i) => (
-            <div key={h} className="rounded-2xl border border-line bg-white p-6">
-              <div className="font-mono text-xs text-muted">0{i + 1}</div>
-              <div className="mt-1 text-xl font-bold">{h}</div>
-              <p className="mt-2 text-[15px] leading-relaxed text-muted">{b}</p>
+      {/* tracks */}
+      <section id="tracks" className="mx-auto max-w-6xl px-6 py-16">
+        <h2 className="text-3xl font-extrabold tracking-tight">Three tracks</h2>
+        <p className="mt-1 max-w-2xl text-muted">Each one is a multi-turn job with real equipment and hidden physical properties. Agents run experiments, read the results, adjust, and are scored on what actually happens.</p>
+        <div className="mt-6 grid gap-4 md:grid-cols-3">
+          {TRACKS.map((t) => (
+            <div key={t.title} className="flex flex-col rounded-2xl border border-line bg-white p-6">
+              <div className="flex items-center justify-between">
+                <span className="font-mono text-xs uppercase tracking-wider text-muted">{t.pillar}</span>
+                <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${t.href ? 'bg-mint/15 text-mint-deep' : 'bg-black/5 text-muted'}`}>{t.status}</span>
+              </div>
+              <div className="mt-2 text-xl font-bold">{t.title}</div>
+              <p className="mt-2 flex-1 text-[15px] leading-relaxed text-muted">{t.body}</p>
+              {t.href && <button onClick={() => navigate(t.href!)} className="mt-4 self-start rounded-full bg-ink px-4 py-2 text-sm font-semibold text-white">Open</button>}
             </div>
           ))}
         </div>
@@ -69,8 +70,9 @@ export function Home() {
       <section id="leaderboard" className="mx-auto max-w-6xl px-6 pb-24">
         <div className="flex items-end justify-between gap-4">
           <div>
-            <h2 className="text-3xl font-extrabold tracking-tight">Leaderboard</h2>
-            <p className="mt-1 text-muted">Dev set, {index?.levels.length ?? 30} oracle-verified levels. Click any cell to watch the replay.</p>
+            <div className="font-mono text-xs uppercase tracking-wider text-muted">Tutorial tier</div>
+            <h2 className="text-3xl font-extrabold tracking-tight">The cube lab</h2>
+            <p className="mt-1 max-w-2xl text-muted">Where Knock started: identical-looking cubes hide mass, friction and contents; agents probe, then make one flick. 30 oracle-verified levels, benchmark v0.2. Click any cell to watch the replay.</p>
           </div>
         </div>
         <div className="mt-6 overflow-x-auto rounded-2xl border border-line bg-white">
@@ -107,7 +109,7 @@ export function Home() {
       </section>
 
       <footer className="border-t border-line px-6 py-8 text-center text-sm text-muted">
-        Knock · physics by MuJoCo · <a className="underline" href="https://github.com/srthkdev/knock">GitHub</a>
+        Knock · physics by MuJoCo · factory models by Kenney (CC0) · <a className="underline" href="https://github.com/srthkdev/knock">GitHub</a>
       </footer>
     </div>
   )
