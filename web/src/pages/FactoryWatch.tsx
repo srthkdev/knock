@@ -211,9 +211,18 @@ function Clock({ replay, frameRef, playing, speed, onEnd }: {
   return null
 }
 
-function Scene({ layout, replay, frameRef, playing, speed, xray, fresh, onEnd }: {
+function AutoOrbit({ target, radius, height }: { target: [number, number, number]; radius: number; height: number }) {
+  useFrame(({ camera, clock }) => {
+    const a = 0.35 + Math.sin(clock.elapsedTime * 0.05) * 0.45
+    camera.position.set(target[0] + Math.sin(a) * radius, height, target[2] + Math.cos(a) * radius)
+    camera.lookAt(target[0], target[1], target[2])
+  })
+  return null
+}
+
+function Scene({ layout, replay, frameRef, playing, speed, xray, fresh, onEnd, hero = false }: {
   layout: Layout; replay: Replay | null; frameRef: React.MutableRefObject<number>; playing: boolean; speed: number
-  xray: boolean; fresh: Set<string>; onEnd: () => void
+  xray: boolean; fresh: Set<string>; onEnd: () => void; hero?: boolean
 }) {
   const cx = layout.w, cz = -layout.h
   return (
@@ -236,7 +245,8 @@ function Scene({ layout, replay, frameRef, playing, speed, xray, fresh, onEnd }:
         <ContactShadows position={[cx, 0.01, cz]} scale={[layout.w * 2 + 8, layout.h * 2 + 8]} opacity={0.3} blur={2.5} far={4} />
       </Suspense>
       <Clock replay={replay} frameRef={frameRef} playing={playing} speed={speed} onEnd={onEnd} />
-      <OrbitControls makeDefault target={[cx - 4.5, 0, cz + 0.5]} maxPolarAngle={Math.PI / 2.15} minDistance={6} maxDistance={70} />
+      {hero ? <AutoOrbit target={[cx, 0, cz]} radius={layout.w * 2.0} height={layout.w * 1.45} />
+        : <OrbitControls makeDefault target={[cx - 4.5, 0, cz + 0.5]} maxPolarAngle={Math.PI / 2.15} minDistance={6} maxDistance={70} />}
       <EffectComposer multisampling={0}>
         <N8AO aoRadius={0.6} intensity={2} distanceFalloff={1} halfRes />
         <Bloom intensity={0.25} luminanceThreshold={0.9} mipmapBlur />
@@ -436,4 +446,20 @@ export function FactoryWatch({ run, taskId }: { run: string; taskId: string }) {
       </div>
     </div>
   )
+}
+
+// Landing-page hero: an agent's factory in production, looping, slow orbit.
+export function FactoryHero({ run, task }: { run: string; task: string }) {
+  const [ep, setEp] = useState<EpisodeData | null>(null)
+  const [replay, setReplay] = useState<Replay | null>(null)
+  const frameRef = useRef(0)
+  useEffect(() => {
+    getJSON(`${run}/${task}.json`).then((d: EpisodeData) => {
+      setEp(d)
+      if (d.final_replay) getJSON(d.final_replay).then(setReplay)
+    }).catch(() => {})
+  }, [run, task])
+  if (!ep || !ep.final_layout) return null
+  const onEnd = () => { frameRef.current = 0 }
+  return <Scene layout={ep.final_layout} replay={replay} frameRef={frameRef} playing speed={1.5} xray={false} fresh={new Set()} onEnd={onEnd} hero />
 }

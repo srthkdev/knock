@@ -63,7 +63,11 @@ def run_codex(prompt: str, schema: dict, *, model: str, effort: str, image_paths
         cmd = codex_command(work, schema_path, out, model, effort, image_paths)
         t0 = time.time()
         # input= writes the prompt and closes stdin
-        proc = subprocess.run(cmd, input=prompt, capture_output=True, text=True, timeout=timeout_s)
+        try:
+            proc = subprocess.run(cmd, input=prompt, capture_output=True, text=True, timeout=timeout_s)
+        except subprocess.TimeoutExpired as e:  # a turn that thinks too long is a lost turn, not a crash
+            out_s = e.stdout.decode() if isinstance(e.stdout, bytes) else (e.stdout or "")
+            proc = subprocess.CompletedProcess(cmd, -9, out_s, f"timeout after {timeout_s:.0f}s")
         secs = time.time() - t0
         reply_txt = out.read_text() if out.exists() else ""
     items, usage = scan_events(proc.stdout)

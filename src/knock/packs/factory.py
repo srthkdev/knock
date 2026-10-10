@@ -39,9 +39,9 @@ through. A box falling to the floor is a spill. A box that sits still on a belt 
 stand on platform scales: runs report each bin's count and total weight. A good box weighs about
 {fs.NOMINAL_KG:.2f} kg; other boxes may be underfilled or double-packed.
 Build language (one command per line; X or Y may be a range like 2..5):
-  belt X Y DIR speed=1.0          DIR is E, W, N or S
-  scale X Y DIR speed=1.0 reject_below_g=950 reject_above_g=1100
-  pusher X Y DIR offset_mm=100 stroke_ms=250
+  belt X Y DIR speed=<m/s>          DIR is E, W, N or S
+  scale X Y DIR speed=<m/s> reject_below_g=<g> reject_above_g=<g>
+  pusher X Y DIR offset_mm=<mm> stroke_ms=<ms>
   bin X Y
   set X Y key=value ...           retune a placed part
   remove X Y"""
@@ -306,6 +306,27 @@ MAPS = {
         walls=[(5, y) for y in range(2, 7)],
         mixes={"A": [["good", 1.0, 1.0, 0.012]], "B": [["good", 0.75, 1.0, 0.012], ["double", 0.25, 1.9, 0.03]]},
         target=0.8, max_bad=0, money=3000),
+    "rush_hour": dict(
+        title="Rush hour", w=14, h=9,
+        brief="A fast filler: boxes arrive at 1.8 m/s, 70 per minute. Get them around the walls to shipping without throwing any.",
+        parts=[_I(0, 1, "E", 1.8, 70), _bin(13, 7)],
+        walls=[(4, y) for y in range(0, 6)] + [(9, y) for y in range(3, 9)],
+        mixes={"A": [["good", 1.0, 1.0, 0.01]]}, target=0.85, max_bad=0, money=1500, turns=10, sim_seconds=240),
+    "tight_spec": dict(
+        title="Tight spec", w=12, h=8,
+        brief="A fast filler with a drifting nozzle: some boxes are only slightly underfilled. Nothing under spec may ship.",
+        parts=[_I(0, 2, "E", 1.4, 70), _bin(11, 5)],
+        walls=[(6, y) for y in range(0, 4)],
+        mixes={"A": [["good", 0.7, 1.0, 0.006], ["underfilled", 0.3, 0.95, 0.006]]}, target=0.7, max_bad=0,
+        money=2500, turns=10, sim_seconds=240),
+    "mixed_merge": dict(
+        title="Mixed merge", w=14, h=9,
+        brief="Two fast lines into one dock. Line A sometimes underfills, line B sometimes double-packs. Only good boxes may ship.",
+        parts=[_I(0, 1, "E", 1.4, 45, "A"), _I(0, 7, "E", 1.4, 45, "B"), _bin(13, 4)],
+        walls=[(5, y) for y in range(2, 7)],
+        mixes={"A": [["good", 0.8, 1.0, 0.01], ["underfilled", 0.2, 0.93, 0.01]],
+               "B": [["good", 0.8, 1.0, 0.01], ["double", 0.2, 1.9, 0.03]]},
+        target=0.75, max_bad=0, money=3500, turns=10, sim_seconds=240),
 }
 
 
@@ -335,7 +356,8 @@ class FactoryPack(Pack):
                   "max_spilled": 0, "rules": RULES}
         goal = GOAL.format(brief=spec["brief"], seconds=PRODUCTION_S, target=target, max_bad=spec["max_bad"],
                            money=spec["money"])
-        task = BuildFactoryTask(goal, {"turns": 14, "sim_seconds": 360}, ["build", "run", "finish"], None, params)
+        budgets = {"turns": spec.get("turns", 14), "sim_seconds": spec.get("sim_seconds", 360)}
+        task = BuildFactoryTask(goal, budgets, ["build", "run", "finish"], None, params)
         return Scenario(f"F-{map}-{seed}", self.name, world, task)
 
 

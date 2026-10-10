@@ -13,6 +13,13 @@
      "turns": 4
     },
     {
+     "run": "luna",
+     "label": "GPT-6 Luna",
+     "success": false,
+     "score": 47,
+     "turns": 12
+    },
+    {
      "run": "sol",
      "label": "GPT-6.1 Sol",
      "success": true,
@@ -32,6 +39,13 @@
      "success": true,
      "score": 33,
      "turns": 4
+    },
+    {
+     "run": "luna",
+     "label": "GPT-6 Luna",
+     "success": false,
+     "score": -71,
+     "turns": 14
     },
     {
      "run": "sol",
@@ -55,11 +69,102 @@
      "turns": 5
     },
     {
+     "run": "luna",
+     "label": "GPT-6 Luna",
+     "success": true,
+     "score": 67,
+     "turns": 7
+    },
+    {
      "run": "sol",
      "label": "GPT-6.1 Sol",
      "success": true,
      "score": 68,
      "turns": 4
+    }
+   ]
+  },
+  {
+   "id": "rush_hour",
+   "title": "Rush hour",
+   "detail": "A fast filler: boxes arrive at 1.8 m/s, 70 per minute. Get them around the walls to shipping without throwing any.",
+   "runs": [
+    {
+     "run": "astra",
+     "label": "GPT-6 Astra",
+     "success": true,
+     "score": 93,
+     "turns": 4
+    },
+    {
+     "run": "luna",
+     "label": "GPT-6 Luna",
+     "success": true,
+     "score": 95,
+     "turns": 7
+    },
+    {
+     "run": "sol",
+     "label": "GPT-6.1 Sol",
+     "success": true,
+     "score": 93,
+     "turns": 4
+    }
+   ]
+  },
+  {
+   "id": "tight_spec",
+   "title": "Tight spec",
+   "detail": "A fast filler with a drifting nozzle: some boxes are only slightly underfilled. Nothing under spec may ship.",
+   "runs": [
+    {
+     "run": "astra",
+     "label": "GPT-6 Astra",
+     "success": true,
+     "score": 56,
+     "turns": 10
+    },
+    {
+     "run": "luna",
+     "label": "GPT-6 Luna",
+     "success": false,
+     "score": -97,
+     "turns": 10
+    },
+    {
+     "run": "sol",
+     "label": "GPT-6.1 Sol",
+     "success": false,
+     "score": -128,
+     "turns": 10
+    }
+   ]
+  },
+  {
+   "id": "mixed_merge",
+   "title": "Mixed merge",
+   "detail": "Two fast lines into one dock. Line A sometimes underfills, line B sometimes double-packs. Only good boxes may ship.",
+   "runs": [
+    {
+     "run": "astra",
+     "label": "GPT-6 Astra",
+     "success": false,
+     "score": 88,
+     "turns": 10
+    },
+    {
+     "run": "luna",
+     "label": "GPT-6 Luna",
+     "success": false,
+     "score": -258,
+     "turns": 3
+    },
+    {
+     "run": "sol",
+     "label": "GPT-6.1 Sol",
+     "success": true,
+     "score": 91,
+     "turns": 10
     }
    ]
   },
