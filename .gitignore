@@ -6,3 +6,4 @@ tools/node_modules/
 *.egg-info/
 .claude/
 target/
+scratch/assets/

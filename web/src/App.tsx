@@ -1,4 +1,5 @@
 import { Build } from './pages/Build'
+import { Factory } from './pages/Factory'
 import { Home } from './pages/Home'
 import { Play } from './pages/Play'
 import { Watch } from './pages/Watch'
@@ -13,6 +14,7 @@ export default function App() {
   if (page === 'watch') body = <Watch key={route.join('/')} run={clean(rest[0]) || 'sol'} levelId={clean(rest[1]) || 'L00000'} />
   else if (page === 'play') body = <Play key={route.join('/')} levelId={clean(rest[0]) || 'L00000'} />
   else if (page === 'build') body = <Build />
+  else if (page === 'factory') body = <Factory />
   else body = <Home />
 
   return (
