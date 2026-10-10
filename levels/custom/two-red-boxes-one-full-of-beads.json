@@ -1,0 +1,52 @@
+{
+ "id": "two-red-boxes-one-full-of-beads",
+ "seed": 53971,
+ "objects": [
+  {
+   "id": "A",
+   "half": 0.04,
+   "color": "#c8553d",
+   "y": -0.175,
+   "hidden": {
+    "material": "plastic",
+    "hollow": true,
+    "contents": "beads",
+    "friction": 0.3
+   }
+  },
+  {
+   "id": "B",
+   "half": 0.04,
+   "color": "#c8553d",
+   "y": 0.175,
+   "hidden": {
+    "material": "plastic",
+    "hollow": true,
+    "contents": "foam",
+    "friction": 0.45
+   }
+  }
+ ],
+ "task": {
+  "kind": "find_and_slide",
+  "target_x": 0.6,
+  "tol": 0.04,
+  "budget": 3,
+  "object_id": null,
+  "property": "rattles"
+ },
+ "notes": {
+  "title": "Beads or Foam",
+  "description": "Two identical small red boxes hide beads and silent foam; the small plastic shell makes the beads rattle clearly. Shake one box to identify the rattler, then use the remaining lift and push probes to calibrate its flick: about 0.233 N\u00b7s sends its 0.124 kg mass roughly 0.60 m.",
+  "prompt": "two red boxes: one full of beads, one with silent foam, small budget",
+  "oracle": {
+   "object": "A",
+   "impulse_Ns": 0.2324,
+   "predicted_x": 0.6007,
+   "solvable": true
+  },
+  "rounds": 1,
+  "difficulty": "tricky",
+  "builder_model": "gpt-6.1-sol/medium"
+ }
+}

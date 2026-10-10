@@ -7,8 +7,8 @@ from pathlib import Path
 
 import numpy as np
 
-from knock import world
-from knock.level import Level
+from yantra import world
+from yantra.level import Level
 
 cases = []
 for f in sorted(Path("levels/dev").glob("*.json"))[:8]:

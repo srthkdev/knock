@@ -65,24 +65,17 @@ export function Pill({ children, tone = 'neutral' }: { children: ReactNode; tone
   return <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium ${cls}`}>{children}</span>
 }
 
+// A yantra (the square frame with four gates, interlocking triangles, centre point) inside a gear.
 export function Logo({ className = 'h-7' }: { className?: string }) {
   return (
     <svg viewBox="0 0 128 128" className={className} aria-hidden>
-      <defs>
-        <linearGradient id="lt" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#f3a07f" /><stop offset="1" stopColor="#e07a5a" /></linearGradient>
-      </defs>
       <rect width="128" height="128" rx="28" fill="#1c1d1f" />
-      <g fill="none" stroke="#5fd3a0" strokeLinecap="round" strokeWidth="5">
-        <path d="M86 44 a22 22 0 0 1 0 40" opacity="0.95" />
-        <path d="M96 34 a36 36 0 0 1 0 60" opacity="0.6" />
-        <path d="M106 26 a50 50 0 0 1 0 76" opacity="0.3" />
-      </g>
-      <g stroke="#1c1d1f" strokeWidth="2" strokeLinejoin="round">
-        <path d="M48 30 L74 44 L48 58 L22 44 Z" fill="url(#lt)" />
-        <path d="M22 44 L48 58 L48 92 L22 78 Z" fill="#c4553a" />
-        <path d="M48 58 L74 44 L74 78 L48 92 Z" fill="#a8432c" />
-      </g>
-      <circle cx="78" cy="64" r="4.5" fill="#5fd3a0" />
+      <path d="M26 26 H54 V17 H74 V26 H102 V54 H111 V74 H102 V102 H74 V111 H54 V102 H26 V74 H17 V54 H26 Z" fill="none" stroke="#f2a541" strokeWidth="4.5" strokeLinejoin="round" />
+      <circle cx="64" cy="64" r="30" fill="none" stroke="#5fd3a0" strokeWidth="7" strokeDasharray="5.9 5.88" />
+      <circle cx="64" cy="64" r="26" fill="#1c1d1f" stroke="#5fd3a0" strokeWidth="3" />
+      <path d="M64 44 L81.3 74 L46.7 74 Z" fill="#e07a5a" />
+      <path d="M64 84 L46.7 54 L81.3 54 Z" fill="none" stroke="#f2a541" strokeWidth="3.5" strokeLinejoin="round" />
+      <circle cx="64" cy="64" r="4" fill="#ffffff" />
     </svg>
   )
 }

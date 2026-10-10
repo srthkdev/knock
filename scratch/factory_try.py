@@ -1,5 +1,5 @@
 import time, sys
-from knock.packs.factory_sim import *
+from yantra.packs.factory_sim import *
 def lay(sp, off, stroke, below=940):
     parts=[Part("inlet",0,2,"E",{"speed":sp,"feed_per_min":40},True,"A")]
     parts+=[Part("belt",x,2,"E",{"speed":sp}) for x in (1,2,4)]

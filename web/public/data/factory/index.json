@@ -1,182 +1,1296 @@
 {
+ "benchmark": "factory v1",
  "tasks": [
   {
-   "id": "first_line",
+   "id": "first_line-1",
    "title": "First line",
    "detail": "Get every box from the inlet to the shipping bin. Walls are in the way.",
+   "tier": 1,
+   "split": "public",
+   "size": "12x8",
+   "target": 34.0,
+   "item": "box",
    "runs": [
-    {
-     "run": "astra",
-     "label": "GPT-6 Astra",
-     "success": true,
-     "score": 55,
-     "turns": 4
-    },
     {
      "run": "luna",
      "label": "GPT-6 Luna",
-     "success": false,
-     "score": 47,
-     "turns": 12
+     "success": true,
+     "score": 53,
+     "turns": 12,
+     "tainted": false
+    },
+    {
+     "run": "sol",
+     "label": "GPT-6.1 Sol",
+     "success": true,
+     "score": 55,
+     "turns": 4,
+     "tainted": false
+    },
+    {
+     "run": "sonnet",
+     "label": "Claude Sonnet 5.5",
+     "success": true,
+     "score": 53,
+     "turns": 3,
+     "tainted": false
+    },
+    {
+     "run": "terra",
+     "label": "GPT-5.6 Terra",
+     "success": true,
+     "score": 52,
+     "turns": 4,
+     "tainted": false
+    }
+   ]
+  },
+  {
+   "id": "first_line-2",
+   "title": "First line",
+   "detail": "Get every box from the inlet to the shipping bin. Walls are in the way.",
+   "tier": 1,
+   "split": "public",
+   "size": "12x8",
+   "target": 34.0,
+   "item": "box",
+   "runs": [
+    {
+     "run": "luna",
+     "label": "GPT-6 Luna",
+     "success": true,
+     "score": 53,
+     "turns": 6,
+     "tainted": false
     },
     {
      "run": "sol",
      "label": "GPT-6.1 Sol",
      "success": true,
      "score": 54,
-     "turns": 4
+     "turns": 4,
+     "tainted": false
+    },
+    {
+     "run": "sonnet",
+     "label": "Claude Sonnet 5.5",
+     "success": true,
+     "score": 53,
+     "turns": 3,
+     "tainted": false
+    },
+    {
+     "run": "terra",
+     "label": "GPT-5.6 Terra",
+     "success": false,
+     "score": 47,
+     "turns": 9,
+     "tainted": false
     }
    ]
   },
   {
-   "id": "quality_gate",
+   "id": "gen1000-1000",
+   "title": "Plant 1000",
+   "detail": "Get every box to the shipping bin.",
+   "tier": 1,
+   "split": "public",
+   "size": "12x9",
+   "target": 46.0,
+   "item": "box",
+   "runs": [
+    {
+     "run": "luna",
+     "label": "GPT-6 Luna",
+     "success": true,
+     "score": 74,
+     "turns": 8,
+     "tainted": true
+    },
+    {
+     "run": "sol",
+     "label": "GPT-6.1 Sol",
+     "success": true,
+     "score": 73,
+     "turns": 4,
+     "tainted": false
+    },
+    {
+     "run": "sonnet",
+     "label": "Claude Sonnet 5.5",
+     "success": true,
+     "score": 74,
+     "turns": 4,
+     "tainted": false
+    },
+    {
+     "run": "terra",
+     "label": "GPT-5.6 Terra",
+     "success": true,
+     "score": 69,
+     "turns": 7,
+     "tainted": false
+    }
+   ]
+  },
+  {
+   "id": "gen1001-1001",
+   "title": "Plant 1001",
+   "detail": "Get every box to the shipping bin.",
+   "tier": 1,
+   "split": "public",
+   "size": "15x9",
+   "target": 46.0,
+   "item": "box",
+   "runs": [
+    {
+     "run": "luna",
+     "label": "GPT-6 Luna",
+     "success": true,
+     "score": 76,
+     "turns": 6,
+     "tainted": true
+    },
+    {
+     "run": "sol",
+     "label": "GPT-6.1 Sol",
+     "success": true,
+     "score": 75,
+     "turns": 4,
+     "tainted": false
+    },
+    {
+     "run": "sonnet",
+     "label": "Claude Sonnet 5.5",
+     "success": true,
+     "score": 76,
+     "turns": 3,
+     "tainted": false
+    },
+    {
+     "run": "terra",
+     "label": "GPT-5.6 Terra",
+     "success": true,
+     "score": 71,
+     "turns": 6,
+     "tainted": false
+    }
+   ]
+  },
+  {
+   "id": "gen1003-1003",
+   "title": "Plant 1003",
+   "detail": "Get every box to the shipping bin.",
+   "tier": 1,
+   "split": "public",
+   "size": "13x8",
+   "target": 45.0,
+   "item": "box",
+   "runs": [
+    {
+     "run": "luna",
+     "label": "GPT-6 Luna",
+     "success": true,
+     "score": 74,
+     "turns": 8,
+     "tainted": true
+    },
+    {
+     "run": "sol",
+     "label": "GPT-6.1 Sol",
+     "success": true,
+     "score": 72,
+     "turns": 4,
+     "tainted": false
+    },
+    {
+     "run": "sonnet",
+     "label": "Claude Sonnet 5.5",
+     "success": true,
+     "score": 74,
+     "turns": 4,
+     "tainted": false
+    },
+    {
+     "run": "terra",
+     "label": "GPT-5.6 Terra",
+     "success": false,
+     "score": -160,
+     "turns": 6,
+     "tainted": false
+    }
+   ]
+  },
+  {
+   "id": "gen1005-1005",
+   "title": "Plant 1005",
+   "detail": "This line makes rubber ducks (Bob): 18 cm long, 9 cm tall, about 400 g. Get every box to the shipping bin.",
+   "tier": 1,
+   "split": "public",
+   "size": "13x8",
+   "target": 36.0,
+   "item": "bob",
+   "runs": [
+    {
+     "run": "luna",
+     "label": "GPT-6 Luna",
+     "success": true,
+     "score": 57,
+     "turns": 8,
+     "tainted": true
+    },
+    {
+     "run": "sol",
+     "label": "GPT-6.1 Sol",
+     "success": true,
+     "score": 57,
+     "turns": 4,
+     "tainted": false
+    },
+    {
+     "run": "sonnet",
+     "label": "Claude Sonnet 5.5",
+     "success": true,
+     "score": 58,
+     "turns": 4,
+     "tainted": false
+    },
+    {
+     "run": "terra",
+     "label": "GPT-5.6 Terra",
+     "success": true,
+     "score": 55,
+     "turns": 10,
+     "tainted": false
+    }
+   ]
+  },
+  {
+   "id": "gen1008-1008",
+   "title": "Plant 1008",
+   "detail": "Get every box to the shipping bin.",
+   "tier": 1,
+   "split": "public",
+   "size": "13x8",
+   "target": 49.0,
+   "item": "box",
+   "runs": [
+    {
+     "run": "luna",
+     "label": "GPT-6 Luna",
+     "success": true,
+     "score": 80,
+     "turns": 3,
+     "tainted": false
+    },
+    {
+     "run": "sol",
+     "label": "GPT-6.1 Sol",
+     "success": true,
+     "score": 78,
+     "turns": 4,
+     "tainted": false
+    },
+    {
+     "run": "sonnet",
+     "label": "Claude Sonnet 5.5",
+     "success": true,
+     "score": 80,
+     "turns": 4,
+     "tainted": false
+    },
+    {
+     "run": "terra",
+     "label": "GPT-5.6 Terra",
+     "success": true,
+     "score": 78,
+     "turns": 3,
+     "tainted": false
+    }
+   ]
+  },
+  {
+   "id": "gen1009-1009",
+   "title": "Plant 1009",
+   "detail": "This line makes toy fish (Blub): 22 cm long, lying on their side, about 400 g. Get every box to the shipping bin.",
+   "tier": 1,
+   "split": "public",
+   "size": "14x8",
+   "target": 47.0,
+   "item": "blub",
+   "runs": [
+    {
+     "run": "luna",
+     "label": "GPT-6 Luna",
+     "success": false,
+     "score": 71,
+     "turns": 6,
+     "tainted": true
+    },
+    {
+     "run": "sol",
+     "label": "GPT-6.1 Sol",
+     "success": true,
+     "score": 76,
+     "turns": 4,
+     "tainted": false
+    },
+    {
+     "run": "sonnet",
+     "label": "Claude Sonnet 5.5",
+     "success": true,
+     "score": 78,
+     "turns": 4,
+     "tainted": false
+    },
+    {
+     "run": "terra",
+     "label": "GPT-5.6 Terra",
+     "success": false,
+     "score": 71,
+     "turns": 7,
+     "tainted": false
+    }
+   ]
+  },
+  {
+   "id": "gen1002-1002",
+   "title": "Plant 1002",
+   "detail": "This line makes toy fish (Blub): 22 cm long, lying on their side, about 400 g. Get every box to the shipping bin.",
+   "tier": 1,
+   "split": "test",
+   "size": "14x9",
+   "target": 34.0,
+   "item": "blub",
+   "runs": [
+    {
+     "run": "luna",
+     "label": "GPT-6 Luna",
+     "success": true,
+     "score": 57,
+     "turns": 3,
+     "tainted": false
+    },
+    {
+     "run": "sol",
+     "label": "GPT-6.1 Sol",
+     "success": true,
+     "score": 57,
+     "turns": 4,
+     "tainted": false
+    },
+    {
+     "run": "sonnet",
+     "label": "Claude Sonnet 5.5",
+     "success": true,
+     "score": 57,
+     "turns": 4,
+     "tainted": false
+    },
+    {
+     "run": "terra",
+     "label": "GPT-5.6 Terra",
+     "success": false,
+     "score": -126,
+     "turns": 7,
+     "tainted": false
+    }
+   ]
+  },
+  {
+   "id": "gen1006-1006",
+   "title": "Plant 1006",
+   "detail": "Get every box to the shipping bin.",
+   "tier": 1,
+   "split": "test",
+   "size": "14x9",
+   "target": 39.0,
+   "item": "box",
+   "runs": [
+    {
+     "run": "luna",
+     "label": "GPT-6 Luna",
+     "success": true,
+     "score": 65,
+     "turns": 6,
+     "tainted": false
+    },
+    {
+     "run": "sol",
+     "label": "GPT-6.1 Sol",
+     "success": true,
+     "score": 63,
+     "turns": 4,
+     "tainted": false
+    },
+    {
+     "run": "sonnet",
+     "label": "Claude Sonnet 5.5",
+     "success": true,
+     "score": 65,
+     "turns": 4,
+     "tainted": false
+    },
+    {
+     "run": "terra",
+     "label": "GPT-5.6 Terra",
+     "success": true,
+     "score": 63,
+     "turns": 8,
+     "tainted": false
+    }
+   ]
+  },
+  {
+   "id": "gen1016-1016",
+   "title": "Plant 1016",
+   "detail": "Some boxes leave filling out of spec. Ship only good ones.",
+   "tier": 2,
+   "split": "public",
+   "size": "14x8",
+   "target": 33.0,
+   "item": "box",
+   "runs": [
+    {
+     "run": "luna",
+     "label": "GPT-6 Luna",
+     "success": false,
+     "score": -85,
+     "turns": 10,
+     "tainted": true
+    },
+    {
+     "run": "sol",
+     "label": "GPT-6.1 Sol",
+     "success": false,
+     "score": 46,
+     "turns": 6,
+     "tainted": false
+    },
+    {
+     "run": "sonnet",
+     "label": "Claude Sonnet 5.5",
+     "success": false,
+     "score": 14,
+     "turns": 10,
+     "tainted": false
+    },
+    {
+     "run": "terra",
+     "label": "GPT-5.6 Terra",
+     "success": false,
+     "score": -85,
+     "turns": 10,
+     "tainted": false
+    }
+   ]
+  },
+  {
+   "id": "gen1017-1017",
+   "title": "Plant 1017",
+   "detail": "Some boxes leave filling out of spec. Ship only good ones.",
+   "tier": 2,
+   "split": "public",
+   "size": "15x10",
+   "target": 29.0,
+   "item": "box",
+   "runs": [
+    {
+     "run": "luna",
+     "label": "GPT-6 Luna",
+     "success": false,
+     "score": -3,
+     "turns": 10,
+     "tainted": true
+    },
+    {
+     "run": "sol",
+     "label": "GPT-6.1 Sol",
+     "success": false,
+     "score": 44,
+     "turns": 9,
+     "tainted": false
+    },
+    {
+     "run": "sonnet",
+     "label": "Claude Sonnet 5.5",
+     "success": false,
+     "score": 2,
+     "turns": 5,
+     "tainted": false
+    },
+    {
+     "run": "terra",
+     "label": "GPT-5.6 Terra",
+     "success": false,
+     "score": -21,
+     "turns": 6,
+     "tainted": false
+    }
+   ]
+  },
+  {
+   "id": "gen1023-1023",
+   "title": "Plant 1023",
+   "detail": "Some boxes leave filling out of spec. Ship only good ones.",
+   "tier": 2,
+   "split": "public",
+   "size": "13x9",
+   "target": 36.0,
+   "item": "box",
+   "runs": [
+    {
+     "run": "luna",
+     "label": "GPT-6 Luna",
+     "success": false,
+     "score": -41,
+     "turns": 8,
+     "tainted": false
+    },
+    {
+     "run": "sol",
+     "label": "GPT-6.1 Sol",
+     "success": true,
+     "score": 54,
+     "turns": 8,
+     "tainted": false
+    },
+    {
+     "run": "sonnet",
+     "label": "Claude Sonnet 5.5",
+     "success": false,
+     "score": -3,
+     "turns": 4,
+     "tainted": false
+    },
+    {
+     "run": "terra",
+     "label": "GPT-5.6 Terra",
+     "success": false,
+     "score": -15,
+     "turns": 5,
+     "tainted": false
+    }
+   ]
+  },
+  {
+   "id": "gen1029-1029",
+   "title": "Plant 1029",
+   "detail": "Some boxes leave filling out of spec. Ship only good ones.",
+   "tier": 2,
+   "split": "public",
+   "size": "14x10",
+   "target": 27.0,
+   "item": "box",
+   "runs": [
+    {
+     "run": "luna",
+     "label": "GPT-6 Luna",
+     "success": false,
+     "score": 40,
+     "turns": 10,
+     "tainted": true
+    },
+    {
+     "run": "sol",
+     "label": "GPT-6.1 Sol",
+     "success": true,
+     "score": 47,
+     "turns": 7,
+     "tainted": false
+    },
+    {
+     "run": "sonnet",
+     "label": "Claude Sonnet 5.5",
+     "success": false,
+     "score": -25,
+     "turns": 10,
+     "tainted": false
+    },
+    {
+     "run": "terra",
+     "label": "GPT-5.6 Terra",
+     "success": false,
+     "score": -35,
+     "turns": 8,
+     "tainted": false
+    }
+   ]
+  },
+  {
+   "id": "gen1031-1031",
+   "title": "Plant 1031",
+   "detail": "Some boxes leave filling out of spec. Ship only good ones.",
+   "tier": 2,
+   "split": "public",
+   "size": "15x10",
+   "target": 27.0,
+   "item": "box",
+   "runs": [
+    {
+     "run": "luna",
+     "label": "GPT-6 Luna",
+     "success": false,
+     "score": -58,
+     "turns": 10,
+     "tainted": true
+    },
+    {
+     "run": "sol",
+     "label": "GPT-6.1 Sol",
+     "success": false,
+     "score": -42,
+     "turns": 10,
+     "tainted": false
+    },
+    {
+     "run": "sonnet",
+     "label": "Claude Sonnet 5.5",
+     "success": false,
+     "score": -65,
+     "turns": 10,
+     "tainted": false
+    },
+    {
+     "run": "terra",
+     "label": "GPT-5.6 Terra",
+     "success": false,
+     "score": -41,
+     "turns": 9,
+     "tainted": false
+    }
+   ]
+  },
+  {
+   "id": "gen1049-1049",
+   "title": "Plant 1049",
+   "detail": "This line makes rubber ducks (Bob): 18 cm long, 9 cm tall, about 400 g. Some items leave filling out of spec. Ship only good ones.",
+   "tier": 2,
+   "split": "public",
+   "size": "15x8",
+   "target": 22.0,
+   "item": "bob",
+   "runs": [
+    {
+     "run": "luna",
+     "label": "GPT-6 Luna",
+     "success": false,
+     "score": -51,
+     "turns": 6,
+     "tainted": false
+    },
+    {
+     "run": "sol",
+     "label": "GPT-6.1 Sol",
+     "success": true,
+     "score": 38,
+     "turns": 8,
+     "tainted": false
+    },
+    {
+     "run": "sonnet",
+     "label": "Claude Sonnet 5.5",
+     "success": false,
+     "score": -36,
+     "turns": 5,
+     "tainted": false
+    },
+    {
+     "run": "terra",
+     "label": "GPT-5.6 Terra",
+     "success": false,
+     "score": -48,
+     "turns": 8,
+     "tainted": false
+    }
+   ]
+  },
+  {
+   "id": "quality_gate-1",
    "title": "Quality gate",
    "detail": "Some boxes leave filling underfilled. Ship the good ones, keep the bad ones out of the shipping bin.",
+   "tier": 2,
+   "split": "public",
+   "size": "12x8",
+   "target": 22.0,
+   "item": "box",
    "runs": [
-    {
-     "run": "astra",
-     "label": "GPT-6 Astra",
-     "success": true,
-     "score": 33,
-     "turns": 4
-    },
     {
      "run": "luna",
      "label": "GPT-6 Luna",
      "success": false,
-     "score": -71,
-     "turns": 14
+     "score": -28,
+     "turns": 13,
+     "tainted": true
     },
     {
      "run": "sol",
      "label": "GPT-6.1 Sol",
+     "success": true,
+     "score": 35,
+     "turns": 7,
+     "tainted": false
+    },
+    {
+     "run": "sonnet",
+     "label": "Claude Sonnet 5.5",
+     "success": true,
+     "score": 39,
+     "turns": 7,
+     "tainted": false
+    },
+    {
+     "run": "terra",
+     "label": "GPT-5.6 Terra",
      "success": false,
-     "score": 32,
-     "turns": 4
+     "score": -1,
+     "turns": 9,
+     "tainted": false
     }
    ]
   },
   {
-   "id": "two_lines",
+   "id": "quality_gate-2",
+   "title": "Quality gate",
+   "detail": "Some boxes leave filling underfilled. Ship the good ones, keep the bad ones out of the shipping bin.",
+   "tier": 2,
+   "split": "public",
+   "size": "12x8",
+   "target": 22.0,
+   "item": "box",
+   "runs": [
+    {
+     "run": "luna",
+     "label": "GPT-6 Luna",
+     "success": false,
+     "score": -46,
+     "turns": 13,
+     "tainted": true
+    },
+    {
+     "run": "sol",
+     "label": "GPT-6.1 Sol",
+     "success": true,
+     "score": 40,
+     "turns": 7,
+     "tainted": false
+    },
+    {
+     "run": "sonnet",
+     "label": "Claude Sonnet 5.5",
+     "success": true,
+     "score": 38,
+     "turns": 9,
+     "tainted": false
+    },
+    {
+     "run": "terra",
+     "label": "GPT-5.6 Terra",
+     "success": false,
+     "score": -9,
+     "turns": 12,
+     "tainted": false
+    }
+   ]
+  },
+  {
+   "id": "two_lines-1",
    "title": "Two lines, one dock",
    "detail": "Two filling lines feed one shipping dock. Line B sometimes double-packs. Merge both lines and ship only good boxes.",
+   "tier": 2,
+   "split": "public",
+   "size": "14x9",
+   "target": 42.0,
+   "item": "box",
    "runs": [
     {
-     "run": "astra",
-     "label": "GPT-6 Astra",
+     "run": "luna",
+     "label": "GPT-6 Luna",
      "success": false,
+     "score": 7,
+     "turns": 14,
+     "tainted": true
+    },
+    {
+     "run": "sol",
+     "label": "GPT-6.1 Sol",
+     "success": true,
+     "score": 70,
+     "turns": 6,
+     "tainted": false
+    },
+    {
+     "run": "sonnet",
+     "label": "Claude Sonnet 5.5",
+     "success": true,
+     "score": 71,
+     "turns": 4,
+     "tainted": false
+    },
+    {
+     "run": "terra",
+     "label": "GPT-5.6 Terra",
+     "success": false,
+     "score": -180,
+     "turns": 4,
+     "tainted": false
+    }
+   ]
+  },
+  {
+   "id": "two_lines-2",
+   "title": "Two lines, one dock",
+   "detail": "Two filling lines feed one shipping dock. Line B sometimes double-packs. Merge both lines and ship only good boxes.",
+   "tier": 2,
+   "split": "public",
+   "size": "14x9",
+   "target": 42.0,
+   "item": "box",
+   "runs": [
+    {
+     "run": "luna",
+     "label": "GPT-6 Luna",
+     "success": true,
      "score": 64,
-     "turns": 5
-    },
-    {
-     "run": "luna",
-     "label": "GPT-6 Luna",
-     "success": true,
-     "score": 67,
-     "turns": 7
+     "turns": 14,
+     "tainted": true
     },
     {
      "run": "sol",
      "label": "GPT-6.1 Sol",
      "success": true,
-     "score": 68,
-     "turns": 4
+     "score": 70,
+     "turns": 11,
+     "tainted": false
+    },
+    {
+     "run": "sonnet",
+     "label": "Claude Sonnet 5.5",
+     "success": true,
+     "score": 71,
+     "turns": 7,
+     "tainted": false
+    },
+    {
+     "run": "terra",
+     "label": "GPT-5.6 Terra",
+     "success": true,
+     "score": 66,
+     "turns": 11,
+     "tainted": false
     }
    ]
   },
   {
-   "id": "rush_hour",
-   "title": "Rush hour",
-   "detail": "A fast filler: boxes arrive at 1.8 m/s, 70 per minute. Get them around the walls to shipping without throwing any.",
+   "id": "gen1019-1019",
+   "title": "Plant 1019",
+   "detail": "Some boxes leave filling out of spec. Ship only good ones.",
+   "tier": 2,
+   "split": "test",
+   "size": "13x8",
+   "target": 35.0,
+   "item": "box",
    "runs": [
-    {
-     "run": "astra",
-     "label": "GPT-6 Astra",
-     "success": true,
-     "score": 93,
-     "turns": 4
-    },
-    {
-     "run": "luna",
-     "label": "GPT-6 Luna",
-     "success": true,
-     "score": 95,
-     "turns": 7
-    },
-    {
-     "run": "sol",
-     "label": "GPT-6.1 Sol",
-     "success": true,
-     "score": 93,
-     "turns": 4
-    }
-   ]
-  },
-  {
-   "id": "tight_spec",
-   "title": "Tight spec",
-   "detail": "A fast filler with a drifting nozzle: some boxes are only slightly underfilled. Nothing under spec may ship.",
-   "runs": [
-    {
-     "run": "astra",
-     "label": "GPT-6 Astra",
-     "success": true,
-     "score": 56,
-     "turns": 10
-    },
     {
      "run": "luna",
      "label": "GPT-6 Luna",
      "success": false,
-     "score": -97,
-     "turns": 10
+     "score": 25,
+     "turns": 10,
+     "tainted": true
+    },
+    {
+     "run": "sol",
+     "label": "GPT-6.1 Sol",
+     "success": true,
+     "score": 58,
+     "turns": 8,
+     "tainted": false
+    },
+    {
+     "run": "sonnet",
+     "label": "Claude Sonnet 5.5",
+     "success": true,
+     "score": 58,
+     "turns": 9,
+     "tainted": false
+    },
+    {
+     "run": "terra",
+     "label": "GPT-5.6 Terra",
+     "success": true,
+     "score": 57,
+     "turns": 7,
+     "tainted": false
+    }
+   ]
+  },
+  {
+   "id": "gen1030-1030",
+   "title": "Plant 1030",
+   "detail": "Some boxes leave filling out of spec. Ship only good ones.",
+   "tier": 2,
+   "split": "test",
+   "size": "13x8",
+   "target": 37.0,
+   "item": "box",
+   "runs": [
+    {
+     "run": "luna",
+     "label": "GPT-6 Luna",
+     "success": false,
+     "score": -12,
+     "turns": 10,
+     "tainted": true
+    },
+    {
+     "run": "sol",
+     "label": "GPT-6.1 Sol",
+     "success": true,
+     "score": 60,
+     "turns": 4,
+     "tainted": false
+    },
+    {
+     "run": "sonnet",
+     "label": "Claude Sonnet 5.5",
+     "success": true,
+     "score": 62,
+     "turns": 4,
+     "tainted": false
+    },
+    {
+     "run": "terra",
+     "label": "GPT-5.6 Terra",
+     "success": false,
+     "score": 57,
+     "turns": 7,
+     "tainted": false
+    }
+   ]
+  },
+  {
+   "id": "gen1036-1036",
+   "title": "Plant 1036",
+   "detail": "This line makes toy fish (Blub): 22 cm long, lying on their side, about 400 g. Two lines, one dock. Some items leave filling out of spec. Ship only good ones.",
+   "tier": 3,
+   "split": "public",
+   "size": "13x8",
+   "target": 44.0,
+   "item": "blub",
+   "runs": [
+    {
+     "run": "luna",
+     "label": "GPT-6 Luna",
+     "success": false,
+     "score": -113,
+     "turns": 10,
+     "tainted": false
     },
     {
      "run": "sol",
      "label": "GPT-6.1 Sol",
      "success": false,
-     "score": -128,
-     "turns": 10
+     "score": 62,
+     "turns": 10,
+     "tainted": false
+    },
+    {
+     "run": "sonnet",
+     "label": "Claude Sonnet 5.5",
+     "success": false,
+     "score": -129,
+     "turns": 10,
+     "tainted": false
+    },
+    {
+     "run": "terra",
+     "label": "GPT-5.6 Terra",
+     "success": false,
+     "score": 53,
+     "turns": 9,
+     "tainted": false
     }
    ]
   },
   {
-   "id": "mixed_merge",
+   "id": "mixed_merge-2",
    "title": "Mixed merge",
    "detail": "Two fast lines into one dock. Line A sometimes underfills, line B sometimes double-packs. Only good boxes may ship.",
+   "tier": 3,
+   "split": "public",
+   "size": "14x9",
+   "target": 54.0,
+   "item": "box",
    "runs": [
-    {
-     "run": "astra",
-     "label": "GPT-6 Astra",
-     "success": false,
-     "score": 88,
-     "turns": 10
-    },
     {
      "run": "luna",
      "label": "GPT-6 Luna",
      "success": false,
-     "score": -258,
-     "turns": 3
+     "score": -36,
+     "turns": 10,
+     "tainted": true
+    },
+    {
+     "run": "sol",
+     "label": "GPT-6.1 Sol",
+     "success": false,
+     "score": 88,
+     "turns": 8,
+     "tainted": false
+    },
+    {
+     "run": "sonnet",
+     "label": "Claude Sonnet 5.5",
+     "success": false,
+     "score": 10,
+     "turns": 9,
+     "tainted": false
+    },
+    {
+     "run": "terra",
+     "label": "GPT-5.6 Terra",
+     "success": false,
+     "score": -30,
+     "turns": 10,
+     "tainted": false
+    }
+   ]
+  },
+  {
+   "id": "mixed_merge-3",
+   "title": "Mixed merge",
+   "detail": "Two fast lines into one dock. Line A sometimes underfills, line B sometimes double-packs. Only good boxes may ship.",
+   "tier": 3,
+   "split": "public",
+   "size": "14x9",
+   "target": 54.0,
+   "item": "box",
+   "runs": [
+    {
+     "run": "luna",
+     "label": "GPT-6 Luna",
+     "success": false,
+     "score": 34,
+     "turns": 10,
+     "tainted": false
     },
     {
      "run": "sol",
      "label": "GPT-6.1 Sol",
      "success": true,
-     "score": 91,
-     "turns": 10
+     "score": 88,
+     "turns": 6,
+     "tainted": false
+    },
+    {
+     "run": "sonnet",
+     "label": "Claude Sonnet 5.5",
+     "success": false,
+     "score": -58,
+     "turns": 10,
+     "tainted": false
+    },
+    {
+     "run": "terra",
+     "label": "GPT-5.6 Terra",
+     "success": false,
+     "score": 102,
+     "turns": 9,
+     "tainted": false
+    }
+   ]
+  },
+  {
+   "id": "rush_hour-1",
+   "title": "Rush hour",
+   "detail": "A fast filler: boxes arrive at 1.8 m/s, 70 per minute. Get them around the walls to shipping without throwing any.",
+   "tier": 3,
+   "split": "public",
+   "size": "14x9",
+   "target": 60.0,
+   "item": "box",
+   "runs": [
+    {
+     "run": "luna",
+     "label": "GPT-6 Luna",
+     "success": false,
+     "score": 85,
+     "turns": 10,
+     "tainted": true
+    },
+    {
+     "run": "sol",
+     "label": "GPT-6.1 Sol",
+     "success": true,
+     "score": 94,
+     "turns": 4,
+     "tainted": false
+    },
+    {
+     "run": "sonnet",
+     "label": "Claude Sonnet 5.5",
+     "success": true,
+     "score": 92,
+     "turns": 4,
+     "tainted": false
+    },
+    {
+     "run": "terra",
+     "label": "GPT-5.6 Terra",
+     "success": false,
+     "score": -198,
+     "turns": 10,
+     "tainted": false
+    }
+   ]
+  },
+  {
+   "id": "rush_hour-2",
+   "title": "Rush hour",
+   "detail": "A fast filler: boxes arrive at 1.8 m/s, 70 per minute. Get them around the walls to shipping without throwing any.",
+   "tier": 3,
+   "split": "public",
+   "size": "14x9",
+   "target": 60.0,
+   "item": "box",
+   "runs": [
+    {
+     "run": "luna",
+     "label": "GPT-6 Luna",
+     "success": true,
+     "score": 92,
+     "turns": 6,
+     "tainted": true
+    },
+    {
+     "run": "sol",
+     "label": "GPT-6.1 Sol",
+     "success": true,
+     "score": 94,
+     "turns": 4,
+     "tainted": false
+    },
+    {
+     "run": "sonnet",
+     "label": "Claude Sonnet 5.5",
+     "success": true,
+     "score": 95,
+     "turns": 5,
+     "tainted": false
+    },
+    {
+     "run": "terra",
+     "label": "GPT-5.6 Terra",
+     "success": true,
+     "score": 92,
+     "turns": 6,
+     "tainted": false
+    }
+   ]
+  },
+  {
+   "id": "tight_spec-2",
+   "title": "Tight spec",
+   "detail": "A fast filler with a drifting nozzle: some boxes are only slightly underfilled. Nothing under spec may ship.",
+   "tier": 3,
+   "split": "public",
+   "size": "12x8",
+   "target": 34.0,
+   "item": "box",
+   "runs": [
+    {
+     "run": "luna",
+     "label": "GPT-6 Luna",
+     "success": false,
+     "score": -67,
+     "turns": 10,
+     "tainted": true
+    },
+    {
+     "run": "sol",
+     "label": "GPT-6.1 Sol",
+     "success": false,
+     "score": -160,
+     "turns": 10,
+     "tainted": false
+    },
+    {
+     "run": "sonnet",
+     "label": "Claude Sonnet 5.5",
+     "success": false,
+     "score": -59,
+     "turns": 10,
+     "tainted": false
+    },
+    {
+     "run": "terra",
+     "label": "GPT-5.6 Terra",
+     "success": false,
+     "score": 58,
+     "turns": 9,
+     "tainted": false
+    }
+   ]
+  },
+  {
+   "id": "tight_spec-3",
+   "title": "Tight spec",
+   "detail": "A fast filler with a drifting nozzle: some boxes are only slightly underfilled. Nothing under spec may ship.",
+   "tier": 3,
+   "split": "public",
+   "size": "12x8",
+   "target": 34.0,
+   "item": "box",
+   "runs": [
+    {
+     "run": "luna",
+     "label": "GPT-6 Luna",
+     "success": false,
+     "score": -75,
+     "turns": 10,
+     "tainted": true
+    },
+    {
+     "run": "sol",
+     "label": "GPT-6.1 Sol",
+     "success": false,
+     "score": -57,
+     "turns": 10,
+     "tainted": false
+    },
+    {
+     "run": "sonnet",
+     "label": "Claude Sonnet 5.5",
+     "success": true,
+     "score": 59,
+     "turns": 10,
+     "tainted": false
+    },
+    {
+     "run": "terra",
+     "label": "GPT-5.6 Terra",
+     "success": false,
+     "score": -104,
+     "turns": 10,
+     "tainted": false
     }
    ]
   },
   {
    "id": "bottling",
    "title": "Bottling line (physics replay)",
+   "tier": 0,
+   "split": "demo",
+   "size": "",
    "detail": "A recorded MuJoCo run of a bottling line: checkweigher and reject pusher. No agent.",
    "runs": [
     {
      "run": "demo",
      "label": "Watch replay",
-     "success": true
+     "success": true,
+     "score": null,
+     "turns": 0
     }
    ]
   }

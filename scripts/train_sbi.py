@@ -20,7 +20,7 @@ from pathlib import Path
 import numpy as np
 import torch
 
-from knock.agents import sbi_agent as S
+from yantra.agents import sbi_agent as S
 
 HELDOUT_SEED0 = 10_000_000
 

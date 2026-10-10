@@ -1,0 +1,206 @@
+{
+ "id": "F-first_line-1",
+ "pack": "factory",
+ "world": {
+  "seed": 1,
+  "settings": {
+   "_layout": {
+    "w": 12,
+    "h": 8,
+    "walls": [
+     [
+      4,
+      0
+     ],
+     [
+      4,
+      1
+     ],
+     [
+      4,
+      2
+     ],
+     [
+      4,
+      3
+     ],
+     [
+      4,
+      4
+     ],
+     [
+      8,
+      3
+     ],
+     [
+      8,
+      4
+     ],
+     [
+      8,
+      5
+     ],
+     [
+      8,
+      6
+     ],
+     [
+      8,
+      7
+     ]
+    ],
+    "parts": [
+     {
+      "kind": "inlet",
+      "x": 0,
+      "y": 1,
+      "dir": "E",
+      "params": {
+       "speed": 1.0,
+       "feed_per_min": 40
+      },
+      "fixed": true,
+      "name": "A"
+     },
+     {
+      "kind": "bin",
+      "x": 11,
+      "y": 6,
+      "dir": "E",
+      "params": {},
+      "fixed": true,
+      "name": "ship"
+     }
+    ]
+   },
+   "money": 1500.0,
+   "_mixes": {
+    "A": [
+     [
+      "good",
+      1.0,
+      1.0,
+      0.01
+     ]
+    ]
+   },
+   "item": "box",
+   "state": {
+    "money_left": 1500,
+    "map": " 7 . . . . . . . . # . . .\n 6 . . . . . . . . # . . G\n 5 . . . . . . . . # . . .\n 4 . . . . # . . . # . . .\n 3 . . . . # . . . # . . .\n 2 . . . . # . . . . . . .\n 1 I . . . # . . . . . . .\n 0 . . . . # . . . . . . .\n   0 1 2 3 4 5 6 7 8 9 0 1",
+    "parts": [
+     "inlet(A) at 0,1 dir E {\"speed\": 1.0, \"feed_per_min\": 40} [plant]",
+     "bin(ship) at 11,6 dir E [plant]"
+    ]
+   }
+  },
+  "components": [
+   {
+    "kind": "plant",
+    "id": "plant",
+    "visible": {},
+    "hidden": {
+     "belt_mu": 0.5559108123501284,
+     "pusher_speed": 1.745510065958529,
+     "pusher_lag": 0.03441596127196337,
+     "scale_noise_g": 10.945175991227584
+    },
+    "pose": {}
+   }
+  ]
+ },
+ "task": {
+  "kind": "build_factory",
+  "goal": "Get every box from the inlet to the shipping bin. Walls are in the way. Score: a 90 s production run must ship at least 34 good items per minute to the shipping bin, with at most 0 bad boxes shipped, no spills and no jams. You have $1500 for parts.",
+  "budget": {
+   "turns": 14.0,
+   "sim_seconds": 360.0
+  },
+  "probes": [
+   "build",
+   "run",
+   "finish"
+  ],
+  "act": null,
+  "params": {
+   "map": "first_line",
+   "title": "First line",
+   "target_good_per_min": 34.0,
+   "max_bad_shipped": 0,
+   "max_spilled": 0,
+   "rules": "A factory floor of square cells, 0.5 m each; x grows east, y grows north. Items (boxes, 14 cm\ncubes, unless the task says the line makes toys) arrive from inlets (I) and must end up in the shipping bin (G). Map symbols: > < ^ v belts (arrow = flow),\nW scale, P pusher, R reject bin, # wall, . empty.\nParts (price): belt $20 (speed m/s); scale $400 (a belt section with a load cell; boxes\nwhose reading is below reject_below_g or above reject_above_g are flagged); pusher $300 (stands\nbeside a belt and pushes across it in its direction; fires when a flagged box is offset_mm before the paddle\nline, stays out stroke_ms); reject bin $60. Removing a part refunds half its price.\nBelts carry boxes by friction: boxes need time to speed up or turn, so fast turns, merges and drop-offs can\nthrow boxes. Rails are fitted automatically on belt edges nothing feeds into, except the side a pusher pushes\nthrough. A box falling to the floor is a spill. A box that sits still on a belt for 3 s is a jam. Bins\nstand on platform scales: runs report each bin's count and total weight. A good box weighs about\n1.00 kg (toys less); other items may be underfilled or double-packed.\nBuild language (one command per line; X or Y may be a range like 2..5):\n  belt X Y DIR speed=<m/s>          DIR is E, W, N or S\n  scale X Y DIR speed=<m/s> reject_below_g=<g> reject_above_g=<g>\n  pusher X Y DIR offset_mm=<mm> stroke_ms=<ms>\n  bin X Y\n  set X Y key=value ...           retune a placed part\n  remove X Y",
+   "_start": {
+    "w": 12,
+    "h": 8,
+    "walls": [
+     [
+      4,
+      0
+     ],
+     [
+      4,
+      1
+     ],
+     [
+      4,
+      2
+     ],
+     [
+      4,
+      3
+     ],
+     [
+      4,
+      4
+     ],
+     [
+      8,
+      3
+     ],
+     [
+      8,
+      4
+     ],
+     [
+      8,
+      5
+     ],
+     [
+      8,
+      6
+     ],
+     [
+      8,
+      7
+     ]
+    ],
+    "parts": [
+     {
+      "kind": "inlet",
+      "x": 0,
+      "y": 1,
+      "dir": "E",
+      "params": {
+       "speed": 1.0,
+       "feed_per_min": 40
+      },
+      "fixed": true,
+      "name": "A"
+     },
+     {
+      "kind": "bin",
+      "x": 11,
+      "y": 6,
+      "dir": "E",
+      "params": {},
+      "fixed": true,
+      "name": "ship"
+     }
+    ]
+   },
+   "_split": "public",
+   "_tier": 1
+  }
+ },
+ "notes": {}
+}

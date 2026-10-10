@@ -10,7 +10,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scratch"))
 from bottling_oracle import reference  # noqa: E402
 
-from knock.packs import BottlingPack  # noqa: E402
+from yantra.packs import BottlingPack  # noqa: E402
 
 
 def make(seed):

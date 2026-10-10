@@ -1,26 +1,23 @@
-"""Run a Codex (GPT) agent on factory maps; one trace per episode with per-turn replays.
+"""Run a Codex (GPT) agent on factory scenarios; one trace per episode with per-turn replays.
 
-    uv run python scripts/run_factory.py gpt-6.1-sol runs/factory/sol first_line:1 quality_gate:1 two_lines:1
+    uv run python scripts/run_factory.py gpt-6.1-sol runs/factory_v1/sol levels/factory/F-first_line-1.json ...
 """
 import json
 import sys
 import time
 from pathlib import Path
 
-import knock.packs  # noqa: F401
-from knock.agents.llm import CodexLLMAgent
-from knock.core import Episode, run_episode
-from knock.packs import FactoryPack
+import yantra.packs  # noqa: F401
+from yantra.agents.llm import CodexLLMAgent
+from yantra.core import Episode, Scenario, run_episode
 
 model, out = sys.argv[1], Path(sys.argv[2])
-effort = "high"
-for spec in sys.argv[3:]:
-    map_, seed = spec.split(":")
-    sc = FactoryPack().generate(int(seed), map=map_)
+for f in sys.argv[3:]:
+    sc = Scenario.from_json(Path(f).read_text())
     d = out / sc.id
     if (d / "trace.json").exists():
         print("skip", sc.id); continue
-    agent = CodexLLMAgent(model, effort, log_dir=d / "_codex")
+    agent = CodexLLMAgent(model, "high", log_dir=d / "_codex")
     ep = Episode(sc.world, sc.task, out_dir=d)
     t = time.time()
     res = run_episode(agent, ep)

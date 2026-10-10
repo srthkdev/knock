@@ -4,8 +4,8 @@ requires-python = ">=3.12"
 
 [manifest]
 members = [
-    "knock",
     "knock-audio",
+    "yantra",
 ]
 
 [[package]]
@@ -684,61 +684,6 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/16/45/c37a21ad5c0ab581a93c55ad544721aaa1f0ae94edb29c6a678a23d013e6/kiwisolver-1.5.1-graalpy312-graalpy250_312_native-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:072bdb15a3c19a5b5dbc8f8fb1f4e1884bf4f3507eeb4cc6334401274d37a5c0", size = 194292, upload-time = "2026-08-28T10:28:11.06Z" },
     { url = "https://files.pythonhosted.org/packages/a6/c1/69f00d627949580e43d57af0aa465df46868d7c29801c137a55374101294/kiwisolver-1.5.1-graalpy312-graalpy250_312_native-win_amd64.whl", hash = "sha256:a5a00665d1a0e26763a7338d7e911d4598fbc1d50dd0d6b7919b7dc6c5d6569f", size = 73362, upload-time = "2026-08-28T10:28:12.449Z" },
 ]
-
-[[package]]
-name = "knock"
-version = "0.1.0"
-source = { editable = "." }
-dependencies = [
-    { name = "fastapi" },
-    { name = "gymnasium" },
-    { name = "matplotlib" },
-    { name = "mujoco" },
-    { name = "numpy" },
-    { name = "pillow" },
-    { name = "pydantic" },
-    { name = "rich" },
-    { name = "sbi" },
-    { name = "scikit-fem" },
-    { name = "scipy" },
-    { name = "torch" },
-    { name = "typer" },
-    { name = "uvicorn", extra = ["standard"] },
-]
-
-[package.dev-dependencies]
-dev = [
-    { name = "pytest" },
-    { name = "scikit-learn" },
-]
-rust = [
-    { name = "knock-audio" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "fastapi", specifier = ">=0.143.0" },
-    { name = "gymnasium", specifier = ">=1.4.0" },
-    { name = "matplotlib", specifier = ">=3.9" },
-    { name = "mujoco", specifier = ">=3.3" },
-    { name = "numpy", specifier = ">=2.0" },
-    { name = "pillow", specifier = ">=10" },
-    { name = "pydantic", specifier = ">=2.14.0" },
-    { name = "rich", specifier = ">=15.0.0" },
-    { name = "sbi", specifier = ">=0.27.0" },
-    { name = "scikit-fem", specifier = ">=12.0.2" },
-    { name = "scipy", specifier = ">=1.13" },
-    { name = "torch", specifier = ">=2.14.1" },
-    { name = "typer", specifier = ">=0.27.3" },
-    { name = "uvicorn", extras = ["standard"], specifier = ">=0.54.0" },
-]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "pytest", specifier = ">=8" },
-    { name = "scikit-learn", specifier = ">=1.5" },
-]
-rust = [{ name = "knock-audio", editable = "crates/knock-audio" }]
 
 [[package]]
 name = "knock-audio"
@@ -2242,6 +2187,61 @@ sdist = { url = "https://files.pythonhosted.org/packages/a4/34/4dd12fc8bb7d61c91
 wheels = [
     { url = "https://files.pythonhosted.org/packages/a1/38/df03f564f43cec2684823f3cccae1a652ee7face1cbaa76fb223096e64d7/werkzeug-3.1.9-py3-none-any.whl", hash = "sha256:6392e50c78460ba618e5b21f08a71f59c99ce99cdc6cf6e3dd7e6ccca8754fab", size = 228700, upload-time = "2026-09-27T18:33:39.685Z" },
 ]
+
+[[package]]
+name = "yantra"
+version = "0.1.0"
+source = { editable = "." }
+dependencies = [
+    { name = "fastapi" },
+    { name = "gymnasium" },
+    { name = "matplotlib" },
+    { name = "mujoco" },
+    { name = "numpy" },
+    { name = "pillow" },
+    { name = "pydantic" },
+    { name = "rich" },
+    { name = "sbi" },
+    { name = "scikit-fem" },
+    { name = "scipy" },
+    { name = "torch" },
+    { name = "typer" },
+    { name = "uvicorn", extra = ["standard"] },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
+    { name = "scikit-learn" },
+]
+rust = [
+    { name = "knock-audio" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "fastapi", specifier = ">=0.143.0" },
+    { name = "gymnasium", specifier = ">=1.4.0" },
+    { name = "matplotlib", specifier = ">=3.9" },
+    { name = "mujoco", specifier = ">=3.3" },
+    { name = "numpy", specifier = ">=2.0" },
+    { name = "pillow", specifier = ">=10" },
+    { name = "pydantic", specifier = ">=2.14.0" },
+    { name = "rich", specifier = ">=15.0.0" },
+    { name = "sbi", specifier = ">=0.27.0" },
+    { name = "scikit-fem", specifier = ">=12.0.2" },
+    { name = "scipy", specifier = ">=1.13" },
+    { name = "torch", specifier = ">=2.14.1" },
+    { name = "typer", specifier = ">=0.27.3" },
+    { name = "uvicorn", extras = ["standard"], specifier = ">=0.54.0" },
+]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "pytest", specifier = ">=8" },
+    { name = "scikit-learn", specifier = ">=1.5" },
+]
+rust = [{ name = "knock-audio", editable = "crates/knock-audio" }]
 
 [[package]]
 name = "zipp"

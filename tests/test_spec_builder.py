@@ -5,11 +5,11 @@ import json
 import pytest
 from pydantic import ValidationError
 
-from knock.builder import (build_level, builder_prompt, check_fair, check_identifiable, check_level,
+from yantra.builder import (build_level, builder_prompt, check_fair, check_identifiable, check_level,
                            check_solvable, check_unique, slugify)
-from knock.level import Level
-from knock.oracle import valid_level
-from knock.spec import LevelSpec, strict_json_schema
+from yantra.level import Level
+from yantra.oracle import valid_level
+from yantra.spec import LevelSpec, strict_json_schema
 
 
 def obj(i, material="plastic", hollow=True, contents="empty", friction=0.3, edge=0.1, color="blue"):
@@ -167,7 +167,7 @@ def test_identifiable_quiet_rattle_fails(monkeypatch):
     # a muffled rattle (first shake only ~7 dB over the floor) must not count as identifiable;
     # the shake readings are stubbed so the check is tested independently of audio details
     import numpy as np
-    from knock import world
+    from yantra import world
 
     def quiet_shake(o, seed=0):
         feats = {"ring_time_s": 0.0, "distinct_hits": 0, "brightness_hz": 500, "dominant_pitch_hz": 300,

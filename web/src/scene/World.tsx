@@ -1,4 +1,4 @@
-// The Knock table rendered with React Three Fiber.
+// The cube-lab table rendered with React Three Fiber.
 // Everything inside <MjFrame> uses MuJoCo coordinates (z up, metres), so simulator
 // trajectories can be applied directly.
 import { useEffect, useMemo, useRef, type ReactNode } from 'react'

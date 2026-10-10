@@ -16,10 +16,10 @@ const kit = (name: string) => `${BASE}assets/kenney/${name}.glb`
 const ROT: Record<string, number> = { E: 0, N: Math.PI / 2, W: Math.PI, S: -Math.PI / 2 }
 const VEC: Record<string, [number, number]> = { E: [1, 0], N: [0, 1], W: [-1, 0], S: [0, -1] }
 
-interface Part { kind: string; x: number; y: number; dir: string; params: Record<string, number>; fixed: boolean; name: string }
-interface Layout { w: number; h: number; walls: [number, number][]; parts: Part[] }
-interface Frame { t: number; items: [number, boolean, number, number, number, number, number, number, number][]; push: number[] }
-interface Replay { layout: Layout; frames: Frame[]; report: any; truth: any }
+export interface Part { kind: string; x: number; y: number; dir: string; params: Record<string, number>; fixed: boolean; name: string }
+export interface Layout { w: number; h: number; walls: [number, number][]; parts: Part[] }
+export interface Frame { t: number; items: [number, boolean, number, number, number, number, number, number, number][]; push: number[] }
+export interface Replay { layout: Layout; frames: Frame[]; report: any; truth: any; fps?: number; scale?: number }
 interface Turn {
   i: number; tool: string; args: any; reasoning: string; prediction: Record<string, number> | null
   obs: any; layout: Layout; replay: string | null
@@ -28,7 +28,7 @@ interface EpisodeData {
   id: string; run: string; label: string; model: string; title: string; goal: string; params: any
   budgets: Record<string, number>; turns: Turn[]; think_seconds: number
   result: { success: boolean; score: number; checks: Record<string, boolean>; production: any; end: string; money_left: number }
-  final_layout: Layout; final_replay: string | null
+  final_layout: Layout; final_replay: string | null; item?: string
 }
 
 const cellXZ = (x: number, y: number): [number, number] => [(x + 0.5) * CELL, -(y + 0.5) * CELL]
@@ -41,11 +41,30 @@ function Model({ name, position = [0, 0, 0], rotation = [0, 0, 0], scale = 1 }: 
   return <Clone object={scene} position={position} rotation={rotation} scale={scale} />
 }
 
-// sim z (m) -> kit y. Boxes resting on a belt sit on BELT_TOP; boxes in bins or on the floor sit on the floor.
-function kitY(z: number) {
-  const onBelt = 0.47, onFloor = 0.17, half = 0.28
-  if (z >= onBelt) return BELT_TOP + half + (z - onBelt) / S
-  return half + Math.max(0, (z - onFloor) / (onBelt - onFloor)) * BELT_TOP
+// sim z (m) -> kit y. Items resting on a belt sit on BELT_TOP; items in bins or on the floor sit on the floor.
+// `rest` = height of the item's origin above its base (box: half its edge).
+function kitY(z: number, rest = 0.07) {
+  const onBelt = 0.4 + rest, onFloor = 0.1 + rest, r = rest / S
+  if (z >= onBelt) return BELT_TOP + r + (z - onBelt) / S
+  return r + Math.max(0, (z - onFloor) / (onBelt - onFloor)) * BELT_TOP
+}
+
+const ITEM_REST: Record<string, number> = { box: 0.07, spot: 0.0846, bob: 0.03, blub: 0.051 }
+
+// textured toy meshes (Keenan Crane, CC0), converted to kit space (x, z up -> kit y, -y -> kit z)
+const toyCache = new Map<string, Promise<THREE.BufferGeometry>>()
+function toyGeometry(item: string) {
+  if (!toyCache.has(item)) toyCache.set(item, fetch(`${BASE}assets/crane/${item}.json`).then((r) => r.json()).then((d) => {
+    const p = d.position as number[]
+    const k = new Float32Array(p.length)
+    for (let i = 0; i < p.length; i += 3) { k[i] = p[i] / S; k[i + 1] = p[i + 2] / S; k[i + 2] = -p[i + 1] / S }
+    const g = new THREE.BufferGeometry()
+    g.setAttribute('position', new THREE.BufferAttribute(k, 3))
+    g.setAttribute('uv', new THREE.BufferAttribute(new Float32Array(d.uv), 2))
+    g.computeVertexNormals()
+    return g
+  }))
+  return toyCache.get(item)!
 }
 
 function Arrow({ dir }: { dir: string }) {
@@ -137,24 +156,42 @@ function Floor({ layout }: { layout: Layout }) {
   )
 }
 
-function Items({ replay, frameRef, xray }: { replay: Replay | null; frameRef: React.RefObject<number>; xray: boolean }) {
+function Items({ replay, frameRef, xray, item = 'box' }: { replay: Replay | null; frameRef: React.RefObject<number>; xray: boolean; item?: string }) {
   const N = 48
+  const [geo, setGeo] = useState<THREE.BufferGeometry | null>(null)
+  const [tex, setTex] = useState<THREE.Texture | null>(null)
+  useEffect(() => {
+    if (item === 'box') { setGeo(null); setTex(null); return }
+    toyGeometry(item).then(setGeo)
+    new THREE.TextureLoader().load(`${BASE}assets/crane/${item}.png`, (t) => { t.flipY = true; t.colorSpace = THREE.SRGBColorSpace; setTex(t) })
+  }, [item])
+  const rest = ITEM_REST[item] ?? 0.07
   const refs = useRef<(THREE.Mesh | null)[]>([])
   const q = useMemo(() => new THREE.Quaternion(), [])
   const c = useMemo(() => new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI / 2), [])
   const cInv = useMemo(() => c.clone().invert(), [c])
-  const good = useMemo(() => new THREE.MeshStandardMaterial({ color: '#c8955a', roughness: 0.85 }), [])
+  const good = useMemo(() => new THREE.MeshStandardMaterial(tex ? { map: tex, roughness: 0.6 } : { color: '#c8955a', roughness: 0.85 }), [tex])
   const bad = useMemo(() => new THREE.MeshStandardMaterial({ color: '#e0523a', roughness: 0.7, emissive: '#5a1408' }), [])
+  const q2 = useMemo(() => new THREE.Quaternion(), [])
   useFrame(() => {
     for (const m of refs.current) if (m) m.visible = false
     if (!replay || !replay.frames.length) return
-    const f = replay.frames[Math.min(replay.frames.length - 1, Math.floor(frameRef.current))]
-    for (const it of f.items) {
+    const k = 1 / (replay.scale ?? 1)
+    const n = replay.frames.length
+    const fi = Math.min(n - 1, Math.max(0, frameRef.current))
+    const f0 = replay.frames[Math.floor(fi)], f1 = replay.frames[Math.min(n - 1, Math.floor(fi) + 1)]
+    const a = fi - Math.floor(fi)
+    const next = new Map(f1.items.map((it) => [it[0], it]))
+    for (const it of f0.items) {
       const m = refs.current[it[0]]
       if (!m) continue
+      const jt = next.get(it[0]) ?? it
+      const lerp = (j: number) => ((it[j] as number) + ((jt[j] as number) - (it[j] as number)) * a) * k
       m.visible = true
-      m.position.set(it[2] / S, kitY(it[4]), -it[3] / S)
-      q.set(it[6], it[7], it[8], it[5])
+      m.position.set(lerp(2) / S, kitY(lerp(4), rest), -lerp(3) / S)
+      q.set(it[6] * k, it[7] * k, it[8] * k, it[5] * k).normalize()
+      q2.set(jt[6] * k, jt[7] * k, jt[8] * k, jt[5] * k).normalize()
+      q.slerp(q2, a)
       m.quaternion.copy(c).multiply(q).multiply(cInv)
       m.material = xray && it[1] ? bad : good
     }
@@ -162,9 +199,10 @@ function Items({ replay, frameRef, xray }: { replay: Replay | null; frameRef: Re
   return (
     <group>
       {Array.from({ length: N }, (_, i) => (
-        <mesh key={i} ref={(el) => { refs.current[i] = el }} castShadow receiveShadow material={good} visible={false}>
-          <boxGeometry args={[0.56, 0.56, 0.56]} />
-        </mesh>
+        geo ? <mesh key={`${item}${i}`} ref={(el) => { refs.current[i] = el }} castShadow receiveShadow material={good} visible={false} geometry={geo} />
+          : <mesh key={`box${i}`} ref={(el) => { refs.current[i] = el }} castShadow receiveShadow material={good} visible={false}>
+            <boxGeometry args={[0.56, 0.56, 0.56]} />
+          </mesh>
       ))}
     </group>
   )
@@ -178,7 +216,7 @@ function Paddles({ layout, replay, frameRef }: { layout: Layout; replay: Replay 
     pushers.forEach((p, j) => {
       const g = refs.current[j]
       if (!g) return
-      const ext = (f?.push[j] ?? 0) / S
+      const ext = (f?.push[j] ?? 0) / (replay?.scale ?? 1) / S
       const [x, z] = cellXZ(p.x, p.y)
       const [dx, dy] = VEC[p.dir]
       const rest = CELL / 2 - 0.24
@@ -204,7 +242,7 @@ function Clock({ replay, frameRef, playing, speed, onEnd }: {
   useFrame((_, dt) => {
     if (!playing || !replay) return
     const n = replay.frames.length
-    frameRef.current = Math.min(n - 1, frameRef.current + dt * 12 * speed)
+    frameRef.current = Math.min(n - 1, frameRef.current + dt * (replay.fps ?? 12) * speed)
     if (frameRef.current >= n - 1 && !ended.current) { ended.current = true; onEnd() }
     if (frameRef.current < n - 1) ended.current = false
   })
@@ -220,13 +258,41 @@ function AutoOrbit({ target, radius, height }: { target: [number, number, number
   return null
 }
 
-function Scene({ layout, replay, frameRef, playing, speed, xray, fresh, onEnd, hero = false }: {
+function Picker({ layout, onCell, onHover }: { layout: Layout; onCell: (x: number, y: number) => void; onHover: (c: [number, number] | null) => void }) {
+  const toCell = (p: THREE.Vector3): [number, number] | null => {
+    const x = Math.floor(p.x / CELL), y = Math.floor(-p.z / CELL)
+    return x >= 0 && y >= 0 && x < layout.w && y < layout.h ? [x, y] : null
+  }
+  return (
+    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[layout.w, 0.05, -layout.h]}
+      onPointerMove={(e) => { e.stopPropagation(); onHover(toCell(e.point)) }} onPointerOut={() => onHover(null)}
+      onClick={(e) => { e.stopPropagation(); const c = toCell(e.point); if (c) onCell(c[0], c[1]) }}>
+      <planeGeometry args={[layout.w * CELL, layout.h * CELL]} />
+      <meshBasicMaterial transparent opacity={0} depthWrite={false} />
+    </mesh>
+  )
+}
+
+function Ghost({ cell, ok }: { cell: [number, number]; ok: boolean }) {
+  const [x, z] = cellXZ(cell[0], cell[1])
+  return (
+    <mesh position={[x, 0.06, z]} rotation={[-Math.PI / 2, 0, 0]}>
+      <planeGeometry args={[1.9, 1.9]} />
+      <meshBasicMaterial color={ok ? '#7ee0b0' : '#ff7a59'} transparent opacity={0.45} />
+    </mesh>
+  )
+}
+
+export function Scene({ layout, replay, frameRef, playing, speed, xray, fresh, onEnd, hero = false, onCell, hover, onHover, hoverOk = true, item = 'box' }: {
   layout: Layout; replay: Replay | null; frameRef: React.MutableRefObject<number>; playing: boolean; speed: number
   xray: boolean; fresh: Set<string>; onEnd: () => void; hero?: boolean
+  onCell?: (x: number, y: number) => void; hover?: [number, number] | null; onHover?: (c: [number, number] | null) => void; hoverOk?: boolean
+  item?: string
 }) {
   const cx = layout.w, cz = -layout.h
+  const dist = Math.max(layout.w, layout.h * 1.4) * CELL * 0.95
   return (
-    <Canvas shadows dpr={[1, 2]} camera={{ position: [cx - 5, 19, cz + 18], fov: 42 }}
+    <Canvas shadows dpr={[1, 2]} camera={{ position: [cx - 4, dist * 1.05, cz + dist * 0.8], fov: 42 }}
       gl={{ antialias: false, toneMapping: THREE.ACESFilmicToneMapping }}>
       <color attach="background" args={['#23242f']} />
       <fog attach="fog" args={['#23242f', 40, 80]} />
@@ -241,12 +307,14 @@ function Scene({ layout, replay, frameRef, playing, speed, xray, fresh, onEnd, h
         <Floor layout={layout} />
         <Parts layout={layout} fresh={fresh} />
         <Paddles layout={layout} replay={replay} frameRef={frameRef} />
-        <Items replay={replay} frameRef={frameRef} xray={xray} />
+        <Items replay={replay} frameRef={frameRef} xray={xray} item={item} />
+        {onCell && <Picker layout={layout} onCell={onCell} onHover={onHover ?? (() => {})} />}
+        {hover && <Ghost cell={hover} ok={hoverOk} />}
         <ContactShadows position={[cx, 0.01, cz]} scale={[layout.w * 2 + 8, layout.h * 2 + 8]} opacity={0.3} blur={2.5} far={4} />
       </Suspense>
       <Clock replay={replay} frameRef={frameRef} playing={playing} speed={speed} onEnd={onEnd} />
       {hero ? <AutoOrbit target={[cx, 0, cz]} radius={layout.w * 2.0} height={layout.w * 1.45} />
-        : <OrbitControls makeDefault target={[cx - 4.5, 0, cz + 0.5]} maxPolarAngle={Math.PI / 2.15} minDistance={6} maxDistance={70} />}
+        : <OrbitControls makeDefault target={[cx - 4, 0, cz - 0.5]} maxPolarAngle={Math.PI / 2.15} minDistance={6} maxDistance={70} />}
       <EffectComposer multisampling={0}>
         <N8AO aoRadius={0.6} intensity={2} distanceFalloff={1} halfRes />
         <Bloom intensity={0.25} luminanceThreshold={0.9} mipmapBlur />
@@ -377,7 +445,7 @@ export function FactoryWatch({ run, taskId }: { run: string; taskId: string }) {
   const dur = replay?.frames.length ? replay.frames[replay.frames.length - 1].t : 0
   return (
     <div className="relative h-full w-full bg-[#23242f] text-white">
-      <Scene layout={layout} replay={replay} frameRef={frameRef} playing={playing} speed={speed} xray={xray} fresh={fresh} onEnd={onEnd} />
+      <Scene layout={layout} replay={replay} frameRef={frameRef} playing={playing} speed={speed} xray={xray} fresh={fresh} onEnd={onEnd} item={ep.item} />
 
       {/* left: the agent's turns */}
       <div className="absolute bottom-4 left-4 top-[72px] flex w-[390px] max-w-[calc(100vw-32px)] flex-col rounded-2xl bg-[#15161d]/92 shadow-2xl ring-1 ring-white/10 backdrop-blur">
@@ -461,5 +529,5 @@ export function FactoryHero({ run, task }: { run: string; task: string }) {
   }, [run, task])
   if (!ep || !ep.final_layout) return null
   const onEnd = () => { frameRef.current = 0 }
-  return <Scene layout={ep.final_layout} replay={replay} frameRef={frameRef} playing speed={1.5} xray={false} fresh={new Set()} onEnd={onEnd} hero />
+  return <Scene layout={ep.final_layout} replay={replay} frameRef={frameRef} playing speed={1.5} xray={false} fresh={new Set()} onEnd={onEnd} hero item={ep.item} />
 }

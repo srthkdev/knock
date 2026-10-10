@@ -1,19 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 128" width="520" height="128">
-  <defs>
-    <linearGradient id="top" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f3a07f"/><stop offset="1" stop-color="#e07a5a"/></linearGradient>
-  </defs>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 470 128" width="470" height="128">
   <rect width="128" height="128" rx="28" fill="#1c1d1f"/>
-  <g fill="none" stroke="#5fd3a0" stroke-linecap="round">
-    <path d="M86 44 a22 22 0 0 1 0 40" stroke-width="5" opacity="0.95"/>
-    <path d="M96 34 a36 36 0 0 1 0 60" stroke-width="5" opacity="0.6"/>
-    <path d="M106 26 a50 50 0 0 1 0 76" stroke-width="5" opacity="0.3"/>
-  </g>
-  <g stroke="#1c1d1f" stroke-width="2" stroke-linejoin="round">
-    <path d="M48 30 L74 44 L48 58 L22 44 Z" fill="url(#top)"/>
-    <path d="M22 44 L48 58 L48 92 L22 78 Z" fill="#c4553a"/>
-    <path d="M48 58 L74 44 L74 78 L48 92 Z" fill="#a8432c"/>
-  </g>
-  <circle cx="78" cy="64" r="4.5" fill="#5fd3a0"/>
-  <text x="156" y="82" font-family="Inter, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="72" font-weight="800" letter-spacing="-2" fill="#1c1d1f">knock</text>
-  <text x="160" y="110" font-family="Inter, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="17" font-weight="500" fill="#6b6b66">probe hidden physics, then act</text>
+  <path d="M26 26 H54 V17 H74 V26 H102 V54 H111 V74 H102 V102 H74 V111 H54 V102 H26 V74 H17 V54 H26 Z" fill="none" stroke="#f2a541" stroke-width="4.5" stroke-linejoin="round"/>
+  <circle cx="64" cy="64" r="30" fill="none" stroke="#5fd3a0" stroke-width="7" stroke-dasharray="5.9 5.88"/>
+  <circle cx="64" cy="64" r="26" fill="#1c1d1f" stroke="#5fd3a0" stroke-width="3"/>
+  <path d="M64 44 L81.3 74 L46.7 74 Z" fill="#e07a5a"/>
+  <path d="M64 84 L46.7 54 L81.3 54 Z" fill="none" stroke="#f2a541" stroke-width="3.5" stroke-linejoin="round"/>
+  <circle cx="64" cy="64" r="4" fill="#ffffff"/>
+  <text x="152" y="90" font-family="Inter, -apple-system, Segoe UI, Helvetica, Arial, sans-serif" font-size="78" font-weight="800" letter-spacing="-2" fill="#1c1d1f">yantra</text>
 </svg>

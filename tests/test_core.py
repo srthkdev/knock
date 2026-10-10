@@ -1,4 +1,4 @@
-"""Contract tests for knock.core using a tiny analytic pack (no MuJoCo)."""
+"""Contract tests for yantra.core using a tiny analytic pack (no MuJoCo)."""
 import json
 import math
 
@@ -6,7 +6,7 @@ import numpy as np
 import pytest
 from pydantic import BaseModel, Field
 
-from knock.core import (COMPONENTS, TOOLS, Choice, Component, Episode, EventLog, Observation, Pack, ParamSet,
+from yantra.core import (COMPONENTS, TOOLS, Choice, Component, Episode, EventLog, Observation, Pack, ParamSet,
                         Scenario, Task, Tool, ToolCall, Uniform, World, action_schema, parse_action, run_episode,
                         solve)
 
@@ -330,7 +330,7 @@ for cls in (Lamp,):
     COMPONENTS.register()(cls)
 for cls in (BuildLamp, RunShift, Finish):
     TOOLS.register()(cls)
-from knock.core import TASKS  # noqa: E402
+from yantra.core import TASKS  # noqa: E402
 TASKS.register()(LightTask)
 
 

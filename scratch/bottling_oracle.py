@@ -1,8 +1,8 @@
 """Hidden-info reference: physics-derived settings swept over belt speed; best successful production."""
 import sys, time
-from knock.packs import BottlingPack
-from knock.packs.bottling import StartProduction, Settings
-from knock.packs import bottling_sim as sim
+from yantra.packs import BottlingPack
+from yantra.packs.bottling import StartProduction, Settings
+from yantra.packs import bottling_sim as sim
 
 def reference(sc, speeds=(0.6, 0.8, 1.0, 1.2, 1.5, 1.8), pitch=0.5):
     line, lot = sc.world.get("line").hidden, sc.world.get("lot").hidden

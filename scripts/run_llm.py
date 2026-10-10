@@ -5,9 +5,9 @@
 import json
 import sys
 
-import knock.packs  # noqa: F401
-from knock.agents.llm import CodexLLMAgent
-from knock.bench import load_scenarios, run_suite, summarize
+import yantra.packs  # noqa: F401
+from yantra.agents.llm import CodexLLMAgent
+from yantra.bench import load_scenarios, run_suite, summarize
 
 model, levels, out = sys.argv[1], sys.argv[2], sys.argv[3]
 effort = sys.argv[4] if len(sys.argv) > 4 else "high"

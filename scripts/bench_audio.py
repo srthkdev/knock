@@ -7,9 +7,9 @@ import time
 
 import numpy as np
 
-from knock import sound, world
-from knock.level import Hidden, Obj
-from knock.materials import MATERIALS, WALL
+from yantra import sound, world
+from yantra.level import Hidden, Obj
+from yantra.materials import MATERIALS, WALL
 
 
 def clips(n):

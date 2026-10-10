@@ -8,10 +8,10 @@ import json
 import sys
 from pathlib import Path
 
-import knock.packs  # noqa: F401
-from knock.agents.llm import CodexLLMAgent
-from knock.bench import load_scenarios, summarize
-from knock.core import Episode, run_episode
+import yantra.packs  # noqa: F401
+from yantra.agents.llm import CodexLLMAgent
+from yantra.bench import load_scenarios, summarize
+from yantra.core import Episode, run_episode
 
 COMPUTE = ("When you use the decisive act, choose its arguments by explicit calculation from your readings "
            "(write the formula and numbers in your reasoning): it is your only attempt and it is scored by its result.")

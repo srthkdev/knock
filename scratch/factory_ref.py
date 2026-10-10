@@ -1,7 +1,7 @@
 """Hand-written reference factories (hidden-info tuned) to check each map is solvable."""
 import sys, time
-from knock.core import Episode, ToolCall
-from knock.packs import FactoryPack
+from yantra.core import Episode, ToolCall
+from yantra.packs import FactoryPack
 
 def tuned(sc, v, d_cells=0.0):
     h = sc.world.get("plant").hidden

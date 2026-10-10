@@ -1,7 +1,7 @@
 [project]
-name = "knock"
+name = "yantra"
 version = "0.1.0"
-description = "A 3D physics world where AI agents must run experiments to discover hidden properties before acting."
+description = "AI agents build, test and fix factories on real physics (MuJoCo): a multi-turn benchmark and RL environment."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
@@ -27,11 +27,11 @@ dev = [
     "scikit-learn>=1.5",
 ]
 # Optional Rust audio engine (~11x faster sound synthesis): uv sync --group rust
-# Needs a Rust toolchain on PATH; without it knock falls back to the numpy implementation.
+# Needs a Rust toolchain on PATH; without it yantra falls back to the numpy implementation.
 rust = ["knock-audio"]
 
 [project.scripts]
-knock = "knock.cli:main"
+yantra = "yantra.cli:main"
 
 [build-system]
 requires = ["uv_build>=0.8.22,<0.9.0"]

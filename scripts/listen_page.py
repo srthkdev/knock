@@ -6,9 +6,9 @@ import wave
 
 import numpy as np
 
-from knock import world
-from knock.level import Hidden, Obj
-from knock.materials import MATERIALS
+from yantra import world
+from yantra.level import Hidden, Obj
+from yantra.materials import MATERIALS
 
 GAIN = None  # set from the loudest clip
 out = sys.argv[1] if len(sys.argv) > 1 else "listen.html"

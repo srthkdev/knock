@@ -1,9 +1,9 @@
 import numpy as np
 import pytest
 
-from knock.agents import sbi_agent as S
-from knock.env import Episode
-from knock.level import Level
+from yantra.agents import sbi_agent as S
+from yantra.env import Episode
+from yantra.level import Level
 
 pytestmark = pytest.mark.skipif(not S.MODEL_PATH.exists(), reason="trained model not present")
 

@@ -1,0 +1,240 @@
+{
+ "id": "F-gen1049-1049",
+ "pack": "factory",
+ "world": {
+  "seed": 1049,
+  "settings": {
+   "_layout": {
+    "w": 15,
+    "h": 8,
+    "walls": [
+     [
+      7,
+      1
+     ],
+     [
+      7,
+      2
+     ],
+     [
+      7,
+      3
+     ],
+     [
+      7,
+      4
+     ],
+     [
+      7,
+      5
+     ],
+     [
+      7,
+      6
+     ],
+     [
+      7,
+      7
+     ],
+     [
+      10,
+      2
+     ],
+     [
+      10,
+      3
+     ],
+     [
+      10,
+      4
+     ],
+     [
+      10,
+      5
+     ]
+    ],
+    "parts": [
+     {
+      "kind": "inlet",
+      "x": 0,
+      "y": 4,
+      "dir": "E",
+      "params": {
+       "speed": 1.6,
+       "feed_per_min": 51
+      },
+      "fixed": true,
+      "name": "A"
+     },
+     {
+      "kind": "bin",
+      "x": 14,
+      "y": 2,
+      "dir": "E",
+      "params": {},
+      "fixed": true,
+      "name": "ship"
+     }
+    ]
+   },
+   "money": 1550.0,
+   "_mixes": {
+    "A": [
+     [
+      "good",
+      0.6799999999999999,
+      0.4,
+      0.0032
+     ],
+     [
+      "underfilled",
+      0.32,
+      0.378,
+      0.0032
+     ]
+    ]
+   },
+   "item": "bob",
+   "state": {
+    "money_left": 1550,
+    "map": " 7 . . . . . . . # . . . . . . .\n 6 . . . . . . . # . . . . . . .\n 5 . . . . . . . # . . # . . . .\n 4 I . . . . . . # . . # . . . .\n 3 . . . . . . . # . . # . . . .\n 2 . . . . . . . # . . # . . . G\n 1 . . . . . . . # . . . . . . .\n 0 . . . . . . . . . . . . . . .\n   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4",
+    "parts": [
+     "bin(ship) at 14,2 dir E [plant]",
+     "inlet(A) at 0,4 dir E {\"speed\": 1.6, \"feed_per_min\": 51} [plant]"
+    ]
+   }
+  },
+  "components": [
+   {
+    "kind": "plant",
+    "id": "plant",
+    "visible": {},
+    "hidden": {
+     "belt_mu": 0.6439909319419512,
+     "pusher_speed": 1.4311276153035744,
+     "pusher_lag": 0.02442551807473345,
+     "scale_noise_g": 4.132885783358712
+    },
+    "pose": {}
+   }
+  ]
+ },
+ "task": {
+  "kind": "build_factory",
+  "goal": "This line makes rubber ducks (Bob): 18 cm long, 9 cm tall, about 400 g. Some items leave filling out of spec. Ship only good ones. Score: a 90 s production run must ship at least 22 good items per minute to the shipping bin, with at most 0 bad boxes shipped, no spills and no jams. You have $1550 for parts.",
+  "budget": {
+   "turns": 10.0,
+   "sim_seconds": 240.0
+  },
+  "probes": [
+   "build",
+   "run",
+   "finish"
+  ],
+  "act": null,
+  "params": {
+   "map": "gen1049",
+   "title": "Plant 1049",
+   "target_good_per_min": 22.0,
+   "max_bad_shipped": 0,
+   "max_spilled": 0,
+   "rules": "A factory floor of square cells, 0.5 m each; x grows east, y grows north. Items (boxes, 14 cm\ncubes, unless the task says the line makes toys) arrive from inlets (I) and must end up in the shipping bin (G). Map symbols: > < ^ v belts (arrow = flow),\nW scale, P pusher, R reject bin, # wall, . empty.\nParts (price): belt $20 (speed m/s); scale $400 (a belt section with a load cell; boxes\nwhose reading is below reject_below_g or above reject_above_g are flagged); pusher $300 (stands\nbeside a belt and pushes across it in its direction; fires when a flagged box is offset_mm before the paddle\nline, stays out stroke_ms); reject bin $60. Removing a part refunds half its price.\nBelts carry boxes by friction: boxes need time to speed up or turn, so fast turns, merges and drop-offs can\nthrow boxes. Rails are fitted automatically on belt edges nothing feeds into, except the side a pusher pushes\nthrough. A box falling to the floor is a spill. A box that sits still on a belt for 3 s is a jam. Bins\nstand on platform scales: runs report each bin's count and total weight. A good box weighs about\n1.00 kg (toys less); other items may be underfilled or double-packed.\nBuild language (one command per line; X or Y may be a range like 2..5):\n  belt X Y DIR speed=<m/s>          DIR is E, W, N or S\n  scale X Y DIR speed=<m/s> reject_below_g=<g> reject_above_g=<g>\n  pusher X Y DIR offset_mm=<mm> stroke_ms=<ms>\n  bin X Y\n  set X Y key=value ...           retune a placed part\n  remove X Y",
+   "_start": {
+    "w": 15,
+    "h": 8,
+    "walls": [
+     [
+      7,
+      1
+     ],
+     [
+      7,
+      2
+     ],
+     [
+      7,
+      3
+     ],
+     [
+      7,
+      4
+     ],
+     [
+      7,
+      5
+     ],
+     [
+      7,
+      6
+     ],
+     [
+      7,
+      7
+     ],
+     [
+      10,
+      2
+     ],
+     [
+      10,
+      3
+     ],
+     [
+      10,
+      4
+     ],
+     [
+      10,
+      5
+     ]
+    ],
+    "parts": [
+     {
+      "kind": "inlet",
+      "x": 0,
+      "y": 4,
+      "dir": "E",
+      "params": {
+       "speed": 1.6,
+       "feed_per_min": 51
+      },
+      "fixed": true,
+      "name": "A"
+     },
+     {
+      "kind": "bin",
+      "x": 14,
+      "y": 2,
+      "dir": "E",
+      "params": {},
+      "fixed": true,
+      "name": "ship"
+     }
+    ]
+   },
+   "_split": "public",
+   "_tier": 2
+  }
+ },
+ "notes": {
+  "reference": {
+   "ops": "scale 1 4 E speed=1.7 reject_below_g=389\nbelt 2 4 E speed=1.7\nbelt 3 4 E speed=1.7\nbelt 4 4 E speed=1.7\nbelt 5 4 E speed=1.7\nbelt 6 4 S speed=1.7\nbelt 6 3 S speed=1.7\nbelt 6 2 S speed=1.7\nbelt 6 1 S speed=1.7\nbelt 6 0 E speed=1.7\nbelt 7 0 E speed=1.7\nbelt 8 0 E speed=1.7\nbelt 9 0 E speed=1.7\nbelt 10 0 E speed=1.7\nbelt 11 0 E speed=1.7\nbelt 12 0 E speed=1.7\nbelt 13 0 N speed=1.7\nbelt 13 1 N speed=1.7\nbelt 13 2 E speed=1.7\npusher 3 5 S offset_mm=350 stroke_ms=250\nbin 3 3\nbin 4 3",
+   "speed": 1.7,
+   "offset_mm": 350,
+   "stroke_ms": 250,
+   "thresholds": [
+    389.0,
+    0
+   ],
+   "cost": 1180.0
+  },
+  "reference_production": {
+   "good_shipped": 38,
+   "bad_shipped": 0,
+   "good_rejected": 1,
+   "good_per_min": 25.3,
+   "spilled": 0,
+   "jammed": 0
+  }
+ }
+}

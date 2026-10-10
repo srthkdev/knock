@@ -8,11 +8,16 @@ export interface TaskEntry {
   id: string
   title: string
   detail: string
-  runs: { run: string; label: string; success?: boolean }[]
+  runs: { run: string; label: string; success?: boolean; score?: number | null }[]
+  tier?: number
+  split?: string
+  size?: string
 }
 
+const TIER: Record<number, string> = { 1: 'Tier 1 · get boxes to shipping', 2: 'Tier 2 · quality control', 3: 'Tier 3 · fast lines and merges', 0: 'Extras' }
+
 const ENV_INFO: Record<string, { name: string; blurb: string }> = {
-  factory: { name: 'Factory', blurb: 'Physical Factorio: the agent places belts, scales, pushers and bins on a grid, runs the factory on MuJoCo physics, sees what spills and jams, fixes it, then hands it over for a scored production run.' },
+  factory: { name: 'Factory', blurb: 'Physical Factorio: place belts, scales, pushers and bins on a grid, run the factory on MuJoCo physics, see what spills and jams, fix it, then hand it over for a scored production run. Held-out maps keep the leaderboard honest: their layouts are never published.' },
   cube: { name: 'Cube lab', blurb: 'Identical-looking cubes hide mass, friction and contents. Probe, then one flick.' },
 }
 
@@ -66,28 +71,41 @@ export function Tasks({ mode }: { mode: 'watch' | 'play' }) {
         <p className="mt-3 text-sm text-muted">{ENV_INFO[env].blurb}</p>
         {!tasks && <div className="mt-8 text-muted">Loading tasks…</div>}
         {tasks && !list.length && <div className="mt-8 rounded-2xl border border-line bg-white p-6 text-muted">No tasks exported for this environment yet.</div>}
-        <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {list.map((t) => (
-            <div key={t.id} className="flex flex-col rounded-2xl border border-line bg-white p-4">
-              <div className="font-semibold">{t.title}</div>
-              <p className="mt-1 text-sm leading-snug text-muted">{t.detail}</p>
-              {mode === 'watch' ? (
-                <div className="mt-3 flex flex-wrap gap-1.5">
-                  {t.runs.length === 0 && <span className="text-xs text-muted">no agent runs yet</span>}
-                  {t.runs.map((r) => (
-                    <button key={r.run} onClick={() => open(t, r.run)}
-                      className={`rounded-full px-2.5 py-1 text-xs font-medium ring-1 ${r.success ? 'bg-mint/15 text-mint-deep ring-mint/30' : 'bg-coral/10 text-[#a8432c] ring-coral/30'} hover:brightness-95`}>
-                      {r.label} {r.success ? '✓' : '✗'}
-                    </button>
-                  ))}
-                </div>
-              ) : (
-                <button onClick={() => open(t)} className="mt-3 self-start rounded-full bg-ink px-4 py-1.5 text-sm font-semibold text-white"
-                  disabled={t.env === 'factory'}>{t.env === 'factory' ? 'Play · coming next' : 'Play'}</button>
-              )}
+        {[...new Set(list.map((t) => t.tier ?? -1))].map((tier) => (
+          <div key={tier} className="mt-8">
+            {tier >= 0 && env === 'factory' && <h2 className="text-sm font-semibold uppercase tracking-wider text-muted">{TIER[tier] ?? `Tier ${tier}`}</h2>}
+            <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {list.filter((t) => (t.tier ?? -1) === tier).map((t) => {
+                const hidden = t.split === 'test'
+                return (
+                  <div key={t.id} className="flex flex-col rounded-2xl border border-line bg-white p-4">
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="font-semibold">{t.title}</div>
+                      <span className="font-mono text-[11px] text-muted">{hidden ? 'held-out' : t.size}</span>
+                    </div>
+                    <p className="mt-1 flex-1 text-sm leading-snug text-muted">{t.detail}</p>
+                    {mode === 'watch' ? (
+                      <div className="mt-3 flex flex-wrap gap-1.5">
+                        {t.runs.length === 0 && <span className="text-xs text-muted">no agent runs yet</span>}
+                        {t.runs.map((r) => (
+                          <button key={r.run} disabled={hidden} onClick={() => open(t, r.run)} title={hidden ? 'Held-out map: scores only, no replay' : ''}
+                            className={`rounded-full px-2.5 py-1 text-xs font-medium ring-1 ${r.success ? 'bg-mint/15 text-mint-deep ring-mint/30' : 'bg-coral/10 text-[#a8432c] ring-coral/30'} ${hidden ? 'cursor-default' : 'hover:brightness-95'}`}>
+                            {r.label} {r.success ? '✓' : '✗'}{r.score != null ? ` ${r.score}` : ''}
+                          </button>
+                        ))}
+                      </div>
+                    ) : (
+                      <button onClick={() => open(t)} disabled={hidden || t.split === 'demo'}
+                        className="mt-3 self-start rounded-full bg-ink px-4 py-1.5 text-sm font-semibold text-white disabled:opacity-30">
+                        {hidden ? 'Held-out' : t.split === 'demo' ? 'Replay only' : 'Play'}
+                      </button>
+                    )}
+                  </div>
+                )
+              })}
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
     </div>
   )

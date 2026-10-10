@@ -1,14 +1,14 @@
-"""The tabletop pack on knock.core must match Knock v0.2 behaviour."""
+"""The tabletop pack on yantra.core must match Knock v0.2 behaviour."""
 import json
 
 import numpy as np
 
-import knock.packs  # noqa: F401  (registers the pack)
-from knock.agents.tabletop_bayes import TabletopBayesAgent
-from knock.core import Episode, Scenario, ToolCall, action_schema, run_episode, solve
-from knock.env import Episode as LegacyEpisode
-from knock.oracle import valid_level
-from knock.packs.tabletop import Cube, Flick, Push, TabletopPack, scenario_from_level
+import yantra.packs  # noqa: F401  (registers the pack)
+from yantra.agents.tabletop_bayes import TabletopBayesAgent
+from yantra.core import Episode, Scenario, ToolCall, action_schema, run_episode, solve
+from yantra.env import Episode as LegacyEpisode
+from yantra.oracle import valid_level
+from yantra.packs.tabletop import Cube, Flick, Push, TabletopPack, scenario_from_level
 
 
 def test_conversion_roundtrip_and_no_leak():
@@ -69,7 +69,7 @@ def test_llm_schema_covers_pack_tools():
 
 
 def test_llm_prompt_is_generic_and_leak_free():
-    from knock.agents.llm import build_prompt
+    from yantra.agents.llm import build_prompt
     sc = scenario_from_level(valid_level(11))
     ep = Episode(sc.world, sc.task)
     ep.call(ToolCall("lift", "A"))

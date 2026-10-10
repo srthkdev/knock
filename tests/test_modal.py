@@ -2,8 +2,8 @@
 import numpy as np
 import pytest
 
-from knock import modal, sound
-from knock.materials import MATERIALS, WALL
+from yantra import modal, sound
+from yantra.materials import MATERIALS, WALL
 
 
 def test_six_rigid_modes_are_found_and_removed():

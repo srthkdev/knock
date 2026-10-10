@@ -1,16 +1,16 @@
-"""Precompute normalised free-cube mode tables with FEM -> src/knock/data/modes.npz.
+"""Precompute normalised free-cube mode tables with FEM -> src/yantra/data/modes.npz.
 
     uv run python scripts/build_modes.py            # full table (~15 min on a laptop)
 
 Solid cube: one solve per Poisson ratio in modal.NU_GRID.
 Hollow cube: one solve per (Poisson ratio, wall/edge ratio) in NU_GRID x WALL_GRID.
-All solves use E = rho = L = 1; `knock.sound.modes_for` rescales by sqrt(E/rho)/L.
+All solves use E = rho = L = 1; `yantra.sound.modes_for` rescales by sqrt(E/rho)/L.
 """
 import time
 
 import numpy as np
 
-from knock import modal
+from yantra import modal
 
 SOLID_N = 8  # 27-node hexes per edge (agrees with the Ritz reference to <0.05%, see tests)
 HOLLOW_N, HOLLOW_LAYERS = 16, 1  # in-plane cells per face; cells through the wall

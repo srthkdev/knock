@@ -9,10 +9,10 @@ import os
 import numpy as np
 import pytest
 
-from knock import sound, world
-from knock.agents.baselines import sounds_hollow
-from knock.level import Hidden, Obj
-from knock.materials import MATERIALS, WALL
+from yantra import sound, world
+from yantra.agents.baselines import sounds_hollow
+from yantra.level import Hidden, Obj
+from yantra.materials import MATERIALS, WALL
 
 ka = pytest.importorskip("knock_audio")
 CLIP = world.CLIP_S
